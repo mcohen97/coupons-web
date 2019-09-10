@@ -15,6 +15,7 @@ class UsersController < ApplicationController
   # GET /users/new
   def new
     @user = User.new
+    @org = Organization.new
   end
 
   # GET /users/1/edit
@@ -26,12 +27,17 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     @user.role = 'administrator'
+    @user.organization_id = 1
+    org_name = params[:user][:organization]
+    @org = Organization.new(:organization_name => org_name )
 
     respond_to do |format|
-      if @user.save
+      if @user.save && @org.save
         format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render :show, status: :created, location: @user }
       else
+        @user.delete
+        @org.delete
         format.html { render :new }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
@@ -63,13 +69,14 @@ class UsersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def user_params
-      params.require(:user).permit(:name, :surename, :email, :organization)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    @user = User.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def user_params
+    params.require(:user).permit(:name, :surename, :email)
+  end
 end
