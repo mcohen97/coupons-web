@@ -27,17 +27,25 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     @user.role = 'administrator'
-    @user.organization_id = 1
+    @user.avatar.attach(params[:user][:avatar])
     org_name = params[:user][:organization]
-    @org = Organization.new(:organization_name => org_name )
+    @org = Organization.new(:organization_name => org_name)
+
 
     respond_to do |format|
-      if @user.save && @org.save
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render :show, status: :created, location: @user }
+      if @org.save
+        @user.organization_id = @org.id
+
+        if @user.save
+          format.html { redirect_to @user, notice: 'User was successfully created.' }
+          format.json { render :show, status: :created, location: @user }
+        else
+          @user.delete
+          @org.delete
+          format.html { render :new }
+          format.json { render json: @user.errors, status: :unprocessable_entity }
+        end
       else
-        @user.delete
-        @org.delete
         format.html { render :new }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
