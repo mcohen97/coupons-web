@@ -15,7 +15,6 @@ class UsersController < ApplicationController
   # GET /users/new
   def new
     @user = User.new
-    @user.role = 'administrator'
   end
 
   # GET /users/1/edit
@@ -26,6 +25,7 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(user_params)
+    @user.role = 'administrator'
 
     respond_to do |format|
       if @user.save
