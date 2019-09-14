@@ -1,0 +1,10 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <h1>Editar promocion</h1>
+            <%= render 'form', user: @promotion, readonly: false %>
+            <%= link_to 'Mostrar', @promotion %> |
+            <%= link_to 'Atras', promotion_path %>
+        </div>
+    </div>
+</div>
