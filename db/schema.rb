@@ -42,6 +42,18 @@ ActiveRecord::Schema.define(version: 2019_09_11_225340) do
     t.string "organization_name"
   end
 
+
+  create_table "promotions", force: :cascade do |t|
+    t.string "code"
+    t.string "name"
+    t.boolean "active"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "return_type", default: 0
+    t.integer "return_value"
+    t.index ["code"], name: "index_promotions_on_code", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "surename"

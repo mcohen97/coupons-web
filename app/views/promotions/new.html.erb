@@ -1,0 +1,35 @@
+<h1>Nueva promocion</h1>
+<%= form_with scope: :promotion, url: promotions_path, local: true do |form| %>
+
+    <p>
+        <%= form.label :nombre  %><br>
+        <%= form.text_field :name %>
+    </p>
+
+    <p>
+        <%= form.label :codigo%><br>
+        <%= form.text_field :code%>
+    </p>
+
+    <%options = Promotion.return_types.keys.map {|ret_type| [ret_type.titleize,ret_type]} %>
+    <% options.insert(0, "Seleccione tipo de retorno") %>
+    <%= form.select(:return_type, options) %>
+
+    <p>
+        <%= form.label :valor_de_retorno%><br>
+        <%= form.number_field :return_value%>
+    </p>
+
+    <div class="field">
+        <%= form.label :active %><br />
+        <%= form.label :active, "Yes", :value => "true"  %>
+        <%= form.radio_button :active, true %>
+        <%= form.label :active, "No", :value => "false" %>
+        <%= form.radio_button :active, false, :checked => true %>
+  </div>
+
+    <p>
+        <%= form.submit%>
+    </p>
+
+<% end %>
