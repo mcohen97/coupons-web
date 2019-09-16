@@ -28,6 +28,12 @@ class PromotionsController < ApplicationController
     end
   end
 
+  def update
+    @promotion = Promotion.find(params[:id])
+    @promotion.update(promotion_parameters)
+    redirect_to promotion_path(@promotion)
+  end
+
   def destroy
     @promotion = Promotion.find(params[:id])
     @promotion.destroy
