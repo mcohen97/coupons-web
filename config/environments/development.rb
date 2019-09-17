@@ -41,8 +41,8 @@ Rails.application.configure do
     domain: "coupons.com",
     authentication: "plain",
     enable_starttls_auto: true,
-    user_name: "coupons.arancet.cohen.duran@gmail.com",
-    password: "arancetcohenduran",
+    user_name: ENV['MAILER_USER_NAME'],
+    password: ENV['MAILER_PASSWORD']
   }
 
   config.action_mailer.perform_caching = false
