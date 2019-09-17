@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Hi</h1>
+    <p>
+      <%=@sender.name%> <%=@sender.surename%> invited you to join <%=@sender.organization_name%> at Coupons! <br>
+    </p>
+    <p>
+      To sign up to the site, just follow this link: <a>http://localhost:3000/users/new?email=<%=@user_invited%>&&organization_name=<%=@sender.organization_name%></a>
+    </p>
+    <p>Thanks for joining and have a great day!</p>
+  </body>
+</html>
