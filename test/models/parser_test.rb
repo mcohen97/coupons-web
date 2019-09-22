@@ -1,4 +1,3 @@
-#require_relative '../../app/parser'
 require 'test_helper'
 
  

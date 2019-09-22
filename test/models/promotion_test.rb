@@ -44,6 +44,13 @@ class PromotionTest < ActiveSupport::TestCase
     end
   end
 
+  test 'should not save promotion with percentaje over 100' do
+    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+      return_value: 113, active: true, condition: 'quantity > 3')
+    assert_not promo.save
+    assert promo.errors[:return_value].any?
+  end
+
   # Common condition-related behaviour between the different types of promotions is tested here.
 
   test 'should not save promotion with empty condition' do

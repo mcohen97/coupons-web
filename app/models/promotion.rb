@@ -14,14 +14,35 @@ class Promotion < ApplicationRecord
   validates :return_value, numericality: { less_than_or_equal_to: 100 }, if: :percentaje?
   before_validation :parse_condition
 
-  def valid_promotion(arguments)
-    # abstract method to be overriden
+  # returns struct that indicates error if there is one, or result.
+  def evaluate_applicability(arguments_values)
+    parser = Parser.new(self.class.valid_arguments)
+    begin
+      valid = parser.evaluate_condition(condition, arguments_values)
+      if valid
+        return {error: false, applicable: true, return_type: return_type, return_value: return_value}
+      else
+        return {error: false, applicable: false}
+      end
+    rescue ParsingError => e
+      return {error: true, message: e.message}
+    end
+  end
+
+  private
+
+  def calculate_saving(total)
+    if return_type == :percentaje
+      return (total * return_value)/100
+    else
+      return return_value
+    end
   end
 
   def parse_condition
-    parser = Parser.new(Discount.valid_arguments.keys)
+    parser = Parser.new(self.class.valid_arguments.keys)
     begin
-      self.condition = parser.format_expression(self.condition)
+      self.condition = parser.format_expression(condition)
     rescue ParsingError => e
       errors.add(:condition, :invalid, message: e.message)
     end
