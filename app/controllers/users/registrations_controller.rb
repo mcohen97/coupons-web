@@ -8,7 +8,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def new
     if is_invitation_sign_up
       invitation_code = params["invitation_code"]
-      puts is_valid_invitation_code(invitation_code)
       if not is_valid_invitation_code(invitation_code)
         redirect_to new_user_registration_url, :flash => { :error => "The invitation is invalid. Please, contact your organization administrator and ask for a new invitation." }  and return   
       end    
@@ -51,15 +50,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
     params[:user][:role] = "administrator"
-    puts is_invitation_sign_up
     if is_invitation_sign_up
         invitation_code = params[:invitation_code]
         if is_valid_invitation_code(invitation_code)
           invitation = EmailInvitation.find_by invitation_code: invitation_code
-          puts params
           params[:user][:organization] = Organization.find(invitation.organization_id).organization_name
           params[:user][:role] = "organization_user"
-          puts params
+          params[:user][:invitation_code] = invitation_code
         end
     end
 

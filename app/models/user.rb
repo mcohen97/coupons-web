@@ -4,7 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  validates :name, :surname, :email, :role, presence: true
+  validates :name, :surname, :email, :role, presence: true, allow_blank: false
   has_one_attached :avatar
   validate :correct_document_mime_type
   validates :organization_id, presence: {message: "invalid"}
