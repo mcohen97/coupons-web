@@ -6,14 +6,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # GET /resource/sign_up
   def new
-
     super
   end
 
   # POST /resource
-  # def create
-  #   super
-  # end
+  def create
+    super
+  end
 
   # GET /resource/edit
   # def edit
@@ -43,11 +42,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
-    @org_name = params[:user][:organization]
-    @org = Organization.new(organization_name: @org_name)
-    @org.save
-    params[:user][:organization_id] = @org.id
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :surname, :organization_id])
+      params[:user][:role] = "administrator"
+      devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :surname, :organization])
   end
 
 # If you have extra params to permit, append them to the sanitizer.
