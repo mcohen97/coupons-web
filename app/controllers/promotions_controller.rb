@@ -2,7 +2,7 @@ class PromotionsController < ApplicationController
   protect_from_forgery except: :evaluate
 
   def index
-    @promotions = Promotion.all
+    @promotions = Promotion.all.non_deleted
   end
 
   def show
@@ -38,7 +38,7 @@ class PromotionsController < ApplicationController
 
   def destroy
     @promotion = Promotion.find(params[:id])
-    @promotion.destroy
+    @promotion.update(deleted: true)
     respond_to do |format|
       format.html { redirect_to promotions_path, notice: 'Promotion was successfully destroyed.' }
       format.json { head :no_content }

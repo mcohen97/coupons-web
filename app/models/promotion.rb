@@ -2,9 +2,9 @@ require 'parser.rb'
 
 class Promotion < ApplicationRecord
 
+  scope :non_deleted, -> {where(deleted: false)}
+
   enum return_type: %i[percentaje fixed_value]
-  # valid arguments will be overriden by each type of promotion.
-  enum valid_arguments: %i[]
 
   validates :code, uniqueness: true, presence: true
   validates :name, uniqueness: true, length: {minimum: 1}
@@ -15,8 +15,8 @@ class Promotion < ApplicationRecord
 
   # returns struct that indicates error if there is one, or result.
   def evaluate_applicability(arguments_values)
-    if !active
-      return {error: true, message: 'Promotion is not active'}
+    if !active || deleted
+      return {error: false, applicable: false, message: 'Promotion does not apply'}
     end
     begin
       return try_to_evaluate(arguments_values)

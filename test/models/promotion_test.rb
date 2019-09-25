@@ -86,7 +86,21 @@ class PromotionTest < ActiveSupport::TestCase
       
     result = promo.evaluate_applicability({quantity:10, transaction_id: 4})
 
-    assert result[:error]
-    assert_equal 'Promotion is not active', result[:message]
+    assert_not result[:error]
+    assert_not result[:applicable]
+    assert_equal 'Promotion does not apply', result[:message]
+    
+  end
+
+  test 'should return invalid for deleted promotions' do
+    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+      return_value: 10, active: true, condition: 'quantity > 3', deleted: true)
+      
+    result = promo.evaluate_applicability({quantity:10, transaction_id: 4})
+
+    assert_not result[:error]
+    assert_not result[:applicable]
+    assert_equal 'Promotion does not apply', result[:message]
+  
   end
 end

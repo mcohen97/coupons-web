@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_23_210356) do
+ActiveRecord::Schema.define(version: 2019_09_25_223557) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 2019_09_23_210356) do
     t.integer "return_value"
     t.string "type", null: false
     t.string "condition", null: false
+    t.boolean "deleted", default: false, null: false
     t.index ["code"], name: "index_promotions_on_code", unique: true
   end
 
