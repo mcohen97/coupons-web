@@ -6,7 +6,6 @@ class Promotion < ApplicationRecord
   # valid arguments will be overriden by each type of promotion.
   enum valid_arguments: %i[]
 
-
   validates :code, uniqueness: true, presence: true
   validates :name, uniqueness: true, length: {minimum: 1}
   validates :return_type, inclusion: { in: return_types.keys}
@@ -34,7 +33,8 @@ class Promotion < ApplicationRecord
   def try_to_evaluate(arguments_values)
     #parser = Parser.new(self.class.valid_arguments)
     parser = Parser.new()
-    valid = parser.evaluate_condition(condition, arguments_values)
+    expr = parser.parse(condition)
+    valid = expr.evaluate_condition(arguments_values)
     if valid
       register_usage(arguments_values)
       return {error: false, applicable: true, return_type: return_type, return_value: return_value}
@@ -55,7 +55,8 @@ class Promotion < ApplicationRecord
     #parser = Parser.new(self.class.valid_arguments.keys)
     parser = Parser.new()
     begin
-      self.condition = parser.format_expression(condition)
+      expr = parser.parse(condition)
+      self.condition = expr.to_string
     rescue ParsingError => e
       errors.add(:condition, :invalid, message: e.message)
     end

@@ -6,6 +6,7 @@ class DiscountTest < ActiveSupport::TestCase
       return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10')
     
     result = promo.evaluate_applicability({total:9, quantity:0})
+    
     assert_not result[:error]
     assert_not result[:applicable]
    end
@@ -14,7 +15,8 @@ class DiscountTest < ActiveSupport::TestCase
     promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
       return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10')
     
-    result = promo.evaluate_applicability({total:11, quantity:0})
+    result = promo.evaluate_applicability({total:11, quantity:0, transaction_id: 4})
+
     assert_not result[:error]
     assert result[:applicable]
     assert_equal :percentaje, result[:return_type].to_sym
