@@ -11,6 +11,14 @@
         <%= form.text_field :code%>
     </p>
 
+    <div class="field">
+        <%= form.label :Tipo %><br />
+        <%= form.label :Tipo, "Cupon", :value => "Coupon"  %>
+        <%= form.radio_button :type, :Coupon %>
+        <%= form.label :Tipo, "Descuento", :value => "Discount" %>
+        <%= form.radio_button :type, :Discount, :checked => true %>
+    </div>
+
     <%options = Promotion.return_types.keys.map {|ret_type| [ret_type.titleize,ret_type]} %>
     <% options.insert(0, "Seleccione tipo de retorno") %>
     <%= form.select(:return_type, options) %>
@@ -18,6 +26,11 @@
     <p>
         <%= form.label :valor_de_retorno%><br>
         <%= form.number_field :return_value%>
+    </p>
+
+    <p>
+        <%= form.label :condicion  %><br>
+        <%= form.text_field :condition %>
     </p>
 
     <div class="field">
