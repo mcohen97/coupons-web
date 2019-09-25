@@ -1,14 +1,17 @@
 <h1>Promociones</h1>
 <% @promotions.each do |promo|%>
 
-<%= link_to 'Mostrar', promo %>
+<%= link_to 'Mostrar', promotion_path(promo) %>
 <%= link_to 'Editar', edit_promotion_path(promo)%>
-<%= link_to 'Eliminar', promo, method: :delete, data: { confirm: 'Estás seguro?' }%>
+<%= link_to 'Eliminar', promotion_path(promo), method: :delete, data: { confirm: 'Estás seguro?' }%>
+
 
 <hr>
-<h2><%=promo.name%></h2>
-<br><u>codigo: </u> <%= promo.code%>
-<br><u>retorno: </u> 
+<h2><%=promo.name%> (<%=promo.code%>)</h2>
+
+<br><u>tipo:</u> <%= promo.type%>
+<br><u>codigo:</u> <%= promo.code%>
+<br><u>retorno:</u> 
 
 <% if promo.percentaje? %>
 <%=promo.return_value%>%
@@ -16,13 +19,13 @@
 $<%=promo.return_value%>
 <% end %>
 
-<br><u>activa: </u> 
+<br><u>activa:</u> 
 <% if promo.active%>
 yes
 <% else %>
 no
 <% end %>
-
+<br><u>condicion:</u><%= promo.condition%>
 
 <hr>
 <%end%>

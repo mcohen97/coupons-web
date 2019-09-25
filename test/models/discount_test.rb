@@ -11,7 +11,7 @@ class DiscountTest < ActiveSupport::TestCase
    end
 
    test "should return true when promo applies" do
-    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
       return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10')
     
     result = promo.evaluate_applicability({total:11, quantity:0})

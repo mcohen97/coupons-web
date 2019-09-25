@@ -3,7 +3,7 @@ require 'test_helper'
 
 class CouponTest < ActiveSupport::TestCase
   test "should return false when promo does not apply" do
-    promo = Coupon.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Coupon.create(code: 'code4', name: 'a promotion', return_type: :percentaje,
       return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2')
     
     result = promo.evaluate_applicability({total:9, products_size:3})
@@ -12,10 +12,11 @@ class CouponTest < ActiveSupport::TestCase
    end
 
    test "should return true when promo applies" do
-    promo = Coupon.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Coupon.create(code: 'code5', name: 'a promotion', return_type: :percentaje,
       return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2')
     
     result = promo.evaluate_applicability({total:101, products_size:3})
+
     assert_not result[:error]
     assert result[:applicable]
     assert_equal :percentaje, result[:return_type].to_sym

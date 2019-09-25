@@ -16,20 +16,32 @@ class Promotion < ApplicationRecord
 
   # returns struct that indicates error if there is one, or result.
   def evaluate_applicability(arguments_values)
-    parser = Parser.new(self.class.valid_arguments)
     begin
-      valid = parser.evaluate_condition(condition, arguments_values)
-      if valid
-        return {error: false, applicable: true, return_type: return_type, return_value: return_value}
-      else
-        return {error: false, applicable: false}
-      end
-    rescue ParsingError => e
+      return try_to_evaluate(arguments_values)
+    rescue ParsingError, ActiveRecord::RecordInvalid => e
       return {error: true, message: e.message}
     end
   end
 
+  protected
+
+  def register_usage(arguments)
+    return true
+  end
+
   private
+
+  def try_to_evaluate(arguments_values)
+    #parser = Parser.new(self.class.valid_arguments)
+    parser = Parser.new()
+    valid = parser.evaluate_condition(condition, arguments_values)
+    if valid
+      register_usage(arguments_values)
+      return {error: false, applicable: true, return_type: return_type, return_value: return_value}
+    else
+      return {error: false, applicable: false}
+    end
+  end
 
   def calculate_saving(total)
     if return_type == :percentaje
@@ -40,7 +52,8 @@ class Promotion < ApplicationRecord
   end
 
   def parse_condition
-    parser = Parser.new(self.class.valid_arguments.keys)
+    #parser = Parser.new(self.class.valid_arguments.keys)
+    parser = Parser.new()
     begin
       self.condition = parser.format_expression(condition)
     rescue ParsingError => e

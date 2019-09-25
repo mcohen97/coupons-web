@@ -1,4 +1,6 @@
 class PromotionsController < ApplicationController
+  protect_from_forgery except: :evaluate
+
   def index
     @promotions = Promotion.all
   end
@@ -40,6 +42,15 @@ class PromotionsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to promotions_url, notice: 'Promotion was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def evaluate
+    promotion = Promotion.find_by(code: params[:code])
+    if !promotion.nil?
+      render json: promotion.evaluate_applicability(params[:attributes])
+    else
+      render json: {error: true, message: 'Promotion not found'}
     end
   end
 
