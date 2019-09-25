@@ -15,9 +15,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   # GET /resource/edit
-  # def edit
-  #   super
-  # end
+  def edit
+    super
+    @gfre = "fe"
+  end
 
   # PUT /resource
   # def update
@@ -42,8 +43,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
-      params[:user][:role] = "administrator"
-      devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :surname, :organization])
+    params[:user][:role] = "administrator"
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :surname, :role, :organization, :avatar])
   end
 
 # If you have extra params to permit, append them to the sanitizer.
