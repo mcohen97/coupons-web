@@ -6,7 +6,10 @@ class HomeController < ApplicationController
   end
 
   def invite
-    UserMailer.with(user_invited: params[:email], sender: helpers.current_user).invitation_email.deliver_now
+    invited_email = params[:email]
+    invitation = EmailInvitation.create(user: current_user, invited_email: invited_email, organization_id: current_user.organization_id) 
+    puts invitation.invitation_code
+    UserMailer.with(email_invited: invited_email, sender: current_user, organization_name: current_user.organization, invitation: invitation).invitation_email.deliver_now
   end
 
 end

@@ -1,7 +1,9 @@
 class UserMailer < ApplicationMailer
     def invitation_email
-        @user_invited = params[:user_invited]
+        @email_invited = params[:email_invited]
         @sender = params[:sender]
-        mail(to: @user_invited, subject: @sender.name + ' invited you to join Coupons')
+        @invitation = params[:invitation]
+        @organization_name = params[:organization_name]
+        mail(to: @email_invited, subject: @sender.name + ' invited you to join Coupons')
     end
 end
