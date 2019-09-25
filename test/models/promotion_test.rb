@@ -80,4 +80,13 @@ class PromotionTest < ActiveSupport::TestCase
     assert promo.errors[:condition].any?
   end
   
+  test 'should not validate inactive promotions' do
+    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+      return_value: 10, active: false, condition: 'quantity > 3')
+      
+    result = promo.evaluate_applicability({quantity:10, transaction_id: 4})
+
+    assert result[:error]
+    assert_equal 'Promotion is not active', result[:message]
+  end
 end

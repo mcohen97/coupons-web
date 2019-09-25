@@ -15,6 +15,9 @@ class Promotion < ApplicationRecord
 
   # returns struct that indicates error if there is one, or result.
   def evaluate_applicability(arguments_values)
+    if !active
+      return {error: true, message: 'Promotion is not active'}
+    end
     begin
       return try_to_evaluate(arguments_values)
     rescue ParsingError, ActiveRecord::RecordInvalid => e
