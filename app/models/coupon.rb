@@ -4,7 +4,7 @@ class Coupon < Promotion
 
   has_many :coupon_usages
 
-  def register_usage(arguments)
+  def apply_promo(arguments)
     coupon = CouponUsage.new(promotion_id: id, coupon_code: arguments[:coupon_code])
     coupon.save!
   end

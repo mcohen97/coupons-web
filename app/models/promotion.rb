@@ -27,7 +27,7 @@ class Promotion < ApplicationRecord
 
   protected
 
-  def register_usage(arguments)
+  def apply_promo(arguments)
     return true
   end
 
@@ -39,7 +39,7 @@ class Promotion < ApplicationRecord
     expr = parser.parse(condition)
     valid = expr.evaluate_condition(arguments_values)
     if valid
-      register_usage(arguments_values)
+      apply_promo(arguments_values)
       return {error: false, applicable: true, return_type: return_type, return_value: return_value}
     else
       return {error: false, applicable: false}
