@@ -6,19 +6,26 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # GET /resource/sign_up
   def new
-
+    if is_invitation_sign_up
+      invitation_code = params["invitation_code"]
+      puts is_valid_invitation_code(invitation_code)
+      if not is_valid_invitation_code(invitation_code)
+        redirect_to new_user_registration_url, :flash => { :error => "The invitation is invalid. Please, contact your organization administrator and ask for a new invitation." }  and return   
+      end    
+    end
     super
   end
 
   # POST /resource
-  # def create
-  #   super
-  # end
+  def create
+    super
+  end
 
   # GET /resource/edit
-  # def edit
-  #   super
-  # end
+  def edit
+    super
+    @gfre = "fe"
+  end
 
   # PUT /resource
   # def update
@@ -43,12 +50,36 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
-    @org_name = params[:user][:organization]
-    @org = Organization.new(organization_name: @org_name)
-    @org.save
-    params[:user][:organization_id] = @org.id
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :surname, :organization_id])
+    params[:user][:role] = "administrator"
+    puts is_invitation_sign_up
+    if is_invitation_sign_up
+        invitation_code = params[:invitation_code]
+        if is_valid_invitation_code(invitation_code)
+          invitation = EmailInvitation.find_by invitation_code: invitation_code
+          puts params
+          params[:user][:organization] = Organization.find(invitation.organization_id).organization_name
+          params[:user][:role] = "organization_user"
+          puts params
+        end
+    end
+
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :surname, :role, :organization, :avatar, :invitation_code])
   end
+
+  def is_invitation_sign_up
+    params.has_key?("invitation_code") || (params.has_key?(:invitation_code))
+  end
+
+  def is_valid_invitation_code(invitation_code)
+    invitation_exists = EmailInvitation.exists?(invitation_code: invitation_code)
+    if invitation_exists
+      invitation = EmailInvitation.find_by invitation_code: invitation_code
+    end
+    invitation_exists && !invitation.already_used
+  end
+
+
+
 
 # If you have extra params to permit, append them to the sanitizer.
 # def configure_account_update_params

@@ -31,9 +31,17 @@
     <%= f.password_field :current_password, autocomplete: "current-password" %>
   </div>
 
+  <div>
+    <% if @user.avatar.attached? %>
+      <td><img src="<%=(url_for(@user.avatar))%>"></td>
+    <% end %>
+  </div>
+
   <div class="actions">
     <%= f.submit "Update" %>
   </div>
+
+
 <% end %>
 
 <h3>Cancel my account</h3>

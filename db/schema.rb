@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 2019_09_25_141345) do
     t.string "name"
     t.string "surname"
     t.bigint "organization_id", null: false
+    t.string "role"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["organization_id"], name: "index_users_on_organization_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
