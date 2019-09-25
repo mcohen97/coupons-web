@@ -9,6 +9,6 @@
   <%= submit_tag("Send") %>
 <% end %>
 
-<%= link_to 'Log out', login_path %>
+<%= link_to 'Log out', destroy_user_session_path, :method => :delete %>
 
 
