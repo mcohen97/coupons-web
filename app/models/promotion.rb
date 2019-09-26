@@ -1,7 +1,7 @@
 require 'parser.rb'
 
 class Promotion < ApplicationRecord
-
+  acts_as_tenant(:organization)
   enum return_type: %i[percentaje fixed_value]
   # valid arguments will be overriden by each type of promotion.
   enum valid_arguments: %i[]
