@@ -128,12 +128,4 @@ class PromotionTest < ActiveSupport::TestCase
 
     assert_equal 2, similar_code_count
   end
-
-  test 'should paginate properly' do
-    items_count = Promotion.not_deleted.paginate(page: 1, per_page: 3).count
-    assert_equal 3, items_count
-
-    items_count = Promotion.not_deleted.paginate(page: 3, per_page: 3).count
-    assert_equal 2, items_count
-  end
 end
