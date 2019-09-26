@@ -2,12 +2,13 @@
 
 one:
   name: name1
-  surename: surname1
+  surname: surname1
   email: mail1@domain1.com
   organization_id: 1
 
 two:
   name: name2
-  surename: surname2
+  surname: surname2
   email: mail2@domain2.com
   organization_id: 2
+

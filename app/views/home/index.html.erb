@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 
 <h1>Home</h1>
-<h3>Wellcome <%=current_user.name%></h3>
+<h3>Welcome <%=@current_user.email%></h3>
 
 <%= form_tag(invite_path, :method => "post") do %>
   <%= label_tag(:email, "Send invitation to email:") %>
@@ -9,6 +9,6 @@
   <%= submit_tag("Send") %>
 <% end %>
 
-<%= link_to 'Log out', login_path %>
+<%= link_to 'Log out', destroy_user_session_path, :method => :delete %>
 
 

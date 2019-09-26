@@ -1,14 +1,26 @@
 class User < ApplicationRecord
-  has_one_attached :avatar
-  has_secure_password
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
 
-  def organization_name
-    Organization.find(organization_id).organization_name
+  validates :name, :surname, :email, :role, presence: true
+  has_one_attached :avatar
+  validate :correct_document_mime_type
+  validates :organization_id, presence: {message: "invalid"}
+
+  def organization=(org_name)
+    @org = Organization.new :organization_name => org_name
+    if self.role == "administrator" && @org.save
+      self.update_attribute(:organization_id, @org.id)
+    end
+    @organization = org_name
   end
 
-  validates :name, :surename, :email, :role, presence: true
-  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validate :correct_document_mime_type
+  def organization
+    @organization
+  end
+
   private
 
   def correct_document_mime_type
@@ -17,4 +29,5 @@ class User < ApplicationRecord
       errors.add(:document, 'Must be an image')
     end
   end
+
 end
