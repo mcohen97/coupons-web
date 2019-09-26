@@ -101,6 +101,39 @@ class PromotionTest < ActiveSupport::TestCase
     assert_not result[:error]
     assert_not result[:applicable]
     assert_equal 'Promotion does not apply', result[:message]
-  
+  end
+
+  test 'should apply filters specified in scope' do
+    not_deleted_count = Promotion.not_deleted.count
+
+    assert_equal 5, not_deleted_count
+    
+    refined_by_type_count = Promotion.not_deleted.by_type('Discount').count
+
+    assert_equal 2, refined_by_type_count
+
+    refined_by_status_count = Promotion.not_deleted.by_type('Discount').active?(true).count
+
+    assert_equal 1, refined_by_status_count
+
+    refined_by_code_count = Promotion.not_deleted.by_type('Discount').active?(true).by_code('CLA').count
+
+    assert_equal 1, refined_by_code_count
+
+    refined_by_name_count = Promotion.not_deleted.by_type('Discount').active?(true).by_code('CLA').by_name('Pizza').count
+
+    assert_equal 0, refined_by_name_count
+
+    similar_code_count = Promotion.by_code('MOCHI').count
+
+    assert_equal 2, similar_code_count
+  end
+
+  test 'should paginate properly' do
+    items_count = Promotion.not_deleted.paginate(page: 1, per_page: 3).count
+    assert_equal 3, items_count
+
+    items_count = Promotion.not_deleted.paginate(page: 3, per_page: 3).count
+    assert_equal 2, items_count
   end
 end

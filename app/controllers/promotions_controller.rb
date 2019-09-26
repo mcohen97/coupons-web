@@ -2,7 +2,15 @@ class PromotionsController < ApplicationController
   protect_from_forgery except: :evaluate
 
   def index
-    @promotions = Promotion.all.non_deleted
+    offset = params[:page].present? ? params[:page] : 1
+    per_page = params[:per_page].present? ? params[:per_page] : 5
+
+    @promotions = Promotion.all.not_deleted
+    @promotions = @promotions.by_code(params[:code]) if params[:code].present?
+    @promotions = @promotions.by_name(params[:name]) if params[:name].present?
+    @promotions = @promotions.by_type(params[:type]) if params[:type].present?
+    @promotions = @promotions.active?(params[:active]) if params[:active].present?
+    @promotions = @promotions.paginate(page: offset, per_page: per_page)
   end
 
   def show

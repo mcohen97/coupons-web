@@ -2,7 +2,12 @@ require 'parser.rb'
 
 class Promotion < ApplicationRecord
 
-  scope :non_deleted, -> {where(deleted: false)}
+  scope :not_deleted, -> {where(deleted: false)}
+  
+  scope :by_code, -> (code) { where('code LIKE ?', "%#{code}%") }
+  scope :by_name, -> (name) { where('name LIKE ?', "%#{name}%") }
+  scope :by_type, -> (type) { where(type: type) }
+  scope :active?, -> (status) { where(active: status) }
 
   enum return_type: %i[percentaje fixed_value]
 
