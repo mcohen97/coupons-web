@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.6.4'
+ruby '2.6.3'
 
 gem 'rubocop', '~> 0.74.0', require: false
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -25,6 +25,10 @@ gem 'bcrypt', '~> 3.1.7'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
+
+gem 'will_paginate', '~> 3.1.1'
+gem 'will_paginate-bootstrap' 
+#this is needed to add bootsrap style to pagination
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_24_180336) do
+ActiveRecord::Schema.define(version: 2019_09_25_223557) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,22 @@ ActiveRecord::Schema.define(version: 2019_09_24_180336) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
+  create_table "coupon_usages", force: :cascade do |t|
+    t.string "coupon_code"
+    t.bigint "promotion_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["promotion_id"], name: "index_coupon_usages_on_promotion_id"
+  end
+
+  create_table "discount_usages", force: :cascade do |t|
+    t.string "transaction_id"
+    t.bigint "promotion_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["promotion_id"], name: "index_discount_usages_on_promotion_id"
+  end
+
   create_table "organizations", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -50,6 +66,9 @@ ActiveRecord::Schema.define(version: 2019_09_24_180336) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "return_type", default: 0
     t.integer "return_value"
+    t.string "type", null: false
+    t.string "condition", null: false
+    t.boolean "deleted", default: false, null: false
     t.index ["code"], name: "index_promotions_on_code", unique: true
   end
 
@@ -63,7 +82,7 @@ ActiveRecord::Schema.define(version: 2019_09_24_180336) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "name"
     t.string "surname"
-    t.bigint "organization_id", null: false
+    t.bigint "organization_id"
     t.string "role"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["organization_id"], name: "index_users_on_organization_id"
@@ -71,5 +90,7 @@ ActiveRecord::Schema.define(version: 2019_09_24_180336) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "coupon_usages", "promotions"
+  add_foreign_key "discount_usages", "promotions"
   add_foreign_key "users", "organizations"
 end
