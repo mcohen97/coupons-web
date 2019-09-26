@@ -6,7 +6,7 @@ class DiscountTest < ActiveSupport::TestCase
       return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10')
     
     result = promo.evaluate_applicability({total:9, quantity:0})
-    
+
     assert_not result[:error]
     assert_not result[:applicable]
    end
@@ -28,6 +28,20 @@ class DiscountTest < ActiveSupport::TestCase
       return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10')
     
     result = promo.evaluate_applicability({amount:15, tax:3})
+    assert result[:error]
+   end
+
+   test "should retourn error if transaction id was already used" do
+     
+    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
+      return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10')
+    
+    result = promo.evaluate_applicability({total:11, quantity:0, transaction_id: 4})
+
+    assert_not result[:error]
+
+    result = promo.evaluate_applicability({total:11, quantity:0, transaction_id: 4})
+
     assert result[:error]
    end
 end

@@ -80,4 +80,52 @@ class PromotionTest < ActiveSupport::TestCase
     assert promo.errors[:condition].any?
   end
   
+  test 'should not validate inactive promotions' do
+    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+      return_value: 10, active: false, condition: 'quantity > 3')
+      
+    result = promo.evaluate_applicability({quantity:10, transaction_id: 4})
+
+    assert_not result[:error]
+    assert_not result[:applicable]
+    assert_equal 'Promotion does not apply', result[:message]
+    
+  end
+
+  test 'should return invalid for deleted promotions' do
+    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+      return_value: 10, active: true, condition: 'quantity > 3', deleted: true)
+      
+    result = promo.evaluate_applicability({quantity:10, transaction_id: 4})
+
+    assert_not result[:error]
+    assert_not result[:applicable]
+    assert_equal 'Promotion does not apply', result[:message]
+  end
+
+  test 'should apply filters specified in scope' do
+    not_deleted_count = Promotion.not_deleted.count
+
+    assert_equal 5, not_deleted_count
+    
+    refined_by_type_count = Promotion.not_deleted.by_type('Discount').count
+
+    assert_equal 2, refined_by_type_count
+
+    refined_by_status_count = Promotion.not_deleted.by_type('Discount').active?(true).count
+
+    assert_equal 1, refined_by_status_count
+
+    refined_by_code_count = Promotion.not_deleted.by_type('Discount').active?(true).by_code('CLA').count
+
+    assert_equal 1, refined_by_code_count
+
+    refined_by_name_count = Promotion.not_deleted.by_type('Discount').active?(true).by_code('CLA').by_name('Pizza').count
+
+    assert_equal 0, refined_by_name_count
+
+    similar_code_count = Promotion.by_code('MOCHI').count
+
+    assert_equal 2, similar_code_count
+  end
 end

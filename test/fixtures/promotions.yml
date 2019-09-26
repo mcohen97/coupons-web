@@ -4,8 +4,57 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-#one: {}
-# column: value
-#
-#two: {}
-# column: value
+coupon1:
+  name: Promo verano
+  code: COMIDADESC5
+  return_type: percentaje
+  return_value: 10
+  active: true
+  type: Coupon
+  condition: total > 100 AND products_size >= 2
+
+coupon2:
+  name: Obtené un cupón de 5% de descuento para tu primera compra en las cantinas de la Universidad ORT 
+  code: COMPRAYA
+  return_type: percentaje
+  return_value: 5
+  active: false
+  type: Coupon
+  condition: total > 50 AND estudiante_ort
+
+coupon3:
+  name: Con tu primera compra en Mochileros.uy un cupón de $150 de descuento para tu próxima compra
+  code: MOCHIUY
+  return_type: fixed_value
+  return_value: 150
+  active: true
+  type: Coupon
+  condition: primera_compra OR total > 1000
+
+discount1:
+  name: Descuento comienzo clases
+  code: CLASES
+  return_type: fixed_value
+  return_value: 100
+  active: true
+  type: Discount
+  condition: (total <= 1000 AND quantity >= 5) OR total > 1000
+
+discount2: 
+  name: Compras mayores de $1000 obtienes un 10% de descuento
+  code: 10XCIEN
+  return_type: percentaje
+  return_value: 10
+  active: true
+  type: Discount
+  condition: total > 1000
+  deleted: true
+
+discount3:
+  name: Comprando 3 unidades de nuestras mochilas escolares te descontamos $300
+  code: MOCHIX3
+  return_type: fixed_value
+  return_value: 300
+  active: false
+  type: Discount
+  condition: quantity = 3

@@ -2,9 +2,14 @@ require 'parser.rb'
 
 class Promotion < ApplicationRecord
   acts_as_tenant(:organization)
+
+  scope :not_deleted, -> {where(deleted: false)}
+  
+  scope :by_code, -> (code) { where('code LIKE ?', "%#{code}%") }
+  scope :by_name, -> (name) { where('name LIKE ?', "%#{name}%") }
+  scope :by_type, -> (type) { where(type: type) }
+  scope :active?, -> (status) { where(active: status) }
   enum return_type: %i[percentaje fixed_value]
-  # valid arguments will be overriden by each type of promotion.
-  enum valid_arguments: %i[]
 
   validates :code, uniqueness: true, presence: true
   validates :name, uniqueness: true, length: {minimum: 1}
@@ -15,6 +20,9 @@ class Promotion < ApplicationRecord
 
   # returns struct that indicates error if there is one, or result.
   def evaluate_applicability(arguments_values)
+    if !active || deleted
+      return {error: false, applicable: false, message: 'Promotion does not apply'}
+    end
     begin
       return try_to_evaluate(arguments_values)
     rescue ParsingError, ActiveRecord::RecordInvalid => e
@@ -24,7 +32,7 @@ class Promotion < ApplicationRecord
 
   protected
 
-  def register_usage(arguments)
+  def apply_promo(arguments)
     return true
   end
 
@@ -36,7 +44,7 @@ class Promotion < ApplicationRecord
     expr = parser.parse(condition)
     valid = expr.evaluate_condition(arguments_values)
     if valid
-      register_usage(arguments_values)
+      apply_promo(arguments_values)
       return {error: false, applicable: true, return_type: return_type, return_value: return_value}
     else
       return {error: false, applicable: false}

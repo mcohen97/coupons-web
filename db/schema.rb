@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(version: 2019_09_26_164357) do
     t.string "type", null: false
     t.string "condition", null: false
     t.bigint "organization_id", null: false
+    t.boolean "deleted", default: false, null: false
     t.index ["code"], name: "index_promotions_on_code", unique: true
     t.index ["organization_id"], name: "index_promotions_on_organization_id"
   end

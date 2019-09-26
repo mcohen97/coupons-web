@@ -30,4 +30,19 @@ class CouponTest < ActiveSupport::TestCase
     result = promo.evaluate_applicability({amount:15, tax:3})
     assert result[:error]
    end
+
+   test "should retourn error if coupon code was used" do
+     
+    promo = Coupon.create(code: 'code5', name: 'a promotion', return_type: :percentaje,
+      return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2')
+      
+    result = promo.evaluate_applicability({total:101, products_size:3, coupon_code: 6})
+  
+    assert_not result[:error]
+    
+    result = promo.evaluate_applicability({total:101, products_size:3, coupon_code: 6})
+
+    assert result[:error]
+   end
+
 end
