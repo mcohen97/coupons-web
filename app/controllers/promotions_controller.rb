@@ -1,6 +1,6 @@
 class PromotionsController < ApplicationController
-  protect_from_forgery except: :evaluate
   before_action :authenticate_user!
+  protect_from_forgery except: :evaluate
 
   def index
     offset = params[:page].present? ? params[:page] : 1

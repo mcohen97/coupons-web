@@ -1,6 +1,7 @@
 require 'parser.rb'
 
 class Promotion < ApplicationRecord
+  acts_as_tenant(:organization)
 
   scope :not_deleted, -> {where(deleted: false)}
   
@@ -8,7 +9,6 @@ class Promotion < ApplicationRecord
   scope :by_name, -> (name) { where('name LIKE ?', "%#{name}%") }
   scope :by_type, -> (type) { where(type: type) }
   scope :active?, -> (status) { where(active: status) }
-
   enum return_type: %i[percentaje fixed_value]
 
   validates :code, uniqueness: true, presence: true

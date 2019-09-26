@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_25_223557) do
+ActiveRecord::Schema.define(version: 2019_09_26_164357) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,8 +68,10 @@ ActiveRecord::Schema.define(version: 2019_09_25_223557) do
     t.integer "return_value"
     t.string "type", null: false
     t.string "condition", null: false
+    t.bigint "organization_id", null: false
     t.boolean "deleted", default: false, null: false
     t.index ["code"], name: "index_promotions_on_code", unique: true
+    t.index ["organization_id"], name: "index_promotions_on_organization_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -92,5 +94,6 @@ ActiveRecord::Schema.define(version: 2019_09_25_223557) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "coupon_usages", "promotions"
   add_foreign_key "discount_usages", "promotions"
+  add_foreign_key "promotions", "organizations"
   add_foreign_key "users", "organizations"
 end

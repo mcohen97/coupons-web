@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
- 
   devise_for :users, controllers: {
       registrations: 'users/registrations',
       confirmations: 'users/confirmations',
@@ -13,8 +12,5 @@ Rails.application.routes.draw do
   post '/promotions/evaluate', to: 'promotions#evaluate', as: 'evaluate_promotion'
 
   root 'home#index'
-
-#  resources :users
-
   resources :promotions
 end
