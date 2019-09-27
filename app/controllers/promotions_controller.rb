@@ -1,6 +1,6 @@
 class PromotionsController < ApplicationController
   protect_from_forgery except: :evaluate
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:evaluate, :report]
 
   def index
     offset = params[:page].present? ? params[:page] : 1
@@ -49,7 +49,7 @@ class PromotionsController < ApplicationController
     @promotion = Promotion.find(params[:id])
     @promotion.update(deleted: true)
     respond_to do |format|
-      format.html { redirect_to promotions_path, notice: 'Promotion was successfully destroyed.' }
+      format.html { redirect_to promotions_path, notice: 'Promotion was successfully deleted.' }
       format.json { head :no_content }
     end
   end
@@ -61,6 +61,11 @@ class PromotionsController < ApplicationController
     else
       render json: {error: true, message: 'Promotion not found'}
     end
+  end
+
+  def report
+    @promotion = Promotion.find(params[:id])
+    @report = @promotion.generate_report()
   end
 
   private

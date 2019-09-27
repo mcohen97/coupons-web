@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_25_223557) do
+ActiveRecord::Schema.define(version: 2019_09_26_174600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,10 @@ ActiveRecord::Schema.define(version: 2019_09_25_223557) do
     t.string "type", null: false
     t.string "condition", null: false
     t.boolean "deleted", default: false, null: false
+    t.integer "invocations", default: 0, null: false
+    t.integer "negative_responses", default: 0, null: false
+    t.float "average_response_time", default: 0.0
+    t.float "total_spent", default: 0.0
     t.index ["code"], name: "index_promotions_on_code", unique: true
   end
 

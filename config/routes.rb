@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get '/login/index', to: 'login#index', as: 'login'
   post '/login/create', to: 'login#create', as: 'register'
   post '/promotions/evaluate', to: 'promotions#evaluate', as: 'evaluate_promotion'
+  get '/promotions/report/:id', to: 'promotions#report', as: 'evaluate_report'
 
   root 'home#index'
 

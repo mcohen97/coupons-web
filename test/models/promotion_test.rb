@@ -103,6 +103,29 @@ class PromotionTest < ActiveSupport::TestCase
     assert_equal 'Promotion does not apply', result[:message]
   end
 
+  test 'should generate correct promotion report' do
+    coupon1 = Promotion.find(1)
+
+    first_report = coupon1.generate_report()
+
+    assert_equal 0, first_report[:invocations_count]
+    assert_equal 0, first_report[:positive_ratio]
+    assert_equal 0, first_report[:negative_ratio]
+    assert_equal 0, first_report[:average_response_time]
+    assert_equal 0, first_report[:total_money_spent]
+
+    coupon1.evaluate_applicability({total:200, products_size: 3, coupon_code: 6})
+    coupon1.evaluate_applicability({total:153, products_size: 3, coupon_code: 6})
+    coupon1.evaluate_applicability({total:300, products_size: 3, coupon_code: 5})
+
+    second_report = coupon1.generate_report()
+
+    assert_equal 3, second_report[:invocations_count]
+    assert_equal 2.0/3, second_report[:positive_ratio]
+    assert_equal 1.0/3, second_report[:negative_ratio]
+    assert_equal 50, second_report[:total_money_spent]
+  end
+
   test 'should apply filters specified in scope' do
     not_deleted_count = Promotion.not_deleted.count
 
@@ -128,4 +151,5 @@ class PromotionTest < ActiveSupport::TestCase
 
     assert_equal 2, similar_code_count
   end
+
 end
