@@ -1,5 +1,5 @@
 <h1>Editar promocion</h1>
-<%= form_for @promotion do |form| %>
+<%= form_for @promotion.becomes(Promotion), url: promotion_path do |form| %>
   <%= form.label 'Promotion name' %><br>
   <%= form.text_field :name %><br>
 
