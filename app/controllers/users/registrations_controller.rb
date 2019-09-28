@@ -12,12 +12,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # POST /resource
   def create
     super
+
+    if (not @user.valid?) && @org_created
+      @org.delete
+    end
+
   end
 
   # GET /resource/edit
   def edit
     super
-    @gfre = "fe"
   end
 
   # PUT /resource
@@ -44,7 +48,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
     params[:user][:role] = "administrator"
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :surname, :role, :organization, :avatar])
+    if params[:user][:role] == "administrator"
+      @org = Organization.new :organization_name => params[:user][:organization]
+      @org_created = @org.save
+      params[:user][:organization_id] = @org.id
+    end
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :surname, :role, :organization_id, :organization, :avatar])
   end
 
 # If you have extra params to permit, append them to the sanitizer.
