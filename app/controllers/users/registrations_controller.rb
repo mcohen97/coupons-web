@@ -59,7 +59,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
         invitation_code = params[:invitation_code]
         if is_valid_invitation_code(invitation_code)
           invitation = EmailInvitation.find_by invitation_code: invitation_code
-          params[:user][:organization] = Organization.find(@invitation.organization_id).organization_name
+          organization = Organization.find(@invitation.organization_id)
+          params[:user][:organization] = organization.organization_name
+          params[:user][:organization_id] = organization.id
           params[:user][:role] = "organization_user"
           params[:user][:invitation_code] = invitation_code
         end
