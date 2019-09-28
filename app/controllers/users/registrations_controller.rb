@@ -23,6 +23,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
       @org.delete
     end
 
+    if (@user.valid?) && is_valid_invitation_code(@user.invitation_code)
+      invitation = EmailInvitation.find_by invitation_code: @user.invitation_code
+      invitation.already_used = true
+      invitation.save
+    end
+
   end
 
   # GET /resource/edit
@@ -102,4 +108,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 # def after_inactive_sign_up_path_for(resource)
 #   super(resource)
 # end
+
+helper_method :is_invitation_sign_up
+helper_method :is_valid_invitation_code
 end
