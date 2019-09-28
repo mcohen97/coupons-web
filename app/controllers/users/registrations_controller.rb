@@ -18,12 +18,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # POST /resource
   def create
     super
+
+    if (not @user.valid?) && @org_created
+      @org.delete
+    end
+
   end
 
   # GET /resource/edit
   def edit
     super
-    @gfre = "fe"
   end
 
   # PUT /resource
@@ -59,7 +63,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
           params[:user][:invitation_code] = invitation_code
         end
     end
-
+    if params[:user][:role] == "administrator"
+      @org = Organization.new :organization_name => params[:user][:organization]
+      @org_created = @org.save
+      params[:user][:organization_id] = @org.id
+    end
     devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :surname, :role, :organization, :avatar, :invitation_code])
   end
 
@@ -74,9 +82,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
     invitation_exists && !invitation.already_used
   end
-
-
-
 
 # If you have extra params to permit, append them to the sanitizer.
 # def configure_account_update_params

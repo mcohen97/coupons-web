@@ -10,15 +10,6 @@ class User < ApplicationRecord
   validates :organization_id, presence: {message: "invalid"}
 
   def organization=(org_name)
-    if self.role == "administrator"
-      @org = Organization.new :organization_name => org_name
-      if @org.save
-        self.update_attribute(:organization_id, @org.id)
-      end
-    else
-      @org = Organization.find_by organization_name: org_name
-      self.update_attribute(:organization_id, @org.id)
-    end
     @organization = org_name
   end
 
