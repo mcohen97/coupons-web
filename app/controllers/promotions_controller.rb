@@ -1,6 +1,7 @@
 class PromotionsController < ApplicationController
   protect_from_forgery except: :evaluate
   before_action :authenticate_user!, except: [:evaluate, :report]
+  before_action :set_promo, only: [:show, :edit, :update, :destroy]
 
   def index
     @promotions = Promotion.not_deleted
@@ -21,8 +22,6 @@ class PromotionsController < ApplicationController
   end
 
   def edit
-    @promotion = Promotion.find_by(id: params[:id])
-    send_error_if_nil(@promotion)
   end
 
   def create
@@ -33,21 +32,25 @@ class PromotionsController < ApplicationController
         format.html { redirect_to promotion_path(@promotion), notice: 'Promotion was successfully created.'}
         format.json { render :show, status: :created, location: @promotion }
       else
-        format.html { render @promotion.errors }
+        format.html { render :new}
         format.json { render json: @promotion.errors, status: :unprocessable_entity }
       end
     end
   end
 
   def update
-    @promotion = Promotion.find(params[:id])
-    @promotion.update(promotion_parameters)
-    redirect_to promotion_path(@promotion)
+    respond_to do |format|
+      if @promotion.update(promotion_parameters)
+        format.html { redirect_to @promotion, notice: 'La promocion fue modificada exitosamente.' }
+        format.json { render :show, status: :ok, location: @promotion }
+      else
+        format.html { render :edit }
+        format.json { render json: @promotion.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def destroy
-    @promotion = Promotion.find(params[:id])
-    send_error_if_nil(@promotion)
     @promotion.update(deleted: true)
     respond_to do |format|
       format.html { redirect_to promotions_path, notice: 'Promotion was successfully deleted.' }
@@ -70,6 +73,11 @@ class PromotionsController < ApplicationController
   end
 
   private
+  def set_promo
+    @promotion = Promotion.find_by(id: params[:id])
+    send_error_if_nil(@promotion)
+    @promotion = @promotion.becomes(Promotion)
+  end
 
   def send_error_if_nil(promotion)
     if promotion.nil?
@@ -99,4 +107,5 @@ class PromotionsController < ApplicationController
   def pagination_per_page
     return params[:per_page].present? ? params[:per_page] : 5
   end
+
 end

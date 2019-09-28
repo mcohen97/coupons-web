@@ -22,12 +22,16 @@
   <div class="form-group">
     <%= form.label :Tipo %> <br/>
     <%= form.radio_button :type, :Coupon, readonly: readonly %> Cupon <br/>
-    <%= form.radio_button :type, :Discount, readonly: readonly, checked: true %> Descuento
+    <%= form.radio_button :type, :Discount, readonly: readonly %> Descuento
   </div>
 
-  <%options = Promotion.return_types.keys.map {|ret_type| [ret_type.titleize,ret_type]} %>
-  <% options.insert(0, "Seleccione tipo de retorno") %>
-  <%= form.select(:return_type, options, readonly: readonly) %>
+  <div class="form-group">
+    <%= form.label 'Tipo de retorno' %> <br/>
+    <% options = Promotion.return_types.keys.map {|ret_type| [ret_type.titleize,ret_type]} %>
+    <% options.each do |op| %>
+      <%= form.radio_button :return_type, op %> <%= op[1] %> <br/>
+    <% end %>
+  </div>
 
   <div class="form-group">
     <%= form.label :valor_de_retorno%><br>
@@ -42,7 +46,7 @@
   <div class="form-group">
     <%= form.label 'Estado' %><br />
     <%= form.radio_button :active, true , readonly: readonly %> Activa <br/>
-    <%= form.radio_button :active, false, readonly: readonly, checked: true %> Inactiva
+    <%= form.radio_button :active, false, readonly: readonly %> Inactiva
   </div>
   
   <%if !readonly%>
