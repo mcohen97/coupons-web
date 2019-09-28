@@ -54,21 +54,24 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
     params[:user][:role] = "administrator"
+
     if is_invitation_sign_up
         invitation_code = params[:invitation_code]
         if is_valid_invitation_code(invitation_code)
           invitation = EmailInvitation.find_by invitation_code: invitation_code
-          params[:user][:organization] = Organization.find(invitation.organization_id).organization_name
+          params[:user][:organization] = Organization.find(@invitation.organization_id).organization_name
           params[:user][:role] = "organization_user"
           params[:user][:invitation_code] = invitation_code
         end
     end
+
     if params[:user][:role] == "administrator"
       @org = Organization.new :organization_name => params[:user][:organization]
       @org_created = @org.save
       params[:user][:organization_id] = @org.id
     end
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :surname, :role, :organization, :avatar, :invitation_code])
+
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :surname, :role, :organization, :organization_id, :avatar, :invitation_code])
   end
 
   def is_invitation_sign_up
@@ -78,9 +81,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def is_valid_invitation_code(invitation_code)
     invitation_exists = EmailInvitation.exists?(invitation_code: invitation_code)
     if invitation_exists
-      invitation = EmailInvitation.find_by invitation_code: invitation_code
+      @invitation = EmailInvitation.find_by invitation_code: invitation_code
     end
-    invitation_exists && !invitation.already_used
+    invitation_exists && !@invitation.already_used
   end
 
 # If you have extra params to permit, append them to the sanitizer.
