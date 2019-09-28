@@ -19,6 +19,7 @@ class PromotionsController < ApplicationController
   end
 
   def new
+    @promotion = Promotion.new
   end
 
   def edit
