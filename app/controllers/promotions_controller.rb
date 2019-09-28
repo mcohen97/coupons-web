@@ -3,19 +3,17 @@ class PromotionsController < ApplicationController
   before_action :authenticate_user!, except: [:evaluate, :report]
 
   def index
-    offset = params[:page].present? ? params[:page] : 1
-    per_page = params[:per_page].present? ? params[:per_page] : 5
-
-    @promotions = Promotion.all.not_deleted
+    @promotions = Promotion.not_deleted
     @promotions = @promotions.by_code(params[:code]) if params[:code].present?
     @promotions = @promotions.by_name(params[:name]) if params[:name].present?
     @promotions = @promotions.by_type(params[:type]) if params[:type].present?
     @promotions = @promotions.active?(params[:active]) if params[:active].present?
-    @promotions = @promotions.paginate(page: offset, per_page: per_page)
+    @promotions = set_pagination(@promotions)
   end
 
   def show
-    @promotion = Promotion.find(params[:id])
+    @promotion = Promotion.find_by(id: params[:id])
+    send_error_if_nil(@promotion)
   end
 
   def new
@@ -23,7 +21,8 @@ class PromotionsController < ApplicationController
   end
 
   def edit
-    @promotion = Promotion.find(params[:id])
+    @promotion = Promotion.find_by(id: params[:id])
+    send_error_if_nil(@promotion)
   end
 
   def create
@@ -48,6 +47,7 @@ class PromotionsController < ApplicationController
 
   def destroy
     @promotion = Promotion.find(params[:id])
+    send_error_if_nil(@promotion)
     @promotion.update(deleted: true)
     respond_to do |format|
       format.html { redirect_to promotions_path, notice: 'Promotion was successfully deleted.' }
@@ -71,8 +71,32 @@ class PromotionsController < ApplicationController
 
   private
 
+  def send_error_if_nil(promotion)
+    if promotion.nil?
+      @promotions = Promotion.not_deleted
+      @promotions = set_pagination(@promotions)
+      logger.error{"The promotion was not found"}
+      flash[:alert] = "The promotion was not found"
+      render "index"
+    end
+  end
+
+  def set_pagination(collection)
+    offset = pagination_offset
+    per_page = pagination_per_page
+    return collection.paginate(page: offset, per_page: per_page)
+  end
+
   # Never trust parameters from the scary internet, only allow the white list through.
   def promotion_parameters
     params.require(:promotion).permit(:code, :name, :type, :return_type, :return_value, :active, :condition)
+  end
+
+  def pagination_offset
+    return params[:page].present? ? params[:page] : 1
+  end
+
+  def pagination_per_page
+    return params[:per_page].present? ? params[:per_page] : 5
   end
 end
