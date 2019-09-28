@@ -1,7 +1,8 @@
 class PromotionsController < ApplicationController
   protect_from_forgery except: :evaluate
   before_action :authenticate_user!, except: [:evaluate, :report]
-  before_action :set_promo, only: [:show, :edit, :update, :destroy]
+  before_action :set_promo, only: [:show, :edit, :update, :destroy, :report]
+  rescue_from ActiveRecord::RecordNotFound, :with => :promotion_not_found
 
   def index
     @promotions = Promotion.not_deleted
@@ -13,8 +14,6 @@ class PromotionsController < ApplicationController
   end
 
   def show
-    @promotion = Promotion.find_by(id: params[:id])
-    send_error_if_nil(@promotion)
   end
 
   def new
@@ -68,26 +67,26 @@ class PromotionsController < ApplicationController
   end
 
   def report
-    @promotion = Promotion.find(params[:id])
     @report = @promotion.generate_report()
   end
 
   private
   def set_promo
-    @promotion = Promotion.find_by(id: params[:id])
-    send_error_if_nil(@promotion)
+    @promotion = Promotion.find(params[:id])
     @promotion = @promotion.becomes(Promotion)
   end
 
-  def send_error_if_nil(promotion)
-    if promotion.nil?
-      @promotions = Promotion.not_deleted
-      @promotions = set_pagination(@promotions)
-      logger.error{"The promotion was not found"}
-      flash[:alert] = "The promotion was not found"
-      render "index"
+  def promotion_not_found
+    #@promotions = Promotion.not_deleted
+    #@promotions = set_pagination(@promotions)
+    #logger.error{"The promotion was not found"}
+    #flash[:alert] = "The promotion was not found"
+    #render "index"
+    respond_to do |format|
+      format.html { render :file => "#{Rails.root}/public/404", :layout => false, :status => :not_found }
+      format.json{render json: {error: 'Promotion not found'}.to_json, status: :not_found}
     end
-  end
+  end 
 
   def set_pagination(collection)
     offset = pagination_offset

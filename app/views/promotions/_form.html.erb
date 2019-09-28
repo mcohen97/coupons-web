@@ -20,22 +20,13 @@
   </div>
 
   <div class="form-group">
-    <%= form.label :Tipo %> <br/>
-    <%= form.radio_button :type, :Coupon, readonly: readonly %> Cupon <br/>
-    <%= form.radio_button :type, :Discount, readonly: readonly %> Descuento
-  </div>
-
-  <div class="form-group">
-    <%= form.label 'Tipo de retorno' %> <br/>
-    <% options = Promotion.return_types.keys.map {|ret_type| [ret_type.titleize,ret_type]} %>
-    <% options.each do |op| %>
-      <%= form.radio_button :return_type, op %> <%= op[1] %> <br/>
-    <% end %>
-  </div>
-
-  <div class="form-group">
-    <%= form.label :valor_de_retorno%><br>
-    <%= form.number_field :return_value, readonly: readonly%>
+    <%= form.label 'Tipo:' %>
+    <%if !readonly%>
+      <%= form.radio_button :type, :Coupon, readonly: readonly %> Cupon <br/>
+      <%= form.radio_button :type, :Discount, readonly: readonly %> Descuento
+    <%else%>
+      <%= @promotion.type == 'Discount'? 'Descuento' : 'Cupon' %>
+    <%end%>
   </div>
 
   <div class="form-group">
@@ -44,11 +35,32 @@
   </div>
 
   <div class="form-group">
-    <%= form.label 'Estado' %><br />
-    <%= form.radio_button :active, true , readonly: readonly %> Activa <br/>
-    <%= form.radio_button :active, false, readonly: readonly %> Inactiva
+    <%= form.label 'Tipo de retorno:' %>
+    <%if !readonly%>
+      <%= form.radio_button :return_type, :fixed_value, readonly: readonly %> Valor fijo <br/>
+      <%= form.radio_button :return_type, :percentaje, readonly: readonly %> Porcentaje 
+    <%else%>
+      <%= @promotion.return_type %>
+    <%end%>
   </div>
-  
+
+  <div class="form-group">
+    <%= form.label :valor_de_retorno%><br>
+    <%= form.number_field :return_value, readonly: readonly%>
+  </div>
+
+
+  <div class="form-group">
+      <%= form.label 'Estado:' %> 
+    <%if !readonly%>
+      <%= form.radio_button :active, true, readonly: readonly %> Activa <br/>
+      <%= form.radio_button :active, false, readonly: readonly %> Inactiva 
+    <%else%>
+      <%= @promotion.active ? "Activa" : "Inactiva" %>
+    <%end%>
+  </div>
+
+
   <%if !readonly%>
     <div class="actions">
       <%= form.submit %>
