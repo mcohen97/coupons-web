@@ -4,6 +4,7 @@ class PromotionsController < ApplicationController
   before_action :set_promo, only: [:show, :edit, :update, :destroy, :report]
   rescue_from ActiveRecord::RecordNotFound, :with => :promotion_not_found
 
+
   def index
     @promotions = Promotion.not_deleted
     @promotions = @promotions.by_code(params[:code]) if params[:code].present?

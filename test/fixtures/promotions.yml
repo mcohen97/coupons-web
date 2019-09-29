@@ -8,6 +8,7 @@ coupon1:
   id: 1
   name: Promo verano
   code: COMIDADESC5
+  organization_id: 1
   return_type: percentaje
   return_value: 10
   active: true
@@ -18,6 +19,7 @@ coupon2:
   id: 2
   name: Obtené un cupón de 5% de descuento para tu primera compra en las cantinas de la Universidad ORT 
   code: COMPRAYA
+  organization_id: 2
   return_type: percentaje
   return_value: 5
   active: false
@@ -28,6 +30,7 @@ coupon3:
   id: 3
   name: Con tu primera compra en Mochileros.uy un cupón de $150 de descuento para tu próxima compra
   code: MOCHIUY
+  organization_id: 2
   return_type: fixed_value
   return_value: 150
   active: true
@@ -38,6 +41,7 @@ discount1:
   id: 4
   name: Descuento comienzo clases
   code: CLASES
+  organization_id: 1
   return_type: fixed_value
   return_value: 100
   active: true
@@ -48,6 +52,7 @@ discount2:
   id: 5
   name: Compras mayores de $1000 obtienes un 10% de descuento
   code: 10XCIEN
+  organization_id: 2
   return_type: percentaje
   return_value: 10
   active: true
@@ -59,6 +64,7 @@ discount3:
   id: 6
   name: Comprando 3 unidades de nuestras mochilas escolares te descontamos $300
   code: MOCHIX3
+  organization_id: 2
   return_type: fixed_value
   return_value: 300
   active: false

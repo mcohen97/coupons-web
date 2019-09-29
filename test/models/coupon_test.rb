@@ -3,7 +3,7 @@ require 'test_helper'
 
 class CouponTest < ActiveSupport::TestCase
   test "should return false when promo does not apply" do
-    promo = Coupon.create(code: 'code4', name: 'a promotion', return_type: :percentaje,
+    promo = Coupon.create(organization_id: 1, code: 'code4', name: 'a promotion', return_type: :percentaje,
       return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2')
     
     result = promo.evaluate_applicability({total:9, products_size:3})
@@ -13,7 +13,7 @@ class CouponTest < ActiveSupport::TestCase
 
    test "should return true when promo applies" do
     promo = Coupon.create(code: 'code5', name: 'a promotion', return_type: :percentaje,
-      return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2')
+      return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2', organization_id: 2)
     
     result = promo.evaluate_applicability({total:101, products_size:3, coupon_code: 5})
 
@@ -25,7 +25,7 @@ class CouponTest < ActiveSupport::TestCase
 
    test "should return false when wrong arguments given" do
     promo = Coupon.new(code: 'code', name: 'a promotion', return_type: :percentaje,
-      return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10')
+      return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10', organization_id: 1)
     
     result = promo.evaluate_applicability({amount:15, tax:3})
     assert result[:error]
@@ -34,7 +34,7 @@ class CouponTest < ActiveSupport::TestCase
    test "should retourn error if coupon code was used" do
      
     promo = Coupon.create(code: 'code5', name: 'a promotion', return_type: :percentaje,
-      return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2')
+      return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2', organization_id: 2)
       
     result = promo.evaluate_applicability({total:101, products_size:3, coupon_code: 6})
   
