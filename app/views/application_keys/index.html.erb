@@ -8,12 +8,16 @@
       <th>Name</th>
       <th colspan="3"></th>
     </tr>
+    <tr>
+      <th>Token</th>
+    </tr>
   </thead>
 
   <tbody>
     <% @application_keys.each do |application_key| %>
       <tr>
         <td><%= application_key.name %></td>
+        <td><%= application_key.generate_token %></td>
         <td><%= link_to 'Show', application_key %></td>
         <td><%= link_to 'Edit', edit_application_key_path(application_key) %></td>
         <td><%= link_to 'Destroy', application_key, method: :delete, data: { confirm: 'Are you sure?' } %></td>

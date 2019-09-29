@@ -63,13 +63,14 @@ class ApplicationKeysController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_application_key
-      @application_key = ApplicationKey.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def application_key_params
-      params.require(:application_key).permit(:name)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_application_key
+    @application_key = ApplicationKey.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def application_key_params
+    params.require(:application_key).permit(:name)
+  end
 end
