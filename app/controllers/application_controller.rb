@@ -9,13 +9,15 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def user_signed_in?
-    @current_user
-  end
+  #def user_signed_in?
+  #  @current_user
+  #end
 
   private
 
   def set_current_user
-    @current_user = current_user
+    if user_signed_in?
+      @current_user = current_user
+    end
   end
 end
