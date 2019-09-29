@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :application_keys
   devise_for :users, controllers: {
       registrations: 'users/registrations',
       confirmations: 'users/confirmations',
