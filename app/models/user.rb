@@ -4,16 +4,12 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  validates :name, :surname, :email, :role, presence: true
+  validates :name, :surname, :email, :role, presence: true, allow_blank: false
   has_one_attached :avatar
   validate :correct_document_mime_type
   validates :organization_id, presence: {message: "invalid"}
 
   def organization=(org_name)
-    @org = Organization.new :organization_name => org_name
-    if self.role == "administrator" && @org.save
-      self.update_attribute(:organization_id, @org.id)
-    end
     @organization = org_name
   end
 

@@ -5,6 +5,7 @@ class PromotionsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, :with => :promotion_not_found
 
 
+
   def index
     @promotions = Promotion.not_deleted
     @promotions = @promotions.by_code(params[:code]) if params[:code].present?
@@ -59,35 +60,64 @@ class PromotionsController < ApplicationController
   end
 
   def evaluate
+    appkey = get_app_key()
+    if appkey.nil?
+      render json: {message: 'No valid application key'} , status: 401
+      return 
+    end
     promotion = Promotion.find_by(code: params[:code])
     if !promotion.nil?
-      render json: promotion.evaluate_applicability(params[:attributes])
+      render json: promotion.evaluate_applicability(params[:attributes], appkey)
     else
       render json: {error: true, message: 'Promotion not found'}
     end
   end
 
   def report
-    @report = @promotion.generate_report()
+    if is_backoffice_client
+      respond_to_backoffice
+    else
+      respond_to_external
+    end
   end
 
   private
+
+  def is_backoffice_client
+    return ! request.headers['Content-Type'].present? ||  request.headers['Content-Type'] == 'text/html'
+  end
+
+  def respond_to_backoffice
+    authenticate_user!
+    @report = @promotion.generate_report()
+  end
+
+  def respond_to_external
+    appkey = get_app_key()
+    if appkey.nil?
+      render json: {message: 'No valid application key'} , status: 401
+      return 
+    end
+    @report = @promotion.generate_report()
+    render json: @report, status: :ok
+  end
+  
   def set_promo
     @promotion = Promotion.find(params[:id])
     @promotion = @promotion.becomes(Promotion)
   end
 
   def promotion_not_found
-    #@promotions = Promotion.not_deleted
-    #@promotions = set_pagination(@promotions)
-    #logger.error{"The promotion was not found"}
-    #flash[:alert] = "The promotion was not found"
-    #render "index"
     respond_to do |format|
       format.html { render :file => "#{Rails.root}/public/404", :layout => false, :status => :not_found }
       format.json{render json: {error: 'Promotion not found'}.to_json, status: :not_found}
     end
   end 
+
+  def get_app_key
+    token  = request.headers["Authorization"]
+    return ApplicationKey.get_from_token_if_valid(token)
+  end
 
   def set_pagination(collection)
     offset = pagination_offset

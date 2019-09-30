@@ -15,7 +15,6 @@ Rails.application.routes.draw do
 
   root 'home#index'
 
-#  resources :users
-
   resources :promotions
+  resources :application_keys
 end

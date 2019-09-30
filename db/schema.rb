@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_26_174600) do
+ActiveRecord::Schema.define(version: 2019_09_29_171018) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,15 @@ ActiveRecord::Schema.define(version: 2019_09_26_174600) do
     t.string "checksum", null: false
     t.datetime "created_at", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "application_keys", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "organization_id", null: false
+    t.index ["name"], name: "index_application_keys_on_name"
+    t.index ["organization_id"], name: "index_application_keys_on_organization_id"
   end
 
   create_table "coupon_usages", force: :cascade do |t|
@@ -68,8 +77,8 @@ ActiveRecord::Schema.define(version: 2019_09_26_174600) do
     t.integer "return_value"
     t.string "type", null: false
     t.string "condition", null: false
-    t.bigint "organization_id", null: false
     t.boolean "deleted", default: false, null: false
+    t.bigint "organization_id", null: false
     t.integer "invocations", default: 0, null: false
     t.integer "negative_responses", default: 0, null: false
     t.float "average_response_time", default: 0.0
@@ -96,6 +105,7 @@ ActiveRecord::Schema.define(version: 2019_09_26_174600) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "application_keys", "organizations"
   add_foreign_key "coupon_usages", "promotions"
   add_foreign_key "discount_usages", "promotions"
   add_foreign_key "promotions", "organizations"

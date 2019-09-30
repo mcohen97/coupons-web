@@ -3,6 +3,8 @@ require 'parser.rb'
 class Promotion < ApplicationRecord
   acts_as_tenant(:organization)
 
+  belongs_to :organization
+
   scope :not_deleted, -> {where(deleted: false)}
   
   scope :by_code, -> (code) { where('code LIKE ?', "%#{code}%") }
@@ -20,13 +22,10 @@ class Promotion < ApplicationRecord
   before_validation :parse_condition
 
   # returns struct that indicates error if there is one, or result.
-  def evaluate_applicability(arguments_values)
+  def evaluate_applicability(arguments_values, appkey)
     t_0 = Time.now.getutc
-    if !active || deleted
-      return {error: false, applicable: false, message: 'Promotion does not apply'}
-    end
     begin
-      return try_to_evaluate(arguments_values)
+      return try_to_evaluate(arguments_values, appkey)
     rescue ParsingError, ActiveRecord::RecordInvalid => e
       add_negative_response()
       return {error: true, message: e.message}
@@ -52,20 +51,41 @@ class Promotion < ApplicationRecord
 
   private
 
-  def try_to_evaluate(arguments_values)
+  def try_to_evaluate(arguments_values, appkey)
+
+    if !active || deleted
+      return {error: false, applicable: false, message: 'Promotion does not apply'}
+    end
+
     parser = Parser.new()
     expr = parser.parse(condition)
     valid = expr.evaluate_condition(arguments_values)
+    evaluation_allowed = is_from_clients_organization(appkey)
     add_invocation()
+
+    if !arguments_values[:total].present?
+      return {error: true, message: 'Field total was not specified'}
+    end
+    
+    if !evaluation_allowed
+      return {error: false, applicable: false, message: 'Promotion from another organization'}
+    end
+   
     if valid
       apply_promo(arguments_values)
       update_total_spent(arguments_values[:total])
       return {error: false, applicable: true, return_type: return_type, return_value: return_value}
-    else
-      add_negative_response()
-      return {error: false, applicable: false}
     end
+    
+    add_negative_response()
+    return {error: false, applicable: false}
+    
   end
+
+  def is_from_clients_organization(appkey)
+    return organization_id == appkey.organization.id
+  end
+
 
   def update_total_spent(total)
     update(total_spent: self.total_spent + calculate_saving(total))
