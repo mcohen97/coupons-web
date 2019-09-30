@@ -1,8 +1,7 @@
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <h1><%= t('.sign_in') %></h1>
-
-   <%= bootstrap_devise_error_messages! %>
+  <%= bootstrap_devise_error_messages! %>
 
   <div class="form-group">
     <%= image_tag  "at.png", size: "28", class: "login-icon"%>
@@ -23,9 +22,13 @@
     </div>
   <% end %>
 
+  <div style = "width: 70%; margin-left: auto; margin-right: auto; display: block">
+    <%= bootstrap_flash %>
+  </div>
+
   <div class="form-group">
     <%= f.submit  t('.sign_in'), class: 'btn btn-primary' %>
   </div>
 
-<%= render 'devise/shared/links' %>
+  <%= render 'devise/shared/links' %>
 <% end %>
