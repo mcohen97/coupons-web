@@ -6,6 +6,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # GET /resource/sign_up
   def new
+    if is_invitation_sign_up
+      invitation_code = params["invitation_code"]
+      if not is_valid_invitation_code(invitation_code)
+        redirect_to new_user_registration_url, :flash => { :error => "The invitation is invalid. Please, contact your organization administrator and ask for a new invitation." }  and return   
+      end    
+    end
     super
   end
 
@@ -15,6 +21,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     if (not @user.valid?) && @org_created
       @org.delete
+    end
+
+    if (@user.valid?) && is_valid_invitation_code(@user.invitation_code)
+      invitation = EmailInvitation.find_by invitation_code: @user.invitation_code
+      invitation.already_used = true
+      invitation.save
     end
 
   end
@@ -48,12 +60,38 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
     params[:user][:role] = "administrator"
+
+    if is_invitation_sign_up
+        invitation_code = params[:invitation_code]
+        if is_valid_invitation_code(invitation_code)
+          invitation = EmailInvitation.find_by invitation_code: invitation_code
+          organization = Organization.find(@invitation.organization_id)
+          params[:user][:organization] = organization.organization_name
+          params[:user][:organization_id] = organization.id
+          params[:user][:role] = "organization_user"
+          params[:user][:invitation_code] = invitation_code
+        end
+    end
+
     if params[:user][:role] == "administrator"
       @org = Organization.new :organization_name => params[:user][:organization]
       @org_created = @org.save
       params[:user][:organization_id] = @org.id
     end
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :surname, :role, :organization_id, :organization, :avatar])
+
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :surname, :role, :organization, :organization_id, :avatar, :invitation_code])
+  end
+
+  def is_invitation_sign_up
+    params.has_key?("invitation_code") || (params.has_key?(:invitation_code))
+  end
+
+  def is_valid_invitation_code(invitation_code)
+    invitation_exists = EmailInvitation.exists?(invitation_code: invitation_code)
+    if invitation_exists
+      @invitation = EmailInvitation.find_by invitation_code: invitation_code
+    end
+    invitation_exists && !@invitation.already_used
   end
 
 # If you have extra params to permit, append them to the sanitizer.
@@ -70,4 +108,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 # def after_inactive_sign_up_path_for(resource)
 #   super(resource)
 # end
+
+helper_method :is_invitation_sign_up
+helper_method :is_valid_invitation_code
 end

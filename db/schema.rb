@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_26_164357) do
+ActiveRecord::Schema.define(version: 2019_09_29_171018) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,15 @@ ActiveRecord::Schema.define(version: 2019_09_26_164357) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
+  create_table "application_keys", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "organization_id", null: false
+    t.index ["name"], name: "index_application_keys_on_name"
+    t.index ["organization_id"], name: "index_application_keys_on_organization_id"
+  end
+
   create_table "coupon_usages", force: :cascade do |t|
     t.string "coupon_code"
     t.bigint "promotion_id", null: false
@@ -50,6 +59,19 @@ ActiveRecord::Schema.define(version: 2019_09_26_164357) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["promotion_id"], name: "index_discount_usages_on_promotion_id"
+  end
+
+  create_table "email_invitations", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id", null: false
+    t.bigint "organization_id", null: false
+    t.text "invited_email"
+    t.string "invitation_code"
+    t.boolean "already_used", default: false
+    t.index ["invitation_code"], name: "index_email_invitations_on_invitation_code", unique: true
+    t.index ["organization_id"], name: "index_email_invitations_on_organization_id"
+    t.index ["user_id"], name: "index_email_invitations_on_user_id"
   end
 
   create_table "organizations", force: :cascade do |t|
@@ -86,14 +108,18 @@ ActiveRecord::Schema.define(version: 2019_09_26_164357) do
     t.string "surname"
     t.bigint "organization_id"
     t.string "role"
+    t.text "invitation_code"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["organization_id"], name: "index_users_on_organization_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "application_keys", "organizations"
   add_foreign_key "coupon_usages", "promotions"
   add_foreign_key "discount_usages", "promotions"
+  add_foreign_key "email_invitations", "organizations"
+  add_foreign_key "email_invitations", "users"
   add_foreign_key "promotions", "organizations"
   add_foreign_key "users", "organizations"
 end

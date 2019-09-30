@@ -6,6 +6,10 @@ Rails.application.routes.draw do
       sessions: 'users/sessions'
   }
 
+  devise_scope :user do
+    get '/users', to: 'devise/registrations#new'
+  end
+  
   get 'home/index', to: 'home#index', as: 'home'
   post '/home/invite', to: 'home#invite', as: 'invite'
   get '/login/index', to: 'login#index', as: 'login'
