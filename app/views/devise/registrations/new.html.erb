@@ -29,7 +29,7 @@
     <%= f.text_field :surname, autofocus: true, autocomplete: "surname", class: 'form-control' %>
   </div>
 
-  <% if not is_valid_invitation_code invitation_code%>
+  <% if invitation_code and not is_valid_invitation_code(invitation_code)%>
     <div class="form-group">
       <%= f.label :organization %><br/>
       <%= f.text_field :organization, autofocus: true, autocomplete: "org", class: 'form-control' %>
