@@ -1,3 +1,5 @@
+@import "animate.css";
+
 body {
   background-image: image-url("coupon.png");
   background-repeat: repeat;
@@ -90,7 +92,9 @@ label {
 
 label.form-check-label{
   clear: none;
+  font-weight: normal;
   display: inline-block;
+  vertical-align: middle;
 }
 
 .form-control {
@@ -115,6 +119,8 @@ label.form-check-label{
   margin-bottom: 70px;
   margin-left: auto;
   margin-right: auto;
+  animation: fadeIn .5s;
+  transition: all .5s linear;
 }
 
 .new_user h1 {
@@ -142,3 +148,4 @@ label.form-check-label{
 .login-icon{
   margin-right: 10px;
 }
+
