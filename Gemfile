@@ -67,3 +67,4 @@ gem 'jquery-rails'
 gem 'bootstrap-sass'
 gem 'devise-bootstrap-views'
 gem 'twitter-bootstrap-rails'
+gem "health_check"

@@ -39,13 +39,13 @@ class PromotionTest < ActiveSupport::TestCase
 
   test 'should not save promotion with undefined return type' do
     assert_raises(ArgumentError) do
-      promo = Discount.new(code: 'code', name: 'a promotion', return_type: :credits,
+      promo = Discount.create(code: 'code', name: 'a promotion', return_type: :credits,
         return_value: 10, active: true, condition: 'quantity > 3')
     end
   end
 
   test 'should not save promotion with percentaje over 100' do
-    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
       return_value: 113, active: true, condition: 'quantity > 3')
     assert_not promo.save
     assert promo.errors[:return_value].any?
@@ -55,7 +55,7 @@ class PromotionTest < ActiveSupport::TestCase
 
   test 'should not save promotion with empty condition' do
 
-    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
       return_value: 10, active: true)
     
     assert_not promo.save
@@ -64,8 +64,8 @@ class PromotionTest < ActiveSupport::TestCase
 
   test 'should format correct condition' do
 
-    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
-      return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10')
+    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
+      return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10', organization_id: 1)
     
     assert promo.save
     assert_equal '( ( total <= 100 ) AND ( quantity >= 5 ) ) OR ( total > 10 )', promo.condition
@@ -73,7 +73,7 @@ class PromotionTest < ActiveSupport::TestCase
 
   test 'should not save promotion with invalid expresion' do
     # promotion with invalid condition expresion
-    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
       return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total >')
 
     assert_not promo.save
@@ -81,10 +81,12 @@ class PromotionTest < ActiveSupport::TestCase
   end
   
   test 'should not validate inactive promotions' do
-    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+    app_key = application_keys(:one)
+
+    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
       return_value: 10, active: false, condition: 'quantity > 3')
       
-    result = promo.evaluate_applicability({quantity:10, transaction_id: 4})
+    result = promo.evaluate_applicability({quantity:10, transaction_id: 4},app_key)
 
     assert_not result[:error]
     assert_not result[:applicable]
@@ -93,14 +95,51 @@ class PromotionTest < ActiveSupport::TestCase
   end
 
   test 'should return invalid for deleted promotions' do
-    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+    app_key = application_keys(:one)
+
+    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
       return_value: 10, active: true, condition: 'quantity > 3', deleted: true)
       
-    result = promo.evaluate_applicability({quantity:10, transaction_id: 4})
+    result = promo.evaluate_applicability({quantity:10, transaction_id: 4},app_key)
 
     assert_not result[:error]
     assert_not result[:applicable]
     assert_equal 'Promotion does not apply', result[:message]
+  end
+
+  test 'should return invalid for promotions from other organization' do
+    app_key = application_keys(:one)
+
+    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
+    return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10', organization_id: 2)
+
+    result = promo.evaluate_applicability({quantity:10, transaction_id: 4},app_key)#org id = 1 (different)
+
+    assert result[:error]
+  end
+
+  test 'should generate correct promotion report' do
+    app_key = application_keys(:one)
+    coupon1 = Promotion.find(1)
+
+    first_report = coupon1.generate_report()
+
+    assert_equal 0, first_report[:invocations_count]
+    assert_equal 0, first_report[:positive_ratio]
+    assert_equal 0, first_report[:negative_ratio]
+    assert_equal 0, first_report[:average_response_time]
+    assert_equal 0, first_report[:total_money_spent]
+
+    coupon1.evaluate_applicability({total:200, products_size: 3, coupon_code: 6},app_key)
+    coupon1.evaluate_applicability({total:153, products_size: 3, coupon_code: 6},app_key)
+    coupon1.evaluate_applicability({total:300, products_size: 3, coupon_code: 5},app_key)
+
+    second_report = coupon1.generate_report()
+
+    assert_equal 3, second_report[:invocations_count]
+    assert_equal 2.0/3, second_report[:positive_ratio]
+    assert_equal 1.0/3, second_report[:negative_ratio]
+    assert_equal 50, second_report[:total_money_spent]
   end
 
   test 'should apply filters specified in scope' do
@@ -128,4 +167,5 @@ class PromotionTest < ActiveSupport::TestCase
 
     assert_equal 2, similar_code_count
   end
+
 end

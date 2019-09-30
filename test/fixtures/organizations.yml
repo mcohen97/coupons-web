@@ -5,9 +5,11 @@
 # below each fixture, per the syntax in the comments below
 #
 one: 
+  id: 1
   organization_name: PedidosYa
 # column: value
 #
 two: 
+  id: 2
   organization_name: Rappi
 # column: value

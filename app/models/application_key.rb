@@ -1,6 +1,8 @@
 class ApplicationKey < ApplicationRecord
+  has_one :organization
+  
   SECRET_KEY = Rails.application.config.jwt_secret
-
+  
   acts_as_tenant(:organization)
   validates :name, presence: true, uniqueness: true
 

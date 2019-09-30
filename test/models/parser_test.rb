@@ -1,8 +1,8 @@
 require 'test_helper'
 
  
-class PromotionTest < ActiveSupport::TestCase
- 
+class ParserTest < ActiveSupport::TestCase
+
   def test_format_correct_expression
     parser = Parser.new()
     expression = parser.parse('total <= 100 AND ( quantity >= 5 OR total > 10 )')
