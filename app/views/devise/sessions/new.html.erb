@@ -5,12 +5,12 @@
 
   <div class="form-group">
     <%= image_tag  "at.png", size: "28", class: "login-icon"%>
-    <%= f.email_field :email, autofocus: true, autocomplete: 'email', class: 'form-control' %>
+    <%= f.email_field :email, autofocus: true, autocomplete: 'email', class: 'form-control', placeholder: "Email" %>
   </div>
 
   <div class="form-group">
     <%= image_tag  "key.png", size: "28", class: "login-icon"%>
-    <%= f.password_field :password, autocomplete: 'current-password', class: 'form-control' %>
+    <%= f.password_field :password, autocomplete: 'current-password', class: 'form-control', placeholder: "Password" %>
   </div>
 
   <% if devise_mapping.rememberable? %>

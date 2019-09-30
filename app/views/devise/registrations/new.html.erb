@@ -20,18 +20,18 @@
   </div>
 
   <div class="form-group">
-    <%= f.label :name %><br/>
+    <%= f.label :name %>
     <%= f.text_field :name, autofocus: true, autocomplete: "name", class: 'form-control' %>
   </div>
 
   <div class="form-group">
-    <%= f.label :surname %><br/>
+    <%= f.label :surname %>
     <%= f.text_field :surname, autofocus: true, autocomplete: "surname", class: 'form-control' %>
   </div>
 
   <% if not is_invitation_sign_up or not is_valid_invitation_code(invitation_code)%>
     <div class="form-group">
-      <%= f.label :organization %><br/>
+      <%= f.label :organization %>
       <%= f.text_field :organization, autofocus: true, autocomplete: "org", class: 'form-control' %>
     </div>
   <% end %>
