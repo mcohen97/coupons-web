@@ -1,20 +1,2 @@
 <h1>Promociones</h1>
-<hr>
-<h2><%=@promotion.name%></h2>
-<br><u>codigo: </u> <%= @promotion.code%>
-<br><u>retorno: </u> 
-
-<% if @promotion.percentaje? %>
-<%=@promotion.return_value%>%
-<% else %>
-$<%=@promotion.return_value%>
-<% end %>
-
-<br><u>activa: </u> 
-<% if @promotion.active%>
-si
-<% else %>
-no
-<% end %>
-
-<hr>
+<%= render 'form', promotion: @promotion.becomes(Promotion), readonly: true %>

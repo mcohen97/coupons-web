@@ -1,5 +1,5 @@
 require 'test_helper'
-
+=begin
 class ApplicationKeysControllerTest < ActionDispatch::IntegrationTest
   setup do
     @application_key = application_keys(:one)
@@ -46,3 +46,4 @@ class ApplicationKeysControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to application_keys_url
   end
 end
+=end

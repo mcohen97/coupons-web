@@ -4,6 +4,7 @@
 <%= link_to 'Mostrar', promotion_path(promo) %>
 <%= link_to 'Editar', edit_promotion_path(promo)%>
 <%= link_to 'Eliminar', promotion_path(promo), method: :delete, data: { confirm: 'Estás seguro?' }%>
+<%= link_to 'Ver Reporte', generate_report_path(promo)%>
 
 
 <hr>

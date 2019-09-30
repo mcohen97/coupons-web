@@ -1,5 +1,6 @@
 require 'test_helper'
 
+=begin
 class HomeControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
     get home_index_url
@@ -7,3 +8,4 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
   end
 
 end
+=end
