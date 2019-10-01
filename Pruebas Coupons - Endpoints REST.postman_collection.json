@@ -54,7 +54,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"code\": \"discount1\",\n\t\"attributes\": {\"total\": 14, \"quantity\": 3, \"transaction_id\":6}\n}"
+					"raw": "{\n\t\"code\": \"discount1\",\n\t\"attributes\": {\"total\": 15, \"quantity\": 3, \"transaction_id\":6}\n}"
 				},
 				"url": {
 					"raw": "{{domain}}/promotions/evaluate",
@@ -452,7 +452,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"code\": \"unexistent\",\n\t\"attributes\": {\"total\": 14, \"quantity\": 3, \"transaction_id\":6}\n}"
+					"raw": "{\n\t\"code\": \"discount1\",\n\t\"attributes\": {\"total\": 14, \"quantity\": 3, \"transaction_id\":6}\n}"
 				},
 				"url": {
 					"raw": "{{domain}}/promotions/evaluate",
@@ -638,6 +638,140 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Evaluar promocion correcta denuevo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 200\",function(){",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns applicable, with correct return type and value\", function(){",
+							"    pm.expect(jsonData).to.have.property('applicable');",
+							"    pm.expect(jsonData).to.have.property('return_type');",
+							"    pm.expect(jsonData).to.have.property('return_value');",
+							"",
+							"",
+							"    pm.expect(jsonData.applicable).to.eql(true);",
+							"    pm.expect(jsonData.return_type).to.eql(\"percentaje\");",
+							"    pm.expect(jsonData.return_value).to.eql(10);",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization1AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"code\": \"discount1\",\n\t\"attributes\": {\"total\": 1000, \"quantity\": 3, \"transaction_id\":16}\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/evaluate",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"evaluate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reporte de promocion utilizada",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 200\",function(){",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns applicable, with correct return type and value\", function(){",
+							"    pm.expect(jsonData).to.have.property('total_money_spent');",
+							"    pm.expect(jsonData).to.have.property('invocations_count');",
+							"    pm.expect(jsonData).to.have.property('positive_ratio');",
+							"    pm.expect(jsonData).to.have.property('negative_ratio');",
+							"",
+							"",
+							"    pm.expect(jsonData.total_money_spent).to.eql(101.5);",
+							"    pm.expect(jsonData.invocations_count).to.eql(7);",
+							"    pm.expect(jsonData.positive_ratio).to.eql(2/7);",
+							"    pm.expect(jsonData.negative_ratio).to.eql(5/7);",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization1AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/report/1",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"report",
+						"1"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
@@ -664,19 +798,19 @@
 	],
 	"variable": [
 		{
-			"id": "1594c9fd-cf29-4346-abed-a8a4324ffb99",
+			"id": "086ccf38-fecf-42e4-a69d-78c53af8f36e",
 			"key": "domain",
 			"value": "http://localhost:3000",
 			"type": "string"
 		},
 		{
-			"id": "eff461ec-a3fa-4882-86a6-d25311499500",
+			"id": "298da65c-a832-40d5-b46f-ceeb69b2beff",
 			"key": "organization1AppKey",
 			"value": "eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoicGVkaWRvc1lhS2V5In0.GNNzFnIoYltyKsMZ18HbVtDPI74W-nimChf08sBOzCk",
 			"type": "string"
 		},
 		{
-			"id": "b0e9465e-a517-4170-b400-dd9aba887b24",
+			"id": "7a0db758-b181-47f4-b519-90aa3fc0f870",
 			"key": "organization2AppKey",
 			"value": "eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoicmFwcGlLZXkifQ.zyr-GZNs55IGEgGzeoBvOwoFohscJYB1CiLa6No6AIY",
 			"type": "string"

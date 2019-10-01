@@ -83,12 +83,14 @@ class Promotion < ApplicationRecord
   def validate_authorization(appkey)
     evaluation_allowed = is_from_clients_organization(appkey)   
     if !evaluation_allowed
+      add_negative_response()
       raise NotAuthorizedError, "Can't access promotion from another organization"
     end
   end
 
   def validate_total_specified(arguments_values)
     if !arguments_values[:total].present?
+      add_negative_response()
       raise PromotionArgumentsError, 'Total must be specified'
     end
   end
@@ -112,7 +114,7 @@ class Promotion < ApplicationRecord
 
   def calculate_saving(total)
     if percentaje?
-      return (total * return_value)/100
+      return Float(total * return_value)/100.0
     else
       return return_value
     end

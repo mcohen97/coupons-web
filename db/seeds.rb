@@ -26,4 +26,4 @@ Coupon.create!(code: 'coupon2', name: 'another coupon', return_type: :percentaje
 
 
 ApplicationKey.create!( name: 'pedidosYaKey', organization_id: pedidos_ya.id)
-ApplicationKey.create!( name: 'rappiKey', organization_id: pedidos_ya.id)
+ApplicationKey.create!( name: 'rappiKey', organization_id: rappi.id)
