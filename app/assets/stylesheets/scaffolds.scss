@@ -102,6 +102,8 @@ label.form-check-label{
   display: inline-block;
 }
 
+
+
 .form-group{
   text-align: center
 }
@@ -121,6 +123,15 @@ label.form-check-label{
   margin-right: auto;
   animation: fadeIn .5s;
   transition: all .5s linear;
+}
+
+@media screen and (max-width: 600px) {
+  .new_user {
+    width: 90%;
+    padding: 0px 5px 5px 5px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
 }
 
 .new_user h1 {
