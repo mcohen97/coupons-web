@@ -4,8 +4,6 @@ class PromotionsController < ApplicationController
   before_action :set_promo, only: [:show, :edit, :update, :destroy, :report]
   rescue_from ActiveRecord::RecordNotFound, :with => :promotion_not_found
 
-
-
   def index
     @promotions = Promotion.not_deleted
     @promotions = @promotions.by_code(params[:code]) if params[:code].present?
@@ -62,13 +60,13 @@ class PromotionsController < ApplicationController
   def evaluate
     appkey = get_app_key()
     if appkey.nil?
-      render json: {message: 'No valid application key'} , status: :unauthorized and return 
+      render json: {error_message: 'No valid application key'} , status: :unauthorized and return 
     end
     promotion = Promotion.find_by(code: params[:code])
     if !promotion.nil?
       evaluate_existing_promotion(promotion, appkey)
     else
-      render json: {error: true, message: 'Promotion not found'}
+      render json: {error_message: 'Promotion not found'}, status: :not_found
     end
   end
 
@@ -87,9 +85,9 @@ class PromotionsController < ApplicationController
       result = promotion.evaluate_applicability(params[:attributes], appkey)
       render json: result
     rescue NotAuthorizedError => e
-      render json: {message: e.message}, status: :forbidden
+      render json: {error_message: e.message}, status: :forbidden
     rescue PromotionArgumentsError => e
-      render json: {message: e.message}, status: :bad_request
+      render json: {error_message: e.message}, status: :bad_request
     end
   end
 
