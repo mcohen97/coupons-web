@@ -1,5 +1,5 @@
 class ApplicationKey < ApplicationRecord
-  has_one :organization
+  belongs_to :organization
   
   SECRET_KEY = Rails.application.config.jwt_secret
   

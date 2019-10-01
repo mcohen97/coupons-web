@@ -12,9 +12,18 @@ rappi = Organization.create!(organization_name: "Rappi")
 pablo = User.create!(name: "Pablo", surname: "Villas", email: "pv@gmail.com", password: "123456", role: "administrator", organization_id: pedidos_ya.id)
 simon = User.create!(name: "Simon", surname: "Borreo", email: "sb@gmail.com", password: "123456", role: "administrator", organization_id: rappi.id)
 
-
 Discount.create!(code: 'discount1', name: 'a discount', return_type: :percentaje,
                 return_value: 10, active: true, condition: '( total <= 100 AND quantity >= 5 ) OR total > 10', organization_id: pablo.organization_id)
 
+Discount.create!(code: 'discount2', name: 'another discount', return_type: :percentaje,
+                return_value: 10, active: false, condition: '( total <= 100 AND quantity >= 5 ) OR total > 10', organization_id: pablo.organization_id)
+
 Coupon.create!(code: 'coupon1', name: 'a coupon', return_type: :percentaje,
               return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2', organization_id: simon.organization_id)
+
+Coupon.create!(code: 'coupon2', name: 'another coupon', return_type: :percentaje,
+              return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2', organization_id: simon.organization_id, deleted: true)
+
+
+ApplicationKey.create!( name: 'pedidosYaKey', organization_id: pedidos_ya.id)
+ApplicationKey.create!( name: 'rappiKey', organization_id: rappi.id)

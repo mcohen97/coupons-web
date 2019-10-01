@@ -90,8 +90,8 @@ ActiveRecord::Schema.define(version: 2019_09_29_171018) do
     t.integer "return_value"
     t.string "type", null: false
     t.string "condition", null: false
-    t.bigint "organization_id", null: false
     t.boolean "deleted", default: false, null: false
+    t.bigint "organization_id", null: false
     t.integer "invocations", default: 0, null: false
     t.integer "negative_responses", default: 0, null: false
     t.float "average_response_time", default: 0.0
