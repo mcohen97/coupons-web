@@ -62,12 +62,11 @@ class PromotionsController < ApplicationController
   def evaluate
     appkey = get_app_key()
     if appkey.nil?
-      render json: {message: 'No valid application key'} , status: 401
-      return 
+      render json: {message: 'No valid application key'} , status: :unauthorized and return 
     end
     promotion = Promotion.find_by(code: params[:code])
     if !promotion.nil?
-      render json: promotion.evaluate_applicability(params[:attributes], appkey)
+      evaluate_existing_promotion(promotion, appkey)
     else
       render json: {error: true, message: 'Promotion not found'}
     end
@@ -83,6 +82,17 @@ class PromotionsController < ApplicationController
 
   private
 
+  def evaluate_existing_promotion(promotion, appkey)
+    begin
+      result = promotion.evaluate_applicability(params[:attributes], appkey)
+      render json: result
+    rescue NotAuthorizedError => e
+      render json: {message: e.message}, status: :forbidden
+    rescue PromotionArgumentsError => e
+      render json: {message: e.message}, status: :bad_request
+    end
+  end
+
   def is_backoffice_client
     return ! request.headers['Content-Type'].present? ||  request.headers['Content-Type'] == 'text/html'
   end
@@ -95,8 +105,7 @@ class PromotionsController < ApplicationController
   def respond_to_external
     appkey = get_app_key()
     if appkey.nil?
-      render json: {message: 'No valid application key'} , status: 401
-      return 
+      render json: {message: 'No valid application key'} , status: 401 and return 
     end
     @report = @promotion.generate_report()
     render json: @report, status: :ok

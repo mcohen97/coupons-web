@@ -1,4 +1,6 @@
 require 'parser.rb'
+require_relative '../../lib/error/promotion_arguments_error.rb'
+require_relative '../../lib/error/not_authorized_error.rb'
 
 class Promotion < ApplicationRecord
   acts_as_tenant(:organization)
@@ -28,7 +30,7 @@ class Promotion < ApplicationRecord
       return try_to_evaluate(arguments_values, appkey)
     rescue ParsingError, ActiveRecord::RecordInvalid => e
       add_negative_response()
-      return {error: true, message: e.message}
+      raise PromotionArgumentsError, e.message
     ensure
       update_average_response_time(t_0)
     end
@@ -45,41 +47,50 @@ class Promotion < ApplicationRecord
 
   protected
 
+  # to be overriden.
   def apply_promo(arguments)
-    return true
   end
 
   private
 
   def try_to_evaluate(arguments_values, appkey)
-
-    if !active || deleted
-      return {error: false, applicable: false, message: 'Promotion does not apply'}
-    end
-
-    parser = Parser.new()
-    expr = parser.parse(condition)
-    valid = expr.evaluate_condition(arguments_values)
-    evaluation_allowed = is_from_clients_organization(appkey)
     add_invocation()
 
-    if !arguments_values[:total].present?
-      return {error: true, message: 'Field total was not specified'}
+    validate_authorization(appkey)
+    validate_total_specified(arguments_values)
+
+    if !active || deleted
+      return {applicable: false, message: 'Promotion does not apply'}
     end
-    
-    if !evaluation_allowed
-      return {error: false, applicable: false, message: 'Promotion from another organization'}
-    end
-   
-    if valid
+
+    if is_valid_condition(arguments_values)
       apply_promo(arguments_values)
       update_total_spent(arguments_values[:total])
-      return {error: false, applicable: true, return_type: return_type, return_value: return_value}
+      return { applicable: true, return_type: return_type, return_value: return_value}
     end
     
     add_negative_response()
-    return {error: false, applicable: false}
+    return { applicable: false}
     
+  end
+
+  def is_valid_condition(arguments_values)
+    parser = Parser.new()
+    expr = parser.parse(condition)
+    return expr.evaluate_condition(arguments_values)
+  end
+
+  def validate_authorization(appkey)
+    evaluation_allowed = is_from_clients_organization(appkey)   
+    if !evaluation_allowed
+      raise NotAuthorizedError, "Can't access promotion from another organization"
+    end
+  end
+
+  def validate_total_specified(arguments_values)
+    if !arguments_values[:total].present?
+      raise PromotionArgumentsError, 'Total must be specified'
+    end
   end
 
   def is_from_clients_organization(appkey)
