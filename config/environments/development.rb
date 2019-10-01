@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  config.jwt_secret = "shhhhhh"
+  config.jwt_secret = 'shhhhhh'
 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
@@ -38,10 +40,10 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: "smtp.gmail.com",
+    address: 'smtp.gmail.com',
     port: 587,
-    domain: "coupons.com",
-    authentication: "plain",
+    domain: 'coupons.com',
+    authentication: 'plain',
     enable_starttls_auto: true,
     user_name: ENV['MAILER_USER_NAME'],
     password: ENV['MAILER_PASSWORD']
@@ -59,7 +61,7 @@ Rails.application.configure do
   config.active_record.verbose_query_logs = true
 
   config.log_level = :warn
-  config.log_tags = [ :request_id, :remote_ip ]
+  config.log_tags = %i[request_id remote_ip]
 
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large

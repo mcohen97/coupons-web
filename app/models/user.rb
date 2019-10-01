@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -7,23 +9,18 @@ class User < ApplicationRecord
   validates :name, :surname, :email, :role, presence: true, allow_blank: false
   has_one_attached :avatar
   validate :correct_document_mime_type
-  validates :organization_id, presence: {message: "invalid"}
+  validates :organization_id, presence: { message: 'invalid' }
 
-  def organization=(org_name)
-    @organization = org_name
-  end
+  attr_writer :organization
 
-  def organization
-    @organization
-  end
+  attr_reader :organization
 
   private
 
   def correct_document_mime_type
-    if avatar.attached? && !avatar.content_type.in?(%w(image/jpg image/gif image/jpeg image/png))
+    if avatar.attached? && !avatar.content_type.in?(%w[image/jpg image/gif image/jpeg image/png])
       # avatar.purge # delete the uploaded file
       errors.add(:document, 'Must be an image')
     end
   end
-
 end

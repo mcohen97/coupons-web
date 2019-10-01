@@ -1,15 +1,16 @@
+# frozen_string_literal: true
+
 class LogicCondition
-  
   def initialize(parsed_expression)
     @syntactic_tree = parsed_expression
   end
 
   def evaluate_condition(variable_values)
-    return evaluate_tree(@syntactic_tree, variable_values)
+    evaluate_tree(@syntactic_tree, variable_values)
   end
 
   def to_string
-    return tree_to_string(@syntactic_tree)
+    tree_to_string(@syntactic_tree)
   end
 
   private
@@ -18,35 +19,34 @@ class LogicCondition
   def evaluate_tree(tree, variable_values)
     if tree[:type] == :literal
       literal = tree[:symbol]
-      return to_number(literal, variable_values)
-    else 
+      to_number(literal, variable_values)
+    else
       left = evaluate_tree(tree[:left], variable_values)
       right = evaluate_tree(tree[:right], variable_values)
-      return operate(tree[:symbol], left, right)
+      operate(tree[:symbol], left, right)
     end
   end
 
   def to_number(literal, variable_values)
     if is_number?(literal)
-      return Float(literal)
+      Float(literal)
     else
       value = variable_values[literal.to_sym]
-      if value == nil
+      if value.nil?
         raise ParsingError, "Variable: #{literal} has not defined value"
       end
-      if is_boolean?(value)
-        return value
-      end
-      return Float(value)
+      return value if is_boolean?(value)
+
+      Float(value)
     end
   end
 
   def operate(operator, left_value, right_value)
-    if ['>','>=', '=', '<=', '<' ].include?(operator)
+    if ['>', '>=', '=', '<=', '<'].include?(operator)
       return left_value.send(operator, right_value)
     end
-    
-    if !(is_boolean?(left_value) && is_boolean?(right_value))
+
+    unless is_boolean?(left_value) && is_boolean?(right_value)
       raise ParsingError, "Logical operator: #{operator} with non-boolean values"
     end
 
@@ -59,22 +59,23 @@ class LogicCondition
 
   def tree_to_string(tree, first_call = true)
     if tree[:type] == :literal
-      return tree[:symbol]
+      tree[:symbol]
     else
       if !first_call
-        return "( #{tree_to_string(tree[:left], false)} #{tree[:symbol]} #{tree_to_string(tree[:right], false)} )"
+        "( #{tree_to_string(tree[:left], false)} #{tree[:symbol]} #{tree_to_string(tree[:right], false)} )"
       else
-        return "#{tree_to_string(tree[:left], false)} #{tree[:symbol]} #{tree_to_string(tree[:right], false)}"
+        "#{tree_to_string(tree[:left], false)} #{tree[:symbol]} #{tree_to_string(tree[:right], false)}"
       end
     end
   end
 
-  def is_number? (string)
-    true if Float(string) rescue false
+  def is_number?(string)
+    true if Float(string)
+  rescue StandardError
+    false
   end
 
   def is_boolean?(value)
-    return (!!value == value)
+    (!!value == value)
   end
-
 end

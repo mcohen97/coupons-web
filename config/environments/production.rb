@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   raise 'JWT secret not set in enviroment' unless ENV['JWT_SECRET'].present?
+
   config.jwt_secret = ENV['JWT_SECRET']
 
   # Code is not reloaded between requests.
@@ -55,7 +58,7 @@ Rails.application.configure do
   config.log_level = :warn
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id, :remote_ip ]
+  config.log_tags = %i[request_id remote_ip]
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
@@ -84,7 +87,7 @@ Rails.application.configure do
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
+  if ENV['RAILS_LOG_TO_STDOUT'].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)

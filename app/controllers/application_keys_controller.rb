@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class ApplicationKeysController < ApplicationController
-  before_action :set_application_key, only: [:show, :edit, :update, :destroy]
+  before_action :set_application_key, only: %i[show edit update destroy]
   before_action :authenticate_user!
 
   # GET /application_keys
@@ -10,8 +12,7 @@ class ApplicationKeysController < ApplicationController
 
   # GET /application_keys/1
   # GET /application_keys/1.json
-  def show
-  end
+  def show; end
 
   # GET /application_keys/new
   def new
@@ -19,8 +20,7 @@ class ApplicationKeysController < ApplicationController
   end
 
   # GET /application_keys/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /application_keys
   # POST /application_keys.json
