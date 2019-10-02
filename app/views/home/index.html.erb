@@ -1,12 +1,26 @@
-<div class = "home-container">
-  <h1>Home</h1>
-  <h3>Welcome <%=@current_user.name%></h3>
-
-  <%= form_tag(invite_path, :method => "post") do %>
-    <%= label_tag(:email, "Send invitation to email:") %>
-    <%= text_field_tag(:email) %>
-    <%= submit_tag("Send") %>
-  <% end %>
-
-  <%= link_to('Log out', destroy_user_session_path, method: :delete)  %>
+<div class = "dashboard-container">
+  <a style= "display:inline-block; width:34%; margin:10px" href= "/home/invitation">
+    <div class = "w3-btn w3-white w3-ripple" style = "display:inline-block; width:100%">
+      <img src="/assets/add-friend.png" style="width: 80%; margin:10px">
+      <p>Add a new member to your organization</p>
+    </div>
+  </a>
+  <a style= "display:inline-block; width:34%; margin:10px" href= "/promotions/new">
+    <div class = "w3-btn w3-white w3-ripple" style = "width:100%">
+      <img src="/assets/coupon_star.png" style="width: 80%; margin:10px">
+      <p>Create a new coupon</p>
+    </div>
+  </a>
+  <a style= "display:inline-block; width:34%; margin:10px" href= "/home/invitation">
+    <div class = "w3-btn w3-white w3-ripple" style = "display:inline-block; width:100%">
+      <img src="/assets/coupons.png" style="width: 80%; margin:10px">
+      <p>Promotions management</p>
+    </div>
+  </a>
+  <a style= "display:inline-block; width:34%; margin:10px" href= "/home/invitation">
+    <div class = "w3-btn w3-white w3-ripple" style = "display:inline-block; width:100%">
+      <img src="/assets/presentation.png" style="width: 80%; margin:10px">
+      <p>Promotions report</p>
+    </div>
+  </a>
 </div>

@@ -57,14 +57,11 @@
       </div>
     </div>
   <%end%>
-    <div class="container">
-      <div>
-        <%if user_signed_in?%>
-          <%= bootstrap_flash %>
-        <%end%>
-        <%= yield %>
-      </div>
+    <div class="container" style="display:block;height: 100%">
+      <%if user_signed_in?%>
+        <%= bootstrap_flash %>
+      <%end%>
+      <%= yield %>
     </div> <!-- /container -->
-
   </body>
 </html>

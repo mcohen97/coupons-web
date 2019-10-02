@@ -6,4 +6,9 @@ module ApplicationHelper
           @current_user = nil
         end
     end
+
+    def current_user_organization
+      org = Organization.find_by @current_user.organization
+      return org
+  end
 end

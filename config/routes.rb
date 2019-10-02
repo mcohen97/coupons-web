@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   end
   
   get 'home/index', to: 'home#index', as: 'home'
+  get 'home/invitation', to: 'home#invitation', as: 'invitation'
   post '/home/invite', to: 'home#invite', as: 'invite'
   get '/login/index', to: 'login#index', as: 'login'
   post '/login/create', to: 'login#create', as: 'register'
