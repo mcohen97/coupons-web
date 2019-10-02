@@ -1,33 +1,33 @@
-<h1 class="section-title">Promotions  </h1>
-<% @promotions.each do |promo|%>
+<div class = 'home-container'>
+    <h1 class="section-title">Promotions  </h1>
 
-<%= link_to 'Mostrar', promotion_path(promo) %>
-<%= link_to 'Editar', edit_promotion_path(promo)%>
-<%= link_to 'Eliminar', promotion_path(promo), method: :delete, data: { confirm: 'Estás seguro?' }%>
-<%= link_to 'Ver Reporte', generate_report_path(promo)%>
+    <% @promotions.each do |promo|%>
+        <div class = "promo-container">
+            <h3><%=promo.name%> (<%=promo.code%>)</h3>
+            <div class = "promo-info-container">
+                <b>Type:</b> <%= promo.type%>
+                <br><b>Code:</b> <%= promo.code%>
+                <br><b>Return value:</b> 
 
+                <% if promo.percentaje? %>
+                <%=promo.return_value%>%
+                <% else %>
+                $<%=promo.return_value%>
+                <% end %>
 
-<hr>
-<h2><%=promo.name%> (<%=promo.code%>)</h2>
+                <br><b>Active: </b><%= promo.active%> 
+                <br><b>Condition: </b><%= promo.condition%>
+                <br>
+            </div>
 
-<br><u>tipo:</u> <%= promo.type%>
-<br><u>codigo:</u> <%= promo.code%>
-<br><u>retorno:</u> 
+            <div class = "w3-bar">
+                <a class="w3-button" href=<%=promotion_path(promo)%>>Show</a>
+                <a class="w3-button" href=<%=edit_promotion_path(promo)%>>Edit</a>
+                <a data-confirm="Are you sure?" class="w3-button" rel="nofollow" data-method="delete" href=<%=promotion_path(promo)%>>Delete</a>
+                <a class="w3-button" href=<%=generate_report_path(promo)%>>Report view</a>
+            </div>
+        </div>
+    <%end%>
+    <%= will_paginate @promotions %>
 
-<% if promo.percentaje? %>
-<%=promo.return_value%>%
-<% else %>
-$<%=promo.return_value%>
-<% end %>
-
-<br><u>activa:</u> 
-<% if promo.active%>
-yes
-<% else %>
-no
-<% end %>
-<br><u>condicion:</u><%= promo.condition%>
-
-<hr>
-<%end%>
-<%= will_paginate @promotions %>
+</div>

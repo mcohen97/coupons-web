@@ -1,3 +1,38 @@
 // Place all the styles related to the Promotions controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.promo-container{
+    background-image: image-url("yellow-paper.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 40%;
+    display: inline-block;
+    margin: 10px;
+    border: 3px dashed black;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 10px;
+}
+
+.promo-container .w3-bar{
+    margin: 10px auto 10px auto;
+}
+
+.promo-container h3{
+    font-weight: bold;
+}
+
+.promo-container info-title{
+    font-weight: bold;
+}
+
+.promo-options-container{
+    margin:10px;
+}
+
+.promo-info-container{
+    text-align: left;
+    width: 80%;
+    margin: 0px auto 0px auto;
+}
