@@ -3,6 +3,7 @@
 require_relative 'boot'
 
 require 'rails/all'
+require 'rake'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -20,6 +21,12 @@ module Coupons
           ENV[key.to_s] = value
         end
       end
+    end
+
+    
+    config.after_initialize do
+      Rails.application.load_tasks # <---
+      Rake::Task['log:clear'].invoke
     end
 
     # Settings in config/environments/* take precedence over those specified here.
