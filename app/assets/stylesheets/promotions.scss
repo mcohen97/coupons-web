@@ -6,7 +6,7 @@
     background-image: image-url("yellow-paper.jpg");
     background-repeat: no-repeat;
     background-size: cover;
-    width: 40%;
+    width: 45%;
     display: inline-block;
     margin: 10px;
     border: 3px dashed black;
@@ -21,6 +21,7 @@
 
 .promo-container h3{
     font-weight: bold;
+    margin-bottom: 20px;  
 }
 
 .promo-container info-title{
@@ -36,3 +37,14 @@
     width: 80%;
     margin: 0px auto 0px auto;
 }
+
+@media screen and (max-width: 600px) {
+    .promo-container{
+        width: 95%
+    }
+
+    .promo-option-label{
+        display: none;
+    }
+}
+

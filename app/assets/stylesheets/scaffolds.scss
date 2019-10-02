@@ -168,7 +168,7 @@ label.form-check-label{
   margin-bottom: 30px;
 }
 
-.new_promotion {
+.new_promotion, .edit_promotion {
   background-image: image-url("white-gradient.jpg");
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   background-repeat: no-repeat;
@@ -186,7 +186,7 @@ label.form-check-label{
 }
 
 @media screen and (max-width: 600px) {
-  .new_promotion {
+  .new_promotion, .edit_promotion {
     width: 95%;
     padding: 5px 5px 5px 5px;
     margin-top: 5px;
@@ -194,7 +194,7 @@ label.form-check-label{
   }
 }
 
-.new_promotion h1 {
+.new_promotion h1, .edit_promotion h1 {
   text-align: center;
   margin-top: 30px;
   margin-bottom: 30px;
