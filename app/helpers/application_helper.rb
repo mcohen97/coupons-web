@@ -10,5 +10,9 @@ module ApplicationHelper
     def current_user_organization
       org = Organization.find_by @current_user.organization
       return org
-  end
+    end
+
+    def is_current_user_admin
+      return @current_user.role == "administrator"
+    end
 end

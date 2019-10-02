@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-<head>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,10 +13,11 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:400" rel="stylesheet">
   
     <!-- Font Awesome Icon -->
-    <link type="text/css" rel="stylesheet" href="css/font-awesome.min.css" />
+    <%= stylesheet_link_tag "font-awesome.min" %>
   
     <!-- Custom stlylesheet -->
-    <link type="text/css" rel="stylesheet" href="css/style.css" />
+    <%= stylesheet_link_tag "style" %>
+  
   
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -41,14 +41,14 @@
 		</div>
 		<div class="notfound">
 			<div class="notfound-404">
-				<h1>404</h1>
+				<h1>500</h1>
 			</div>
-      <h2>Not Found</h2>
-      <img style="display: block; clear: both; margin: 0px auto 20px auto" src="lost_travolta.gif" height="200px">
-			<p>What you are looking for might have been removed, had its name changed or is temporarily unavailable.</p>
+      <h2>Server error</h2>
+      <img style="display: block; clear: both; margin: 0px auto 20px auto" src=<%= image_path('caos.gif')%> height="200px">
+			<p>We're sorry, but something went wrong during your last operation. Please, try again later.</p>
 			<a href="/">Homepage</a>
 		</div>
 	</div>
-
 </body>
+
 </html>
