@@ -19,9 +19,12 @@ class PromotionsController < ApplicationController
 
   def new
     @promotion = Promotion.new
+    @form_title = "New promotion"
   end
 
-  def edit; end
+  def edit
+    @form_title = "Edit promotion"
+  end
 
   def create
     @promotion = Promotion.new(promotion_parameters)

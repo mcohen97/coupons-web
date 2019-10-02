@@ -2,11 +2,12 @@
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-
   raise 'JWT secret not set in enviroment' unless ENV['JWT_SECRET'].present?
 
   config.jwt_secret = ENV['JWT_SECRET']
 
+  config.assets.compile = true
+  config.assets.precompile =  ['*.js', '*.css', '*.css.erb']
   # Code is not reloaded between requests.
   config.cache_classes = true
 
@@ -27,7 +28,7 @@ Rails.application.configure do
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
-
+  
   # Compress CSS using a preprocessor.
   # config.assets.css_compressor = :sass
 
