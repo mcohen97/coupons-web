@@ -1,25 +1,25 @@
 <div class = "dashboard-container">
   <%if is_current_user_admin%>
-    <a style= "display:inline-block; width:34%; margin:10px;" href= "/home/invitation">
+    <a class = "dashboard-item" href= "/home/invitation">
       <div class = "w3-btn w3-white w3-ripple" style = "display:inline-block; width:100%; word-wrap: break-word; white-space: initial;">
         <img src="/assets/add-friend.png" style="width: 80%; margin:10px"><br/>
         <h4 class = 'dashboard-title'>Send invitation</h4>
       </div>
     </a>
-    <a style= "display:inline-block; width:34%; margin:10px" href= "/promotions/new">
+    <a class = "dashboard-item" href= "/promotions/new">
       <div class = "w3-btn w3-white w3-ripple" style = "width:100%;word-wrap: break-word; white-space: initial;">
         <img src="/assets/coupon_star.png" style="width: 80%; margin:10px">
         <h4 class = 'dashboard-title'>New promotion</h4>
       </div>
     </a>
   <%end%>
-  <a style= "display:inline-block; width:34%; margin:10px" href= "/promotions">
+  <a class = "dashboard-item" href= "/promotions">
     <div class = "w3-btn w3-white w3-ripple" style = "display:inline-block; width:100%;word-wrap: break-word; white-space: initial;">
       <img src="/assets/coupons.png" style="width: 80%; margin:10px">
-      <h4 class = 'dashboard-title'>Promotions management</h4>
+      <h4 class = 'dashboard-title'>Promotions list</h4>
     </div>
   </a>
-  <a style= "display:inline-block; width:34%; margin:10px" href= "/promotions/report">
+  <a class = "dashboard-item" href= "/promotions/report">
     <div class = "w3-btn w3-white w3-ripple" style = "display:inline-block; width:100%; white-space: initial;">
       <img src="/assets/presentation.png" style="width: 80%; margin:10px">
       <h4 class = 'dashboard-title'>Promotions report</h4>
