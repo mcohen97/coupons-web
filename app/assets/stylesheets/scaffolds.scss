@@ -124,6 +124,24 @@ label.form-check-label{
   transition: all .5s linear;
 }
 
+.form-centered {
+  background-image: image-url("gradient-background.jpg");
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 50%;
+  padding: 20px 20px 20px 20px;
+  border-radius: 15px;
+  border: 1px solid #000;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  animation: fadeIn .5s;
+  transition: all .5s linear;
+  text-align: center;
+}
+
 @media screen and (max-width: 600px) {
   .new_user {
     width: 95%;
@@ -131,6 +149,17 @@ label.form-check-label{
     margin-top: 30px;
     margin-bottom: 30px;
   }
+
+  .form-centered {
+    width: 95%;
+    padding: 0px 5px 5px 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .form-centered h3{
+    font-size: 16px
+  }
+
 }
 
 .new_user h1 {
