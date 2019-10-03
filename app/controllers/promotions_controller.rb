@@ -32,6 +32,7 @@ class PromotionsController < ApplicationController
     respond_to do |format|
       if @promotion.save
         format.html { redirect_to promotions_path, notice: 'Promotion was successfully created.'}
+        logger.info("Successfully created promotion of id: #{@promotion.id}")
         format.json { render :show, status: :created, location: @promotion }
       else
         format.html { render :new }
@@ -43,7 +44,8 @@ class PromotionsController < ApplicationController
   def update
     respond_to do |format|
       if @promotion.update(promotion_parameters)
-        format.html { redirect_to @promotion, notice: 'La promocion fue modificada exitosamente.' }
+        logger.info("Successfully updated promotion of id: #{@promotion.id}.")
+        format.html { redirect_to @promotion, notice: 'Promotion was updated successfully.' }
         format.json { render :show, status: :ok, location: @promotion }
       else
         format.html { render :edit }
@@ -55,20 +57,25 @@ class PromotionsController < ApplicationController
   def destroy
     @promotion.update(deleted: true)
     respond_to do |format|
+      logger.info("Successfully deleted promotion of id: #{@promotion.id}.")
       format.html { redirect_to promotions_path, notice: 'Promotion was successfully deleted.' }
       format.json { head :no_content }
     end
   end
 
   def evaluate
+    logger.info("Evaluating promotion #{params[:code]}.")
     appkey = get_app_key
     if appkey.nil?
-      render(json: { error_message: 'No valid application key' }, status: :unauthorized) && return
+      logger.error('No valid application key.')
+      render(json: { error_message: 'No valid application key.' }, status: :unauthorized) && return
     end
     promotion = Promotion.find_by(code: params[:code])
     if !promotion.nil?
+      logger.info("Successfully evaluated promotion of code: #{params[:code]}")
       evaluate_existing_promotion(promotion, appkey)
     else
+      logger.error('Promotion not found')
       render json: { error_message: 'Promotion not found' }, status: :not_found
     end
   end
@@ -87,8 +94,10 @@ class PromotionsController < ApplicationController
     result = promotion.evaluate_applicability(params[:attributes], appkey)
     render json: result
   rescue NotAuthorizedError => e
+    logger.error('User not authorized')
     render json: { error_message: e.message }, status: :forbidden
   rescue PromotionArgumentsError => e
+    logger.error('Invalid promotion arguments')
     render json: { error_message: e.message }, status: :bad_request
   end
 
@@ -104,7 +113,8 @@ class PromotionsController < ApplicationController
   def respond_to_external
     appkey = get_app_key
     if appkey.nil?
-      render(json: { message: 'No valid application key' }, status: 401) && return
+      logger.error('No valid application key.')
+      render(json: { message: 'No valid application key.' }, status: 401) && return
     end
     @report = @promotion.generate_report
     render json: @report, status: :ok
@@ -117,8 +127,9 @@ class PromotionsController < ApplicationController
 
   def promotion_not_found
     respond_to do |format|
+      logger.error('Promotion not found.')
       format.html { render file: "#{Rails.root}/public/404", layout: false, status: :not_found }
-      format.json { render json: { error: 'Promotion not found' }.to_json, status: :not_found }
+      format.json { render json: { error: 'Promotion not found.' }.to_json, status: :not_found }
     end
   end
 

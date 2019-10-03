@@ -11,10 +11,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # def user_signed_in?
-  #  @current_user
-  # end
-
   private
 
   def set_current_user

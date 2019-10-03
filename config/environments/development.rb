@@ -59,7 +59,7 @@ Rails.application.configure do
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
-  config.log_level = :warn
+  config.log_level = :debug
   config.log_tags = %i[request_id remote_ip]
 
   # Debug mode disables concatenation and preprocessing of assets.

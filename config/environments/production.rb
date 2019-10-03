@@ -56,7 +56,7 @@ Rails.application.configure do
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
   # detection and identification of failures
-  config.log_level = :warn
+  config.log_level = :info
 
   # Prepend all log lines with the following tags.
   config.log_tags = %i[request_id remote_ip]

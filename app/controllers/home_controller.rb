@@ -15,5 +15,6 @@ class HomeController < ApplicationController
     UserMailer.with(email_invited: invited_email, sender: current_user, organization_name: current_user.organization, invitation: invitation).invitation_email.deliver_now
     flash[:success] = "Email succesfully sent!"
     redirect_to home_path
+    logger.info("Email sent, from #{current_user.email}, to #{invited_email}")
   end
 end
