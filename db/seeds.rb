@@ -26,5 +26,8 @@ Coupon.create!(code: 'coupon1', name: 'a coupon', return_type: :percentaje,
 Coupon.create!(code: 'coupon2', name: 'another coupon', return_type: :percentaje,
                return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2', organization_id: simon.organization_id, deleted: true)
 
+CouponInstance.create!(promotion_id: 3, coupon_code: 'coupon1-1')
+CouponInstance.create!(promotion_id: 3, coupon_code: 'coupon1-2')
+
 ApplicationKey.create!(name: 'pedidosYaKey', organization_id: pedidos_ya.id)
 ApplicationKey.create!(name: 'rappiKey', organization_id: rappi.id)
