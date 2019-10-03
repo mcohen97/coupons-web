@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CouponUsage < ApplicationRecord
   belongs_to :promotion
   validates :coupon_code, presence: true

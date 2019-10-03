@@ -1,15 +1,16 @@
-Rails.application.routes.draw do
+# frozen_string_literal: true
 
+Rails.application.routes.draw do
   devise_for :users, controllers: {
-      registrations: 'users/registrations',
-      confirmations: 'users/confirmations',
-      sessions: 'users/sessions'
+    registrations: 'users/registrations',
+    confirmations: 'users/confirmations',
+    sessions: 'users/sessions'
   }
 
   devise_scope :user do
     get '/users', to: 'devise/registrations#new'
   end
-  
+
   get 'home/index', to: 'home#index', as: 'home'
   get 'home/invitation', to: 'home#invitation', as: 'invitation'
   post '/home/invite', to: 'home#invite', as: 'invite'
