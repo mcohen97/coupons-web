@@ -13,10 +13,10 @@ RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
 EXPOSE 3000
 
-ENV RAILS_ENV development
-ENV DATABASE_USER postgres
-ENV DATABASE_PASSWORD ""
-ENV DATABASE_HOST db
+# ENV RAILS_ENV development
+# ENV DATABASE_USER Coupons
+# ENV DATABASE_PASSWORD Milanesa123
+# ENV DATABASE_HOST coupons-server.database.windows.net
 ENV JWT_SECRET shhhhhhhhhhhhhhh
 
 # Start the main process.
