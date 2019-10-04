@@ -4,6 +4,7 @@ require 'parser.rb'
 require 'securerandom'
 require_relative '../../lib/error/promotion_arguments_error.rb'
 require_relative '../../lib/error/not_authorized_error.rb'
+require_relative '../../lib/error/not_authenticated_error.rb'
 
 class Promotion < ApplicationRecord
   acts_as_tenant(:organization)
@@ -39,7 +40,10 @@ class Promotion < ApplicationRecord
     end
   end
 
-  def generate_report
+  def generate_report(app_key_validation = false, appkey = nil)
+    if app_key_validation
+      validate_auth(appkey)
+    end
     positive_responses = invocations - negative_responses
     negative_ratio = invocations > 0 ? Float(negative_responses) / invocations : 0
     positive_ratio = invocations > 0 ? Float(positive_responses) / invocations : 0
@@ -58,7 +62,7 @@ class Promotion < ApplicationRecord
   def try_to_evaluate(arguments_values, appkey)
     add_invocation
 
-    validate_authorization(appkey)
+    validate_auth(appkey)
     validate_total_specified(arguments_values)
 
     if !active || deleted
@@ -81,7 +85,11 @@ class Promotion < ApplicationRecord
     expr.evaluate_condition(arguments_values)
   end
 
-  def validate_authorization(appkey)
+  def validate_auth(appkey)
+    if appkey.nil?
+      add_negative_response
+      raise NotAuthenticatedError, "No valid application key."
+    end
     evaluation_allowed = is_from_clients_organization(appkey)
     unless evaluation_allowed
       add_negative_response
