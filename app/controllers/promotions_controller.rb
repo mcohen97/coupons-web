@@ -71,6 +71,7 @@ class PromotionsController < ApplicationController
       render(json: { error_message: 'No valid application key.' }, status: :unauthorized) && return
     end
     promotion = Promotion.find_by(code: params[:code])
+
     if !promotion.nil?
       logger.info("Successfully evaluated promotion of code: #{params[:code]}")
       evaluate_existing_promotion(promotion, appkey)
@@ -93,7 +94,7 @@ class PromotionsController < ApplicationController
   def evaluate_existing_promotion(promotion, appkey)
     result = promotion.evaluate_applicability(params[:attributes], appkey)
     render json: result
-  rescue NotAuthorizedError => e
+  rescue NotAuthorizedError, KeyDoesntIncludePromotionError => e
     logger.error('User not authorized')
     render json: { error_message: e.message }, status: :forbidden
   rescue PromotionArgumentsError => e
