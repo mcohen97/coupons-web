@@ -24,7 +24,7 @@ class Coupon < Promotion
     ActiveRecord::Base.transaction do
       i = 0  
       while i < count do
-        CouponInstance.new(promotion_id: id, coupon_code: "#{code}_#{SecureRandom.uuid}").save
+        CouponInstance.new(promotion_id: id, coupon_code: "#{code}_#{SecureRandom.uuid[0, 5]}").save
         i += 1
       end
     end

@@ -52,6 +52,21 @@ class PromotionTest < ActiveSupport::TestCase
     assert promo.errors[:return_value].any?
   end
 
+  test 'should not save promotion with empty type' do
+    promo = Promotion.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+      return_value: 10, active: true, condition: 'quantity > 3')
+    
+    assert_not promo.save
+    assert promo.errors[:type].any?
+  end
+
+  test 'should not save promotion with empty status' do
+    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+      return_value: 10, condition: 'quantity > 3')
+    
+    assert_not promo.save
+    assert promo.errors[:active].any?
+  end
   # Common condition-related behaviour between the different types of promotions is tested here.
 
   test 'should not save promotion with empty condition' do
