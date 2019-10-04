@@ -9,8 +9,10 @@ class Coupon < Promotion
   def apply_promo(arguments)
     to_reedem = CouponInstance.find_by(promotion_id: id, coupon_code: arguments[:coupon_code])
     if to_reedem.nil?
+      add_negative_response
       raise PromotionArgumentsError, 'Coupon code does not exist for this promotion'
     elsif to_reedem.redeemed
+      add_negative_response
       raise PromotionArgumentsError, 'Coupon was already redeemed'
     else
       to_reedem.update(redeemed: true)
