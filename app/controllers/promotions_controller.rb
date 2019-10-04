@@ -125,7 +125,11 @@ class PromotionsController < ApplicationController
     appkey = get_app_key
     if appkey.nil?
       logger.error('No valid application key.')
-      render(json: { message: 'No valid application key.' }, status: 401) && return
+      render(json: { error_message: 'No valid application key.' }, status: :unauthorized) && return
+    end
+    if appkey.organization_id != @promotion.organization_id
+      logger.error('User not authorized.')
+      render(json: { error_message: 'Cant get report from other organization promotions.' }, status: :forbidden) && return
     end
     @report = @promotion.generate_report
     render json: @report, status: :ok
