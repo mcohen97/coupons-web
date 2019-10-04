@@ -93,9 +93,14 @@ class Promotion < ApplicationRecord
       raise NotAuthenticatedError, "No valid application key."
     end
     evaluation_allowed = is_from_clients_organization(appkey)
+    key_includes_promotion = does_key_have_promotion(appkey)
     unless evaluation_allowed
       add_negative_response
       raise NotAuthorizedError, "Can't access promotion from another organization"
+    end
+    unless key_includes_promotion
+      add_negative_response
+      raise KeyDoesntIncludePromotionError, "Can't access promotion with this appkey"
     end
   end
 
@@ -108,6 +113,10 @@ class Promotion < ApplicationRecord
 
   def is_from_clients_organization(appkey)
     organization_id == appkey.organization.id
+  end
+
+  def does_key_have_promotion(appkey)
+    appkey.promotions.pluck(:id).include?(id)
   end
 
   def update_total_spent(total)
