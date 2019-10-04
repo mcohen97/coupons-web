@@ -83,9 +83,9 @@ class PromotionTest < ActiveSupport::TestCase
     app_key = application_keys(:one)
 
     promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
-                            return_value: 10, active: false, condition: 'quantity > 3')
+                            return_value: 10, active: false, condition: 'quantity > 3', organization_id:1)
 
-    result = promo.evaluate_applicability({ quantity: 10, transaction_id: 4 }, app_key)
+    result = promo.evaluate_applicability({total: 50, quantity: 10, transaction_id: 4 }, app_key)
 
     assert_not result[:error]
     assert_not result[:applicable]
@@ -96,28 +96,32 @@ class PromotionTest < ActiveSupport::TestCase
     app_key = application_keys(:one)
 
     promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
-                            return_value: 10, active: true, condition: 'quantity > 3', deleted: true)
+                            return_value: 10, active: true, condition: 'quantity > 3', deleted: true, organization_id: 1)
 
-    result = promo.evaluate_applicability({ quantity: 10, transaction_id: 4 }, app_key)
+    result = promo.evaluate_applicability({ total: 15, quantity: 10, transaction_id: 4 }, app_key)
 
     assert_not result[:error]
     assert_not result[:applicable]
     assert_equal 'Promotion does not apply', result[:message]
   end
 
-  test 'should return invalid for promotions from other organization' do
+  test 'should raise error for promotions from other organization' do
     app_key = application_keys(:one)
 
     promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
                             return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10', organization_id: 2)
 
-    result = promo.evaluate_applicability({ quantity: 10, transaction_id: 4 }, app_key) # org id = 1 (different)
+    assert_raises NotAuthorizedError do
+      promo.evaluate_applicability({ quantity: 10, transaction_id: 4 }, app_key) # org id = 1 (different)
+    end
 
-    assert result[:error]
   end
 
   test 'should generate correct promotion report' do
     app_key = application_keys(:one)
+    CouponInstance.create(promotion_id: 1, coupon_code: 'COMIDADESC5-3', redeemed: false)
+    CouponInstance.create(promotion_id: 1, coupon_code: 'COMIDADESC5-4', redeemed: false)
+
     coupon1 = Promotion.find(1)
 
     first_report = coupon1.generate_report
@@ -128,9 +132,11 @@ class PromotionTest < ActiveSupport::TestCase
     assert_equal 0, first_report[:average_response_time]
     assert_equal 0, first_report[:total_money_spent]
 
-    coupon1.evaluate_applicability({ total: 200, products_size: 3, coupon_code: 6 }, app_key)
-    coupon1.evaluate_applicability({ total: 153, products_size: 3, coupon_code: 6 }, app_key)
-    coupon1.evaluate_applicability({ total: 300, products_size: 3, coupon_code: 5 }, app_key)
+    coupon1.evaluate_applicability({ total: 200, products_size: 3, coupon_code: 'COMIDADESC5-3' }, app_key)
+    assert_raises PromotionArgumentsError do
+      coupon1.evaluate_applicability({ total: 153, products_size: 3, coupon_code: 'COMIDADESC5-3' }, app_key)
+    end
+    coupon1.evaluate_applicability({ total: 300, products_size: 3, coupon_code: 'COMIDADESC5-4' }, app_key)
 
     second_report = coupon1.generate_report
 
@@ -166,3 +172,4 @@ class PromotionTest < ActiveSupport::TestCase
     assert_equal 2, similar_code_count
   end
 end
+
