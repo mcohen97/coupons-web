@@ -79,7 +79,7 @@ class ApplicationKeysController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def application_key_params
-    params.require(:application_key).permit(:name)
+    params.require(:application_key).permit(:name, promotion_ids: [])
   end
 
   def application_key_not_found
