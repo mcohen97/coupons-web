@@ -1,0 +1,11 @@
+<h1 class="section-title"> Reporte de promocion: <%= @promotion.code %></h1> <br/>
+<%if @report[:invocations_count] == 0%>
+  <h2>Esta promocion nunca fue utilizada</h2> <br/>
+<%else%>  
+  <u>Cantidad de invocaciones: </u> <%= @report[:invocations_count] %> <br/>
+  <u>Cantidad de dinero gastado: </u> <%= @report[:total_money_spent] %> <br/>
+  <u>Tasa de respuesta positiva: </u> <%= @report[:positive_ratio] %> <br/> 
+  <u>Tasa de respuesta negativa: </u> <%= @report[:negative_ratio] %> <br/>
+  <u>Tasa de respuesta negativa: </u> <%= @report[:average_response_time] %> <br/>
+<%end%>
+<%= link_to 'Atras', promotions_path %>

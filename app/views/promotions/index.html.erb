@@ -1,32 +1,45 @@
-<h1>Promociones  </h1>
-<% @promotions.each do |promo|%>
-
-<%= link_to 'Mostrar', promotion_path(promo) %>
-<%= link_to 'Editar', edit_promotion_path(promo)%>
-<%= link_to 'Eliminar', promotion_path(promo), method: :delete, data: { confirm: 'Estás seguro?' }%>
-
-
+<div class = 'home-container'>
+    <h1 class="section-title">Promotions  </h1>
 <hr>
-<h2><%=promo.name%> (<%=promo.code%>)</h2>
+    <% @promotions.each do |promo|%>
+        <div class = "promo-container">
+            <h3><%=promo.name%> (<%=promo.code%>)</h3>
+            <div class = "promo-info-container">
+                <b>Type:</b> <%= promo.type%>
+                <br><b>Code:</b> <%= promo.code%>
+                <br><b>Return value:</b> 
 
-<br><u>tipo:</u> <%= promo.type%>
-<br><u>codigo:</u> <%= promo.code%>
-<br><u>retorno:</u> 
+                <% if promo.percentaje? %>
+                <%=promo.return_value%>%
+                <% else %>
+                $<%=promo.return_value%>
+                <% end %>
 
-<% if promo.percentaje? %>
-<%=promo.return_value%>%
-<% else %>
-$<%=promo.return_value%>
-<% end %>
+                <br><b>Active: </b><%= promo.active%> 
+                <br><b>Condition: </b><%= promo.condition%>
+                <br>
+            </div>
 
-<br><u>activa:</u> 
-<% if promo.active%>
-yes
-<% else %>
-no
-<% end %>
-<br><u>condicion:</u><%= promo.condition%>
+            <div class = "w3-bar">
+                <a class="w3-button" href=<%=promotion_path(promo)%>>
+                    <img src="/assets/loupe.png" style="margin-right:4px" width='24px'>
+                    <span class = "promo-option-label">Show</span>
+                </a>
+                <a class="w3-button" href=<%=edit_promotion_path(promo)%>>
+                    <img src="/assets/edit.png" style="margin-right:4px" width='24px'>
+                    <span class = "promo-option-label">Edit</span>
+                </a>
+                <a data-confirm="Are you sure?" class="w3-button" rel="nofollow" data-method="delete" href=<%=promotion_path(promo)%>>
+                    <img src="/assets/delete.png" style="margin-right:4px" width='24px'>
+                    <span class = "promo-option-label">Delete</span></a>
+                <a class="w3-button" href=<%=generate_report_path(promo)%>>
+                    <img src="/assets/presentation_64.png" style="margin-right:4px" width='24px'>
+                    <span class = "promo-option-label">Report</span>
+                </a>
+            </div>
+        </div>
+    <%end%>
+    
+    <%= will_paginate @promotions %>
 
-<hr>
-<%end%>
-<%= will_paginate @promotions %>
+</div>

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddReturnToPromotions < ActiveRecord::Migration[6.0]
   def change
     add_column :promotions, :return_type, :integer, default: 0

@@ -1,0 +1,60 @@
+<%= bootstrap_form_for @promotion.becomes(Promotion), local: true do |form| %>
+  <h1><%=@form_title%></h1>
+
+  <div class="form-group">
+  <%= form.alert_message "Please fix the errors below." %>
+  </div>  
+
+  <div class="form-group">
+    <%= form.text_field :name, readonly: readonly %>
+  </div>
+  <div class="form-group">
+    <%= form.text_field :code, readonly: readonly %>
+  </div>
+
+  <div class="form-group">
+    <%=form.label :type%>
+    <%if !readonly%>
+      <%= form.radio_button :type, :Coupon, readonly: readonly %>
+      <%= form.radio_button :type, :Discount, readonly: readonly%> 
+    <%else%>
+      <%= @promotion.type%>
+    <%end%>
+  </div>
+
+  <div class="form-group">
+    <%= form.text_field :condition, readonly: readonly%>
+  </div>
+
+  <div class="form-group">
+    <%=form.label :returned_value_type%>
+    <%if !readonly%>
+      <%= form.radio_button :return_type, :fixed_value, readonly: readonly %>
+      <%= form.radio_button :return_type, :percentaje, readonly: readonly %>
+    <%else%>
+      <%= @promotion.return_type %>
+    <%end%>
+  </div>
+
+  <div class="form-group">
+    <%= form.number_field :return_value, readonly: readonly%>
+  </div>
+
+
+  <div class="form-group">
+    <%=form.label :active%>
+    <%if !readonly%>
+      <%= form.radio_button :active, true, readonly: readonly%>
+      <%= form.radio_button :active, false, readonly: readonly%>  
+    <%else%>
+      <%= @promotion.active ? "Active" : "Inactive" %>
+    <%end%>
+  </div>
+
+
+  <%if !readonly%>
+    <div class="actions">
+      <%= form.submit class: "btn btn-primary" %>
+    </div>
+  <%end%>
+<% end %>
