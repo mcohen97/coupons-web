@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DiscountUsage < ApplicationRecord
   belongs_to :promotion
   validates :transaction_id, presence: true

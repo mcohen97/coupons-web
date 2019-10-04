@@ -1,0 +1,10 @@
+<div class = "form-centered">
+  <h1>Invitation</h1>
+  <h3>Send an invitation email to join <%=current_user_organization.organization_name%></h3>
+
+  <%= form_tag(invite_path, :method => "post") do %>
+    <%= text_field_tag(:email, nil, class: 'form-control', placeholder: "Email")%>
+    <%= submit_tag "Send", class:"btn btn-primary margin"%>
+  <% end %>
+
+</div>

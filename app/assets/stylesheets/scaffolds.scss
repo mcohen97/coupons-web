@@ -23,19 +23,6 @@ pre {
   font-size: 11px;
 }
 
-a {
-  color: #000;
-
-  &:visited {
-    color: #666;
-  }
-
-  &:hover {
-    color: #fff;
-    background-color: #000;
-  }
-}
-
 th {
   padding-bottom: 5px;
 }
@@ -95,6 +82,7 @@ label.form-check-label{
   font-weight: normal;
   display: inline-block;
   vertical-align: middle;
+  margin: 0px 5px 5px 5px
 }
 
 .form-control {
@@ -102,7 +90,20 @@ label.form-check-label{
   display: inline-block;
 }
 
-.form-group{
+.form-control.is-invalid{
+  border: 1px solid red
+}
+
+.form-control.shorter {
+  width: 40%;
+  display: inline-block;
+}
+
+.invalid-feedback{
+  color: rgb(200, 0, 0)
+}
+
+.form-group {
   text-align: center
 }
 
@@ -123,13 +124,91 @@ label.form-check-label{
   transition: all .5s linear;
 }
 
+.form-centered {
+  background-image: image-url("gradient-background.jpg");
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 50%;
+  padding: 20px 20px 20px 20px;
+  border-radius: 15px;
+  border: 1px solid #000;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  animation: fadeIn .5s;
+  transition: all .5s linear;
+  text-align: center;
+}
+
+@media screen and (max-width: 600px) {
+  .new_user {
+    width: 95%;
+    padding: 0px 5px 5px 5px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+
+  .form-centered {
+    width: 95%;
+    padding: 0px 5px 5px 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .form-centered h3{
+    font-size: 16px
+  }
+
+}
+
 .new_user h1 {
   text-align: center;
   margin-top: 30px;
   margin-bottom: 30px;
 }
 
+.new_promotion, .edit_promotion {
+  background-image: image-url("white-gradient.jpg");
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 50%;
+  padding: 20px 20px 20px 20px;
+  border-radius: 15px;
+  border: 1px solid #000;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  animation: fadeIn .5s;
+  transition: all .5s linear;
+}
+
+@media screen and (max-width: 600px) {
+  .new_promotion, .edit_promotion {
+    width: 95%;
+    padding: 5px 5px 5px 5px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+}
+
+.new_promotion h1, .edit_promotion h1 {
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
 .btn.btn-primary{
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  width: auto;
+}
+
+.btn.btn-primary.margin{
+  margin: 10px;
   margin-left: auto;
   margin-right: auto;
   display: block;
@@ -149,3 +228,11 @@ label.form-check-label{
   margin-right: 10px;
 }
 
+
+#error_explanation {
+  color: #f00;
+  ul {
+    list-style: none;
+    margin: 0 0 18px 0;
+  }
+}

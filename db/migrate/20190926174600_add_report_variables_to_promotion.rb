@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddReportVariablesToPromotion < ActiveRecord::Migration[6.0]
   def change
     add_column :promotions, :invocations, :integer, null: false, default: 0

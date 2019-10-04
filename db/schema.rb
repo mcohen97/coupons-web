@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_29_171018) do
+ActiveRecord::Schema.define(version: 2019_10_03_224519) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,12 +45,14 @@ ActiveRecord::Schema.define(version: 2019_09_29_171018) do
     t.index ["organization_id"], name: "index_application_keys_on_organization_id"
   end
 
-  create_table "coupon_usages", force: :cascade do |t|
+  create_table "coupon_instances", force: :cascade do |t|
     t.string "coupon_code"
+    t.boolean "redeemed", default: false, null: false
     t.bigint "promotion_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["promotion_id"], name: "index_coupon_usages_on_promotion_id"
+    t.index ["promotion_id", "coupon_code"], name: "index_coupon_instances_on_promotion_id_and_coupon_code", unique: true
+    t.index ["promotion_id"], name: "index_coupon_instances_on_promotion_id"
   end
 
   create_table "discount_usages", force: :cascade do |t|
@@ -120,7 +122,7 @@ ActiveRecord::Schema.define(version: 2019_09_29_171018) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "application_keys", "organizations"
-  add_foreign_key "coupon_usages", "promotions"
+  add_foreign_key "coupon_instances", "promotions"
   add_foreign_key "discount_usages", "promotions"
   add_foreign_key "email_invitations", "organizations"
   add_foreign_key "email_invitations", "users"
