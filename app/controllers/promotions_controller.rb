@@ -15,7 +15,11 @@ class PromotionsController < ApplicationController
     @promotions = set_pagination(@promotions)
   end
 
-  def show; end
+  def show;
+    if @promotion.type == 'Coupon'
+      @coupon_instances = CouponInstance.where(promotion_id: @promotion.id)
+    end 
+  end
 
   def new
     @promotion = Promotion.new
@@ -34,6 +38,9 @@ class PromotionsController < ApplicationController
         format.html { redirect_to promotions_path, notice: 'Promotion was successfully created.'}
         logger.info("Successfully created promotion of id: #{@promotion.id}")
         format.json { render :show, status: :created, location: @promotion }
+        if @promotion.type == 'Coupon'
+          generate_coupon_instances(@promotion)
+        end
       else
         format.html { render :new }
         format.json { render json: @promotion.errors, status: :unprocessable_entity }
@@ -89,6 +96,10 @@ class PromotionsController < ApplicationController
   end
 
   private
+
+  def generate_coupon_instances(promotion)
+    promotion.generate_coupon_instances(coupon_instances_count)
+  end
 
   def evaluate_existing_promotion(promotion, appkey)
     result = promotion.evaluate_applicability(params[:attributes], appkey)
@@ -147,6 +158,10 @@ class PromotionsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def promotion_parameters
     params.require(:promotion).permit(:code, :name, :type, :return_type, :return_value, :active, :condition)
+  end
+
+  def coupon_instances_count
+    params.fetch(:instances_count, 5)
   end
 
   def pagination_offset

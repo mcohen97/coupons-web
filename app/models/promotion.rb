@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'parser.rb'
+require 'securerandom'
 require_relative '../../lib/error/promotion_arguments_error.rb'
 require_relative '../../lib/error/not_authorized_error.rb'
 

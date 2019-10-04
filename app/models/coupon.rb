@@ -18,4 +18,17 @@ class Coupon < Promotion
       to_reedem.update(redeemed: true)
     end
   end
+
+  def generate_coupon_instances(count)
+
+    ActiveRecord::Base.transaction do
+      i = 0  
+      while i < count do
+        CouponInstance.new(promotion_id: id, coupon_code: "#{code}_#{SecureRandom.uuid}").save
+        i += 1
+      end
+    end
+
+  end
+
 end
