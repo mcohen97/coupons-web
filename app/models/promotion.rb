@@ -23,7 +23,7 @@ class Promotion < ApplicationRecord
   validates :code, uniqueness: true, presence: true
   validates :name, uniqueness: true, length: { minimum: 1 }
   validates :type, presence: true
-  validates :active, presence: true
+  validates :active, inclusion: { in: [ true, false ] }
   validates :return_type, presence: true, inclusion: { in: return_types.keys }
   validates :return_value, numericality: { greater_than: 0 }
   validates :return_value, numericality: { less_than_or_equal_to: 100 }, if: :percentaje?
