@@ -10,6 +10,7 @@ class Promotion < ApplicationRecord
   acts_as_tenant(:organization)
 
   belongs_to :organization
+  has_and_belongs_to_many :application_keys
 
   scope :not_deleted, -> { where(deleted: false) }
 
