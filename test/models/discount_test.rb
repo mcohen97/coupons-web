@@ -29,12 +29,13 @@ class DiscountTest < ActiveSupport::TestCase
     assert_equal 10, result[:return_value]
   end
 
-  test 'should return false when wrong arguments given' do
+  test 'should raise error when wrong arguments given' do
     promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
-                         return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10', organization_id: 2)
+                         return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10', organization_id: 1)
 
-    result = promo.evaluate_applicability({ amount: 15, tax: 3 }, @app_key)
-    assert result[:error]
+    assert_raise PromotionArgumentsError do
+      result = promo.evaluate_applicability({amount: 15, tax: 3 }, @app_key)
+    end
   end
 
   test 'should retourn error if transaction id was already used' do
@@ -44,9 +45,10 @@ class DiscountTest < ActiveSupport::TestCase
     result = promo.evaluate_applicability({ total: 11, quantity: 0, transaction_id: 4 }, @app_key)
 
     assert_not result[:error]
-
-    result = promo.evaluate_applicability({ total: 11, quantity: 0, transaction_id: 4 }, @app_key)
-
-    assert result[:error]
+    
+    assert_raise PromotionArgumentsError do
+      result = promo.evaluate_applicability({ total: 11, quantity: 0, transaction_id: 4 }, @app_key)
+    end
   end
+  
 end
