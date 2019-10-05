@@ -2,7 +2,8 @@
 
 class PromotionsController < ApplicationController
   protect_from_forgery except: :evaluate
-  before_action :authenticate_user!, except: %i[evaluate report]
+  prepend_before_action :authenticate_user!, except: %i[evaluate report]
+  before_action :authorize_user!, only: %i[new create edit update destroy]
   before_action :set_promo, only: %i[show edit update destroy report]
   rescue_from ActiveRecord::RecordNotFound, with: :promotion_not_found
 
@@ -121,9 +122,9 @@ class PromotionsController < ApplicationController
   def evaluate_existing_promotion(promotion, appkey)
     result = promotion.evaluate_applicability(params[:attributes], appkey)
     render json: result
-  rescue  KeyDoesntIncludePromotionError => e
-    logger.error('Invalid appkey for promotion.')
-    render(json: { error_message: e.message }, status: :bad_request)
+  rescue NotAuthenticatedError => e
+    logger.error('No valid application key.')
+    render(json: { error_message: e.message }, status: :unauthorized)
   rescue NotAuthorizedError => e
     logger.error('User not authorized')
     render json: { error_message: e.message }, status: :forbidden

@@ -100,12 +100,12 @@ class Promotion < ApplicationRecord
     end
     unless key_includes_promotion
       add_negative_response
-      raise KeyDoesntIncludePromotionError, "Can't access promotion with this appkey"
+      raise NotAuthorizedError, "Can't access promotion with this appkey"
     end
   end
 
   def validate_total_specified(arguments_values)
-    unless arguments_values[:total].present?
+    if !arguments_values[:total].present? && type == 'Coupon'
       add_negative_response
       raise PromotionArgumentsError, 'Total must be specified'
     end
