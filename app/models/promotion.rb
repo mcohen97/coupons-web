@@ -100,7 +100,7 @@ class Promotion < ApplicationRecord
     end
     unless key_includes_promotion
       add_negative_response
-      raise KeyDoesntIncludePromotionError, "Can't access promotion with this appkey"
+      raise NotAuthorizedError, "Can't access promotion with this appkey"
     end
   end
 
