@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.configure do
+  config.hosts << 'couponsarq3.azurewebsites.net'
+
   # Settings specified here will take precedence over those in config/application.rb.
   raise 'JWT secret not set in enviroment' unless ENV['JWT_SECRET'].present?
 
