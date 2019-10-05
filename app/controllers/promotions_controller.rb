@@ -2,7 +2,8 @@
 
 class PromotionsController < ApplicationController
   protect_from_forgery except: :evaluate
-  before_action :authenticate_user!, except: %i[evaluate report]
+  prepend_before_action :authenticate_user!, except: %i[evaluate report]
+  before_action :authorize_user!, only: %i[new create edit update destroy]
   before_action :set_promo, only: %i[show edit update destroy report]
   rescue_from ActiveRecord::RecordNotFound, with: :promotion_not_found
 
