@@ -2,6 +2,7 @@
 
 class ApplicationKey < ApplicationRecord
   belongs_to :organization
+  has_and_belongs_to_many :promotions
 
   SECRET_KEY = Rails.application.config.jwt_secret
 
@@ -10,7 +11,8 @@ class ApplicationKey < ApplicationRecord
 
   def generate_token
     payload = {
-      name: name
+      name: name,
+      promotions: promotion_ids
     }
 
     JsonWebToken.encode(payload)

@@ -14,20 +14,22 @@ rappi = Organization.create!(organization_name: 'Rappi')
 pablo = User.create!(name: 'Pablo', surname: 'Villas', email: 'pv@gmail.com', password: '123456', role: 'administrator', organization_id: pedidos_ya.id)
 simon = User.create!(name: 'Simon', surname: 'Borreo', email: 'sb@gmail.com', password: '123456', role: 'administrator', organization_id: rappi.id)
 
-Discount.create!(code: 'discount1', name: 'a discount', return_type: :percentaje,
+dis1 = Discount.create!(code: 'discount1', name: 'a discount', return_type: :percentaje,
                  return_value: 10, active: true, condition: '( total <= 100 AND quantity >= 5 ) OR total > 10', organization_id: pablo.organization_id)
 
-Discount.create!(code: 'discount2', name: 'another discount', return_type: :percentaje,
+dis2 =Discount.create!(code: 'discount2', name: 'another discount', return_type: :percentaje,
                  return_value: 10, active: false, condition: '( total <= 100 AND quantity >= 5 ) OR total > 10', organization_id: pablo.organization_id)
 
-Coupon.create!(code: 'coupon1', name: 'a coupon', return_type: :percentaje,
+coup1 = Coupon.create!(code: 'coupon1', name: 'a coupon', return_type: :percentaje,
                return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2', organization_id: simon.organization_id)
 
-Coupon.create!(code: 'coupon2', name: 'another coupon', return_type: :percentaje,
+coup2 = Coupon.create!(code: 'coupon2', name: 'another coupon', return_type: :percentaje,
                return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2', organization_id: simon.organization_id, deleted: true)
 
 CouponInstance.create!(promotion_id: 3, coupon_code: 'coupon1-1')
 CouponInstance.create!(promotion_id: 3, coupon_code: 'coupon1-2')
 
-ApplicationKey.create!(name: 'pedidosYaKey', organization_id: pedidos_ya.id)
-ApplicationKey.create!(name: 'rappiKey', organization_id: rappi.id)
+
+ApplicationKey.create!(name: 'pedidosYaKey', organization_id: pedidos_ya.id, promotion_ids: [dis1.id, dis2.id])
+ApplicationKey.create!(name: 'pedidosYaKeyIncompleto', organization_id: pedidos_ya.id, promotion_ids: [dis1.id])
+ApplicationKey.create!(name: 'rappiKey', organization_id: rappi.id, promotion_ids: [coup1.id, coup2.id])

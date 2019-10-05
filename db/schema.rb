@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_03_224519) do
+ActiveRecord::Schema.define(version: 2019_10_04_172104) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,11 @@ ActiveRecord::Schema.define(version: 2019_10_03_224519) do
     t.bigint "organization_id", null: false
     t.index ["name"], name: "index_application_keys_on_name"
     t.index ["organization_id"], name: "index_application_keys_on_organization_id"
+  end
+
+  create_table "application_keys_promotions", id: false, force: :cascade do |t|
+    t.bigint "promotion_id", null: false
+    t.bigint "application_key_id", null: false
   end
 
   create_table "coupon_instances", force: :cascade do |t|

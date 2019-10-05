@@ -10,6 +10,7 @@ class Promotion < ApplicationRecord
   acts_as_tenant(:organization)
 
   belongs_to :organization
+  has_and_belongs_to_many :application_keys
 
   scope :not_deleted, -> { where(deleted: false) }
 
@@ -22,6 +23,7 @@ class Promotion < ApplicationRecord
   validates :code, uniqueness: true, presence: true
   validates :name, uniqueness: true, length: { minimum: 1 }
   validates :type, presence: true
+  validates :active, inclusion: { in: [ true, false ] }
   validates :return_type, presence: true, inclusion: { in: return_types.keys }
   validates :return_value, numericality: { greater_than: 0 }
   validates :return_value, numericality: { less_than_or_equal_to: 100 }, if: :percentaje?
@@ -91,9 +93,14 @@ class Promotion < ApplicationRecord
       raise NotAuthenticatedError, "No valid application key."
     end
     evaluation_allowed = is_from_clients_organization(appkey)
+    key_includes_promotion = does_key_have_promotion(appkey)
     unless evaluation_allowed
       add_negative_response
       raise NotAuthorizedError, "Can't access promotion from another organization"
+    end
+    unless key_includes_promotion
+      add_negative_response
+      raise NotAuthorizedError, "Can't access promotion with this appkey"
     end
   end
 
@@ -106,6 +113,10 @@ class Promotion < ApplicationRecord
 
   def is_from_clients_organization(appkey)
     organization_id == appkey.organization.id
+  end
+
+  def does_key_have_promotion(appkey)
+    appkey.promotions.pluck(:id).include?(id)
   end
 
   def update_total_spent(total)

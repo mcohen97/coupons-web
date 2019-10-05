@@ -32,20 +32,22 @@ class PromotionsController < ApplicationController
 
   def create
     @promotion = Promotion.new(promotion_parameters)
-
-    respond_to do |format|
-      if @promotion.save
-        format.html { redirect_to promotions_path, notice: 'Promotion was successfully created.'}
-        logger.info("Successfully created promotion of id: #{@promotion.id}")
-        format.json { render :show, status: :created, location: @promotion }
-        if @promotion.type == 'Coupon'
-          generate_coupon_instances(@promotion)
-        end
-      else
-        format.html { render :new }
-        format.json { render json: @promotion.errors, status: :unprocessable_entity }
-      end
+    is_coupon = @promotion.type == 'Coupon'
+    if is_coupon && !valid_instances_count()
+      @promotion.errors.add(:base,"Coupon count must be positive and less or equal to #{Coupon::MAX_COUPON_INSTANCES}")
+      respond_promotion_not_created(@promotion) && return
     end
+
+    if @promotion.save
+      if is_coupon
+        generate_coupon_instances(@promotion)
+      end
+      logger.info("Successfully created promotion of id: #{@promotion.id}")
+      respond_promotion_created(@promotion) && return
+    else
+      respond_promotion_not_created(@promotion)
+    end
+
   end
 
   def update
@@ -74,6 +76,7 @@ class PromotionsController < ApplicationController
     logger.info("Evaluating promotion #{params[:code]}.")
     appkey = get_app_key
     promotion = Promotion.find_by(code: params[:code])
+
     if !promotion.nil?
       logger.info("Successfully evaluated promotion of code: #{params[:code]}")
       evaluate_existing_promotion(promotion, appkey)
@@ -93,6 +96,24 @@ class PromotionsController < ApplicationController
 
   private
 
+  def valid_instances_count
+    return coupon_instances_count < 5
+  end
+
+  def respond_promotion_created(promotion)
+    respond_to do |format|
+      format.html { redirect_to promotions_path, notice: 'Promotion was successfully created.'}
+      format.json { render :show, status: :created, location: promotion }
+    end
+  end
+
+  def respond_promotion_not_created(promotion)
+    respond_to do |format|
+      format.html { render :new }
+      format.json { render json: promotion.errors, status: :unprocessable_entity }
+    end
+  end
+
   def generate_coupon_instances(promotion)
     promotion.generate_coupon_instances(coupon_instances_count)
   end
@@ -100,9 +121,9 @@ class PromotionsController < ApplicationController
   def evaluate_existing_promotion(promotion, appkey)
     result = promotion.evaluate_applicability(params[:attributes], appkey)
     render json: result
-  rescue NotAuthenticatedError => e
-    logger.error('No valid application key.')
-    render(json: { error_message: e.message }, status: :unauthorized)
+  rescue  KeyDoesntIncludePromotionError => e
+    logger.error('Invalid appkey for promotion.')
+    render(json: { error_message: e.message }, status: :bad_request)
   rescue NotAuthorizedError => e
     logger.error('User not authorized')
     render json: { error_message: e.message }, status: :forbidden
@@ -162,7 +183,7 @@ class PromotionsController < ApplicationController
   end
 
   def coupon_instances_count
-    params.fetch(:instances_count, 5)
+    params.fetch(:instances_count, 15)
   end
 
   def pagination_offset
