@@ -105,7 +105,7 @@ class Promotion < ApplicationRecord
   end
 
   def validate_total_specified(arguments_values)
-    unless arguments_values[:total].present?
+    if !arguments_values[:total].present? && type == 'Coupon'
       add_negative_response
       raise PromotionArgumentsError, 'Total must be specified'
     end
