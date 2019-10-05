@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
 require 'parser.rb'
+require 'securerandom'
 require_relative '../../lib/error/promotion_arguments_error.rb'
 require_relative '../../lib/error/not_authorized_error.rb'
+require_relative '../../lib/error/not_authenticated_error.rb'
 
 class Promotion < ApplicationRecord
   acts_as_tenant(:organization)
 
   belongs_to :organization
+  has_and_belongs_to_many :application_keys
 
   scope :not_deleted, -> { where(deleted: false) }
 
@@ -20,6 +23,7 @@ class Promotion < ApplicationRecord
   validates :code, uniqueness: true, presence: true
   validates :name, uniqueness: true, length: { minimum: 1 }
   validates :type, presence: true
+  validates :active, inclusion: { in: [ true, false ] }
   validates :return_type, presence: true, inclusion: { in: return_types.keys }
   validates :return_value, numericality: { greater_than: 0 }
   validates :return_value, numericality: { less_than_or_equal_to: 100 }, if: :percentaje?
@@ -38,7 +42,10 @@ class Promotion < ApplicationRecord
     end
   end
 
-  def generate_report
+  def generate_report(app_key_validation = false, appkey = nil)
+    if app_key_validation
+      validate_auth(appkey)
+    end
     positive_responses = invocations - negative_responses
     negative_ratio = invocations > 0 ? Float(negative_responses) / invocations : 0
     positive_ratio = invocations > 0 ? Float(positive_responses) / invocations : 0
@@ -57,7 +64,7 @@ class Promotion < ApplicationRecord
   def try_to_evaluate(arguments_values, appkey)
     add_invocation
 
-    validate_authorization(appkey)
+    validate_auth(appkey)
     validate_total_specified(arguments_values)
 
     if !active || deleted
@@ -80,11 +87,20 @@ class Promotion < ApplicationRecord
     expr.evaluate_condition(arguments_values)
   end
 
-  def validate_authorization(appkey)
+  def validate_auth(appkey)
+    if appkey.nil?
+      add_negative_response
+      raise NotAuthenticatedError, "No valid application key."
+    end
     evaluation_allowed = is_from_clients_organization(appkey)
+    key_includes_promotion = does_key_have_promotion(appkey)
     unless evaluation_allowed
       add_negative_response
       raise NotAuthorizedError, "Can't access promotion from another organization"
+    end
+    unless key_includes_promotion
+      add_negative_response
+      raise KeyDoesntIncludePromotionError, "Can't access promotion with this appkey"
     end
   end
 
@@ -97,6 +113,10 @@ class Promotion < ApplicationRecord
 
   def is_from_clients_organization(appkey)
     organization_id == appkey.organization.id
+  end
+
+  def does_key_have_promotion(appkey)
+    appkey.promotions.pluck(:id).include?(id)
   end
 
   def update_total_spent(total)

@@ -23,12 +23,6 @@ module Coupons
       end
     end
 
-    
-    config.after_initialize do
-      Rails.application.load_tasks # <---
-      Rake::Task['log:clear'].invoke
-    end
-
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading

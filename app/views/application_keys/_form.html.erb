@@ -16,6 +16,16 @@
     <%= form.text_field :name %>
   </div>
 
+  <div class="field">
+    <%= form.label "Promotions" %><br/>
+    <% Promotion.all.each do |promotion| %>
+      <div>
+        <label> <%=promotion.name %></label>
+        <%= form.check_box :promotion_ids, {multiple: true}, promotion.id, false %>
+      </div>
+    <% end %>
+
+  </div>
   <div class="actions">
     <%= form.submit %>
   </div>

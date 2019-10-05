@@ -15,7 +15,11 @@ class PromotionsController < ApplicationController
     @promotions = set_pagination(@promotions)
   end
 
-  def show; end
+  def show
+    if @promotion.type == 'Coupon'
+      @coupon_instances = CouponInstance.where(promotion_id: @promotion.id)
+    end 
+  end
 
   def new
     @promotion = Promotion.new
@@ -28,17 +32,22 @@ class PromotionsController < ApplicationController
 
   def create
     @promotion = Promotion.new(promotion_parameters)
-
-    respond_to do |format|
-      if @promotion.save
-        format.html { redirect_to promotions_path, notice: 'Promotion was successfully created.'}
-        logger.info("Successfully created promotion of id: #{@promotion.id}")
-        format.json { render :show, status: :created, location: @promotion }
-      else
-        format.html { render :new }
-        format.json { render json: @promotion.errors, status: :unprocessable_entity }
-      end
+    is_coupon = @promotion.type == 'Coupon'
+    if is_coupon && !valid_instances_count()
+      @promotion.errors.add(:base,"Coupon count must be positive and less or equal to #{Coupon::MAX_COUPON_INSTANCES}")
+      respond_promotion_not_created(@promotion) && return
     end
+
+    if @promotion.save
+      if is_coupon
+        generate_coupon_instances(@promotion)
+      end
+      logger.info("Successfully created promotion of id: #{@promotion.id}")
+      respond_promotion_created(@promotion) && return
+    else
+      respond_promotion_not_created(@promotion)
+    end
+
   end
 
   def update
@@ -66,11 +75,8 @@ class PromotionsController < ApplicationController
   def evaluate
     logger.info("Evaluating promotion #{params[:code]}.")
     appkey = get_app_key
-    if appkey.nil?
-      logger.error('No valid application key.')
-      render(json: { error_message: 'No valid application key.' }, status: :unauthorized) && return
-    end
     promotion = Promotion.find_by(code: params[:code])
+
     if !promotion.nil?
       logger.info("Successfully evaluated promotion of code: #{params[:code]}")
       evaluate_existing_promotion(promotion, appkey)
@@ -90,9 +96,34 @@ class PromotionsController < ApplicationController
 
   private
 
+  def valid_instances_count
+    return coupon_instances_count < 5
+  end
+
+  def respond_promotion_created(promotion)
+    respond_to do |format|
+      format.html { redirect_to promotions_path, notice: 'Promotion was successfully created.'}
+      format.json { render :show, status: :created, location: promotion }
+    end
+  end
+
+  def respond_promotion_not_created(promotion)
+    respond_to do |format|
+      format.html { render :new }
+      format.json { render json: promotion.errors, status: :unprocessable_entity }
+    end
+  end
+
+  def generate_coupon_instances(promotion)
+    promotion.generate_coupon_instances(coupon_instances_count)
+  end
+
   def evaluate_existing_promotion(promotion, appkey)
     result = promotion.evaluate_applicability(params[:attributes], appkey)
     render json: result
+  rescue  KeyDoesntIncludePromotionError => e
+    logger.error('Invalid appkey for promotion.')
+    render(json: { error_message: e.message }, status: :bad_request)
   rescue NotAuthorizedError => e
     logger.error('User not authorized')
     render json: { error_message: e.message }, status: :forbidden
@@ -112,12 +143,14 @@ class PromotionsController < ApplicationController
 
   def respond_to_external
     appkey = get_app_key
-    if appkey.nil?
-      logger.error('No valid application key.')
-      render(json: { message: 'No valid application key.' }, status: 401) && return
-    end
-    @report = @promotion.generate_report
+    @report = @promotion.generate_report(true,appkey)
     render json: @report, status: :ok
+  rescue NotAuthenticatedError => e
+    logger.error('No valid application key.')
+    render(json: { error_message: e.message }, status: :unauthorized)
+  rescue NotAuthorizedError => e
+    logger.error('User not authorized.')
+    render(json: { error_message: e.message}, status: :forbidden) 
   end
 
   def set_promo
@@ -147,6 +180,10 @@ class PromotionsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def promotion_parameters
     params.require(:promotion).permit(:code, :name, :type, :return_type, :return_value, :active, :condition)
+  end
+
+  def coupon_instances_count
+    params.fetch(:instances_count, 15)
   end
 
   def pagination_offset
