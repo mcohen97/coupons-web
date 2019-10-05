@@ -35,6 +35,9 @@ class LogicCondition
       if value.nil?
         raise ParsingError, "Variable: #{literal} has not defined value"
       end
+      if value.instance_of?(String)
+        raise ParsingError, "Variable: #{literal} can't be of type string"
+      end
       return value if is_boolean?(value)
 
       Float(value)
