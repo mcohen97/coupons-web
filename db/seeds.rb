@@ -20,16 +20,19 @@ dis1 = Discount.create!(code: 'discount1', name: 'a discount', return_type: :per
 dis2 =Discount.create!(code: 'discount2', name: 'another discount', return_type: :percentaje,
                  return_value: 10, active: false, condition: '( total <= 100 AND quantity >= 5 ) OR total > 10', organization_id: pablo.organization_id)
 
+dis3 =Discount.create!(code: 'discount3', name: 'and yet another discount', return_type: :fixed_value,
+                  return_value: 10, active: false, condition: 'quantity >= 5', organization_id: pablo.organization_id)
+
 coup1 = Coupon.create!(code: 'coupon1', name: 'a coupon', return_type: :percentaje,
                return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2', organization_id: simon.organization_id)
 
 coup2 = Coupon.create!(code: 'coupon2', name: 'another coupon', return_type: :percentaje,
                return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2', organization_id: simon.organization_id, deleted: true)
 
-CouponInstance.create!(promotion_id: 3, coupon_code: 'coupon1-1')
-CouponInstance.create!(promotion_id: 3, coupon_code: 'coupon1-2')
+CouponInstance.create!(promotion_id: 4, coupon_code: 'coupon1-1')
+CouponInstance.create!(promotion_id: 4, coupon_code: 'coupon1-2')
 
 
-ApplicationKey.create!(name: 'pedidosYaKey', organization_id: pedidos_ya.id, promotion_ids: [dis1.id, dis2.id])
+ApplicationKey.create!(name: 'pedidosYaKey', organization_id: pedidos_ya.id, promotion_ids: [dis1.id, dis2.id, dis3.id])
 ApplicationKey.create!(name: 'pedidosYaKeyIncompleto', organization_id: pedidos_ya.id, promotion_ids: [dis1.id])
 ApplicationKey.create!(name: 'rappiKey', organization_id: rappi.id, promotion_ids: [coup1.id, coup2.id])
