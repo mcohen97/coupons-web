@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class ApplicationKeysController < ApplicationController
+  prepend_before_action :authenticate_user!
+  before_action :authorize_user!, only: %i[new create edit update destroy]
   before_action :set_application_key, only: %i[show edit update destroy]
-  before_action :authenticate_user!
   rescue_from ActiveRecord::RecordNotFound, with: :application_key_not_found
 
   # GET /application_keys
@@ -18,10 +19,13 @@ class ApplicationKeysController < ApplicationController
   # GET /application_keys/new
   def new
     @application_key = ApplicationKey.new
+    @form_title = 'New application key'
   end
 
   # GET /application_keys/1/edit
-  def edit; end
+  def edit; 
+    @form_title = 'Edit application key'
+  end
 
   # POST /application_keys
   # POST /application_keys.json

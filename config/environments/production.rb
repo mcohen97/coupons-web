@@ -2,11 +2,15 @@
 
 Rails.application.configure do
   config.hosts << ENV.fetch("HOSTS") { nil }
-
+  config.hosts << 'couponsarq3.azurewebsites.net'
+  config.hosts << "localhost"
   # Settings specified here will take precedence over those in config/application.rb.
   raise 'JWT secret not set in enviroment' unless ENV['JWT_SECRET'].present?
 
   config.jwt_secret = ENV['JWT_SECRET']
+
+  config.require_master_key = true
+
 
   config.assets.compile = true
   config.assets.precompile =  ['*.js', '*.css', '*.css.erb']

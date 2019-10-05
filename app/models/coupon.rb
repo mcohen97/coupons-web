@@ -4,6 +4,9 @@ require 'parser.rb'
 require_relative '../../lib/error/promotion_arguments_error.rb'
 
 class Coupon < Promotion
+
+  MAX_COUPON_INSTANCES = 100
+  
   has_many :coupon_instances
 
   def apply_promo(arguments)

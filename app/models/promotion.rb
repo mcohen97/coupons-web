@@ -23,6 +23,7 @@ class Promotion < ApplicationRecord
   validates :code, uniqueness: true, presence: true
   validates :name, uniqueness: true, length: { minimum: 1 }
   validates :type, presence: true
+  validates :active, inclusion: { in: [ true, false ] }
   validates :return_type, presence: true, inclusion: { in: return_types.keys }
   validates :return_value, numericality: { greater_than: 0 }
   validates :return_value, numericality: { less_than_or_equal_to: 100 }, if: :percentaje?
@@ -99,12 +100,12 @@ class Promotion < ApplicationRecord
     end
     unless key_includes_promotion
       add_negative_response
-      raise KeyDoesntIncludePromotionError, "Can't access promotion with this appkey"
+      raise NotAuthorizedError, "Can't access promotion with this appkey"
     end
   end
 
   def validate_total_specified(arguments_values)
-    unless arguments_values[:total].present?
+    if !arguments_values[:total].present? && type == 'Coupon'
       add_negative_response
       raise PromotionArgumentsError, 'Total must be specified'
     end

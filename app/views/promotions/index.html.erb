@@ -1,9 +1,35 @@
 <div class = 'home-container'>
     <h1 class="section-title">Promotions  </h1>
 <hr>
+    <div class = "filter-container">
+        <%= form_tag(promotions_path, method: :get) do %>
+            <div class = "filter-option">
+                Name: <%= text_field_tag :name, params[:name] %>
+            </div>
+            <div class = "filter-option">
+                Code: <%= text_field_tag :code, params[:code] %>
+            </div>
+            <div class = "filter-option">
+                Type: 
+                <%= radio_button_tag :type, 'Discount', params[:type] == 'Discount'%>Discount 
+                <%= radio_button_tag :type, 'Coupon', params[:type] == 'Coupon'%>Coupon
+            </div>
+            <div class = "filter-option">    
+                Active: 
+                <%= radio_button_tag :active, true, params[:active] == 'true'%>true 
+                <%= radio_button_tag :active, false, params[:active] == 'false'%>false
+            </div> 
+            <div class = "filter-option">    
+                <%= submit_tag "Search", name: nil, class: 'btn btn-primary search'%>
+                 <%= link_to  "Clear", promotions_path, class: 'btn btn-primary search' %>
+            </div>
+
+        <% end %>
+    </div>
+<hr>
     <% @promotions.each do |promo|%>
         <div class = "promo-container">
-            <h3><%=promo.name%> (<%=promo.code%>)</h3>
+            <h3><%=promo.name%></h3>
             <div class = "promo-info-container">
                 <b>Type:</b> <%= promo.type%>
                 <br><b>Code:</b> <%= promo.code%>
