@@ -18,10 +18,13 @@ class ApplicationKeysController < ApplicationController
   # GET /application_keys/new
   def new
     @application_key = ApplicationKey.new
+    @form_title = 'New application key'
   end
 
   # GET /application_keys/1/edit
-  def edit; end
+  def edit; 
+    @form_title = 'Edit application key'
+  end
 
   # POST /application_keys
   # POST /application_keys.json

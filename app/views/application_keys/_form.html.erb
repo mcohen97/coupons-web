@@ -1,32 +1,25 @@
-<%= form_with(model: application_key, local: true) do |form| %>
-  <% if application_key.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(application_key.errors.count, "error") %> prohibited this application_key from being saved:</h2>
+<%= bootstrap_form_for @application_key.becomes(ApplicationKey), local: true do |form| %>
+  <h1><%=@form_title%></h1>
+  <div class="form-group" style="text-align:left">
+    <%= form.alert_message "Please fix the errors below." %>
+  </div>  
 
-      <ul>
-        <% application_key.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= form.label :name %>
+  <div class="form-group">
     <%= form.text_field :name %>
   </div>
 
-  <div class="field">
-    <%= form.label "Promotions" %><br/>
-    <% Promotion.all.each do |promotion| %>
-      <div>
-        <label> <%=promotion.name %></label>
-        <%= form.check_box :promotion_ids, {multiple: true}, promotion.id, false %>
+  <div class="form-group">
+    <%= form.label "Promotions" %><br />
+    <%= form.collection_check_boxes :promotion_ids, Promotion.all, :id, :name do |b| %>
+      <div class="collection-check-box">
+        <%= b.check_box %>
+        <%= b.label %>
       </div>
     <% end %>
 
+
   </div>
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit class: "btn btn-primary"%>
   </div>
 <% end %>

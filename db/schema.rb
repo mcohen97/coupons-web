@@ -15,6 +15,11 @@ ActiveRecord::Schema.define(version: 2019_10_04_172104) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "_WARNING", id: false, force: :cascade do |t|
+    t.serial "id", null: false
+    t.string "message"
+  end
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
