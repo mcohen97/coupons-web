@@ -86,6 +86,13 @@ GEM
       xpath (~> 3.2)
     childprocess (2.0.0)
       rake (< 13.0)
+    coffee-rails (5.0.0)
+      coffee-script (>= 2.2.0)
+      railties (>= 5.2.0)
+    coffee-script (2.4.1)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.12.2)
     commonjs (0.2.7)
     concurrent-ruby (1.1.5)
     crass (1.0.4)
@@ -277,6 +284,7 @@ DEPENDENCIES
   bootstrap_form (~> 4.0)
   byebug
   capybara (>= 2.15)
+  coffee-rails
   devise
   devise-bootstrap-views
   devise-i18n
@@ -303,7 +311,7 @@ DEPENDENCIES
   will_paginate-bootstrap
 
 RUBY VERSION
-   ruby 2.6.3p62
+   ruby 2.6.4p104
 
 BUNDLED WITH
    1.17.3

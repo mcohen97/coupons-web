@@ -1,36 +1,36 @@
-<p id="notice"><%= notice %></p>
-
+<div class = "white-container">
 <h1>Application Keys</h1>
+<%= link_to 'New Application Key', new_application_key_path %>
 
-<table>
-  <thead>
-  <tr>
-    <th>Name</th>
-    <th colspan="3"></th>
-  </tr>
-  <tr>
-    <th>Promotions</th>
-    <th colspan="3"></th>
-  </tr>
-  <tr>
-    <th>Token</th>
-  </tr>
-  </thead>
 
-  <tbody>
-  <% @application_keys.each do |application_key| %>
-    <tr>
-      <td><%= application_key.name %></td>
-      <td><%= application_key.promotions.pluck(:name).join(', ') %></td>
-      <td><%= application_key.generate_token %></td>
-      <td><%= link_to 'Show', application_key %></td>
-      <td><%= link_to 'Edit', edit_application_key_path(application_key) %></td>
-      <td><%= link_to 'Destroy', application_key, method: :delete, data: {confirm: 'Are you sure?'} %></td>
-    </tr>
-  <% end %>
-  </tbody>
-</table>
+<div class = "table-wrapper">
+  <table class="fl-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Promotions</th>
+        <th>Token</th>
+        <th>Options</th>
+      </tr>
+    </thead>
 
+    <tbody>
+    <% @application_keys.each do |application_key| %>
+      <tr>
+        <td><%= application_key.name %></td>
+        <td><%= application_key.promotions.pluck(:name).join(', ') %></td>
+        <td><%= application_key.generate_token %></td>
+        <td>
+          <%= link_to 'Show', application_key %><br>
+          <%= link_to 'Edit', edit_application_key_path(application_key) %><br>
+          <%= link_to 'Destroy', application_key, method: :delete, data: {confirm: 'Are you sure?'} %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+</div>
 <br>
 
-<%= link_to 'New Application Key', new_application_key_path %>
+</div>
