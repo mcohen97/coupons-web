@@ -99,4 +99,13 @@ class ParserTest < ActiveSupport::TestCase
       expression.evaluate_condition(segunda_compra: 3, total: 5)
     end
   end
+
+  def test_evaluate_with_string_values
+    parser = Parser.new
+    condition = 'total > 10'
+    expression = parser.parse(condition)
+    assert_raise ParsingError do
+      expression.evaluate_condition(total: "a string")
+    end
+  end
 end

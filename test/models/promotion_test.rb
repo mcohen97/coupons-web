@@ -10,13 +10,15 @@ class PromotionTest < ActiveSupport::TestCase
 
   test 'should create promotion with the specified data' do
     promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
-                         return_value: 10, active: true, condition: 'quantity > 3')
+                         return_value: 10, active: true, condition: 'quantity > 3', organization_id: 1)
+    assert promo.save
     assert_equal(:Discount, promo.type.to_sym)
     assert_equal(:percentaje, promo.return_type.to_sym)
     assert promo.active
     assert_equal('code', promo.code)
     assert_equal('a promotion', promo.name)
     assert_equal('quantity > 3', promo.condition)
+    assert_equal(1, promo.organization_id)
   end
 
   test 'should not save promotion with empty name' do
@@ -71,6 +73,26 @@ class PromotionTest < ActiveSupport::TestCase
     
     assert_not promo.save
     assert promo.errors[:active].any?
+  end
+
+  test 'should not save promotion with repeated codes' do
+    promo = Discount.new(code: 'code', name: 'a promotion1', return_type: :percentaje,
+      return_value: 10, active: true, condition: 'quantity > 3', organization_id: 1)
+    assert promo.save
+    promo = Discount.new(code: 'code', name: 'a promotion2', return_type: :percentaje,
+      return_value: 10, active: true, condition: 'quantity > 3', organization_id:1)
+    assert_not promo.save
+    assert promo.errors[:code].any?
+  end
+
+  test 'should not save promotion with repeated names' do
+    promo = Discount.new(code: 'code1', name: 'a promotion', return_type: :percentaje,
+      return_value: 10, active: true, condition: 'quantity > 3', organization_id: 1)
+    assert promo.save
+    promo = Discount.new(code: 'code2', name: 'a promotion', return_type: :percentaje,
+      return_value: 10, active: true, condition: 'quantity > 3', organization_id:1)
+    assert_not promo.save
+    assert promo.errors[:name].any?
   end
   # Common condition-related behaviour between the different types of promotions is tested here.
 
