@@ -24,7 +24,7 @@ class ApplicationKey < ApplicationRecord
     @few = payload[:name]
     ApplicationKey.find_by_name(payload[:name])
   rescue StandardError => e
-    NIL
+    nil
   end
 
   def promotions_of_same_org

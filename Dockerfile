@@ -1,12 +1,13 @@
 FROM ruby:2.6.4
-RUN apt-get update -qq && apt-get install -y nodejs postgresql-client yarn
+RUN apt-get update -qq && apt-get install -y nodejs postgresql-client npm
 RUN mkdir /myapp
 WORKDIR /myapp
 COPY Gemfile /myapp/Gemfile
 COPY Gemfile.lock /myapp/Gemfile.lock
 RUN bundle install
 COPY . /myapp
-RUN rake assets:precompile
+RUN npm install yarn -g
+RUN rails assets:precompile
 
 # Add a script to be executed every time the container starts.
 COPY entrypoint.sh /usr/bin/
