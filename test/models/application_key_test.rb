@@ -31,4 +31,10 @@ class ApplicationKeyTest < ActiveSupport::TestCase
     assert appkey.errors[:promotions].any?
    end
 
+   test "should not save appkeys with same name" do
+      appkey = ApplicationKey.new(name: 'pedidosYaKey', organization_id: 1, promotion_ids: [1,4])
+      assert appkey.save
+      appkey = ApplicationKey.new(name: 'pedidosYaKey', organization_id: 1, promotion_ids: [1,4])
+      assert_not appkey.save
+   end
 end

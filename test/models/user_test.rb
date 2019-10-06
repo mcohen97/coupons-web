@@ -68,4 +68,11 @@ class UserTest < ActiveSupport::TestCase
     assert user.errors[:organization_id].any?
    end
 
+   test 'should not save users with repeated emails' do
+    user = User.new(email: 'mail@hotmail.com', password: 'password', name: 'name', surname: 'surname', role: 'org_user', organization_id:1)    
+    assert user.save
+    user = User.new(email: 'mail@hotmail.com', password: 'password', name: 'name', surname: 'surname', role: 'org_user', organization_id:1)    
+    assert_not user.save
+    assert user.errors[:email].any?
+   end
 end
