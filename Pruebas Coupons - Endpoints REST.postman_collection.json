@@ -1147,19 +1147,19 @@
 	],
 	"variable": [
 		{
-			"id": "7709fd16-38e3-4914-abe4-35cd5b463198",
+			"id": "6c0f16ee-b54e-49ff-8bce-ba51059e2f7a",
 			"key": "domain",
 			"value": "http://localhost:3000",
 			"type": "string"
 		},
 		{
-			"id": "3b5eb8c8-c5b3-42a3-be4b-3787ce40010e",
+			"id": "a5630fda-05bd-4f47-954c-e20d17a62882",
 			"key": "organization1AppKey",
 			"value": "eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoicGVkaWRvc1lhS2V5In0.GNNzFnIoYltyKsMZ18HbVtDPI74W-nimChf08sBOzCk",
 			"type": "string"
 		},
 		{
-			"id": "7798bc2c-6b9d-418e-8caf-cc6647024d83",
+			"id": "7cddc742-ed6a-48db-b5ff-b34437813aa1",
 			"key": "organization2AppKey",
 			"value": "eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoicmFwcGlLZXkifQ.zyr-GZNs55IGEgGzeoBvOwoFohscJYB1CiLa6No6AIY",
 			"type": "string"
