@@ -156,6 +156,8 @@ GEM
     public_suffix (4.0.1)
     puma (3.12.1)
     rack (2.0.7)
+    rack-mini-profiler (1.1.0)
+      rack (>= 1.2.0)
     rack-proxy (0.6.5)
       rack
     rack-test (1.1.0)
@@ -295,6 +297,7 @@ DEPENDENCIES
   listen (>= 3.0.5, < 3.2)
   pg (>= 0.18, < 2.0)
   puma (~> 3.11)
+  rack-mini-profiler
   rails (~> 6.0.0)
   rubocop (~> 0.74.0)
   sass-rails (~> 5)
@@ -311,7 +314,7 @@ DEPENDENCIES
   will_paginate-bootstrap
 
 RUBY VERSION
-   ruby 2.6.4p104
+   ruby 2.6.3p62
 
 BUNDLED WITH
    1.17.3
