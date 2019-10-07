@@ -29,6 +29,7 @@ class PromotionsController < ApplicationController
 
   def edit
     @form_title = "Edit promotion"
+    @is_edit = true
   end
 
   def create
