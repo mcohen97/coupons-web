@@ -21,21 +21,28 @@ function show_instances_field(){
     <%= form.text_field :code, readonly: readonly %>
   </div>
 
-  <div class="form-group">
-    <%=form.label :type%>
-    <%if !readonly%>
-      <%= form.radio_button :type, :Coupon, readonly: readonly, onclick: "show_instances_field();" %>
-      <%= form.radio_button :type, :Discount, readonly: readonly, onclick: "hide_instances_field();"%> 
-    <%else%>
+  <%if not @is_edit%>
+    <div class="form-group">
+      <%=form.label :type%>
+      <%if !readonly%>
+        <%= form.radio_button :type, :Coupon, readonly: readonly, onclick: "show_instances_field();" %>
+        <%= form.radio_button :type, :Discount, readonly: readonly, onclick: "hide_instances_field();"%> 
+      <%else%>
+        <%= @promotion.type%>
+      <%end%>
+    </div>
+
+
+    <div class="form-group" id="instances-count-field" >
+      Instances: <br>
+      <%= number_field_tag 'instances_count', '1', min:1, max:10000, class: 'form-control shorter' %>
+    </div>
+  <%else%>
+    <div class="form-group">
+      <%=form.label :type%>
       <%= @promotion.type%>
-    <%end%>
-  </div>
-
-  <div class="form-group" id="instances-count-field" >
-    Instances: <br>
-    <%= number_field_tag 'instances_count', '1', min:1, max:10000, class: 'form-control shorter' %>
-  </div>
-
+    </div>
+  <%end%>
   <div class="form-group">
     <%= form.text_field :condition, readonly: readonly%>
   </div>
@@ -58,8 +65,8 @@ function show_instances_field(){
   <div class="form-group">
     <%=form.label :active%>
     <%if !readonly%>
-      <%= form.radio_button :active, true, readonly: readonly%>
-      <%= form.radio_button :active, false, readonly: readonly%>  
+      <%= form.radio_button :active, 'true', readonly: readonly%>
+      <%= form.radio_button :active, 'false', readonly: readonly%>  
     <%else%>
       <%= @promotion.active ? "Active" : "Inactive" %>
     <%end%>
