@@ -7,6 +7,7 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+Faker::Config.random = Random.new(42)
 
 pedidos_ya = Organization.create!(organization_name: 'Pedidos Ya')
 rappi = Organization.create!(organization_name: 'Rappi')
@@ -31,15 +32,17 @@ coup2 = Coupon.create!(code: 'coupon2', name: 'another coupon', return_type: :pe
 
 rand_promotions = []
 
-512.times do
+coup = Coupon.create!(code: "couponcodetest", name: "Some coupy coupon", return_type: :percentaje,
+                      return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2', organization_id: pablo.organization_id)
+
+(0..512).each { |i|
   dis = Discount.create!(code: Faker::Commerce.unique.promotion_code, name: Faker::Commerce.unique.product_name, return_type: :percentaje,
                          return_value: 10, active: true, condition: '( total <= 100 AND quantity >= 5 ) OR total > 10', organization_id: pablo.organization_id)
-  coup = Coupon.create!(code: Faker::Commerce.unique.promotion_code, name: Faker::Commerce.unique.product_name, return_type: :percentaje,
-                        return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2', organization_id: pablo.organization_id)
+  CouponInstance.create!(promotion_id: coup.id, coupon_code: "coupon#{coup.id}-#{i}")
 
   rand_promotions << dis
-  rand_promotions << coup
-end
+}
+rand_promotions << coup
 
 CouponInstance.create!(promotion_id: 4, coupon_code: 'coupon1-1')
 CouponInstance.create!(promotion_id: 4, coupon_code: 'coupon1-2')
