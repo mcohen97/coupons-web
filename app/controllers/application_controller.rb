@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
 
   def set_organization
     if user_signed_in?
-      current_organization = Organization.find @current_user.organization_id
+      current_organization = Organization.cached_find (@current_user.organization_id)
       set_current_tenant(current_organization)
     end
   end

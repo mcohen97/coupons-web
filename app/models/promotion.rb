@@ -44,13 +44,14 @@ class Promotion < ApplicationRecord
 
   def generate_report(app_key_validation = false, appkey = nil)
     if app_key_validation
-      validate_auth(appkey)
+      validate_auth(appkey,false)
     end
     positive_responses = invocations - negative_responses
     negative_ratio = invocations > 0 ? Float(negative_responses) / invocations : 0
     positive_ratio = invocations > 0 ? Float(positive_responses) / invocations : 0
     report = { invocations_count: invocations, positive_ratio: positive_ratio, negative_ratio: negative_ratio,
                average_response_time: average_response_time, total_money_spent: total_spent }
+    
     report
   end
 
@@ -87,20 +88,26 @@ class Promotion < ApplicationRecord
     expr.evaluate_condition(arguments_values)
   end
 
-  def validate_auth(appkey)
+  def validate_auth(appkey, is_evaluation = true)
     if appkey.nil?
-      add_negative_response
+      add_negative_response_if_evaluation(is_evaluation)
       raise NotAuthenticatedError, "No valid application key."
     end
     evaluation_allowed = is_from_clients_organization(appkey)
     key_includes_promotion = does_key_have_promotion(appkey)
     unless evaluation_allowed
-      add_negative_response
+      add_negative_response_if_evaluation(is_evaluation)
       raise NotAuthorizedError, "Can't access promotion from another organization"
     end
     unless key_includes_promotion
-      add_negative_response
+      add_negative_response_if_evaluation(is_evaluation)
       raise NotAuthorizedError, "Can't access promotion with this appkey"
+    end
+  end
+
+  def add_negative_response_if_evaluation(evaluation)
+    if evaluation
+      add_negative_response
     end
   end
 

@@ -48,18 +48,18 @@
 
             <div class = "w3-bar">
                 <a class="w3-button" href=<%=promotion_path(promo)%>>
-                    <img src="/assets/loupe.png" style="margin-right:4px" width='24px'>
+                    <img src=<%=asset_url('loupe.png')%> style="margin-right:4px" width='24px'>
                     <span class = "promo-option-label">Show</span>
                 </a>
                 <a class="w3-button" href=<%=edit_promotion_path(promo)%>>
-                    <img src="/assets/edit.png" style="margin-right:4px" width='24px'>
+                    <img src=<%=asset_url('edit.png')%> style="margin-right:4px" width='24px'>
                     <span class = "promo-option-label">Edit</span>
                 </a>
                 <a data-confirm="Are you sure?" class="w3-button" rel="nofollow" data-method="delete" href=<%=promotion_path(promo)%>>
-                    <img src="/assets/delete.png" style="margin-right:4px" width='24px'>
+                    <img src=<%=asset_url('delete.png')%> style="margin-right:4px" width='24px'>
                     <span class = "promo-option-label">Delete</span></a>
                 <a class="w3-button" href=<%=generate_report_path(promo)%>>
-                    <img src="/assets/presentation_64.png" style="margin-right:4px" width='24px'>
+                    <img src=<%=asset_url('presentation_64.png')%> style="margin-right:4px" width='24px'>
                     <span class = "promo-option-label">Report</span>
                 </a>
             </div>

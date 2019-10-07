@@ -9,7 +9,7 @@ class ApplicationKeysController < ApplicationController
   # GET /application_keys
   # GET /application_keys.json
   def index
-    @application_keys = ApplicationKey.all
+    @application_keys = ApplicationKey.all.includes(:promotions)
   end
 
   # GET /application_keys/1
@@ -78,7 +78,7 @@ class ApplicationKeysController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_application_key
-    @application_key = ApplicationKey.find(params[:id])
+    @application_key = ApplicationKey.cached_find(params[:id])
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
