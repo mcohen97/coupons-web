@@ -25,17 +25,17 @@
         <td><%= application_key.generate_token %></td>
         <td class = "option" >
           <a class="w3-button" style="padding: 3px;" href=<%=application_key_path(application_key)%>>
-            <img src="/assets/loupe.png" width='24px'>
+            <img src=<%=asset_url('loupe.png')%> width='24px'>
           </a>
         </td>
         <td class = "option">
           <a class="w3-button" style="padding: 3px" href=<%=edit_application_key_path(application_key)%>>
-            <img src="/assets/edit.png" width='24px'>
+            <img src=<%=asset_url('edit.png')%> width='24px'>
           </a>
         </td>
         <td class = "option"  >
           <a data-confirm="Are you sure?" class="w3-button" style="padding: 3px" rel="nofollow" data-method="delete" href=<%=application_key_path(application_key)%>>
-            <img src="/assets/delete.png" width='24px'>
+            <img src=<%=asset_url('delete.png')%> width='24px'>
           </a>
         </td>
       </tr>
