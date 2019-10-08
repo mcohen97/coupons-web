@@ -168,7 +168,10 @@ label.form-check-label{
   margin-bottom: 30px;
 }
 
-.new_promotion, .edit_promotion {
+.new_promotion, 
+.edit_promotion, 
+.new_application_key, 
+.edit_application_key {
   background-image: image-url("white-gradient.jpg");
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   background-repeat: no-repeat;
@@ -186,7 +189,10 @@ label.form-check-label{
 }
 
 @media screen and (max-width: 600px) {
-  .new_promotion, .edit_promotion {
+  .new_promotion, 
+  .edit_promotion, 
+  .new_application_key, 
+  .edit_application_key {
     width: 95%;
     padding: 5px 5px 5px 5px;
     margin-top: 5px;
@@ -194,7 +200,10 @@ label.form-check-label{
   }
 }
 
-.new_promotion h1, .edit_promotion h1 {
+.new_promotion h1, 
+.edit_promotion h1, 
+.new_application_key h1, 
+.edit_application_key h1 {
   text-align: center;
   margin-top: 30px;
   margin-bottom: 30px;
@@ -235,4 +244,16 @@ label.form-check-label{
     list-style: none;
     margin: 0 0 18px 0;
   }
+}
+
+
+.white-container{
+  background-color: rgba(250, 250, 250, 0.9);
+  border: 1px solid rgb(250, 250, 250);
+  padding: 10px;
+  padding-bottom: 10px;
+  border-radius: 10px;
+  animation: fadeIn .3s;
+  text-align: center;
+  transition: all .5s ease-in-out;
 }

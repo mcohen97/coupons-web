@@ -14,10 +14,27 @@ class User < ApplicationRecord
   has_one_attached :avatar
   validate :correct_document_mime_type
   validates :organization_id, presence: { message: 'invalid' }
+  after_save :invalidate_cache
+
 
   attr_writer :organization
 
   attr_reader :organization
+
+  def self.cached_find(id)
+    Rails.cache.fetch([User.name,id]){find(id)}
+  end
+
+  def self.serialize_from_session(key, salt)
+    single_key = key.is_a?(Array) ? key.first : key
+    user = Rails.cache.fetch([User.name, single_key]) do
+       User.where(:id => single_key).entries.first
+    end
+    # validate user against stored salt in the session
+    return user if user && user.authenticatable_salt == salt
+    # fallback to devise default method if user is blank or invalid
+    super
+  end
 
   private
 
@@ -26,5 +43,9 @@ class User < ApplicationRecord
       # avatar.purge # delete the uploaded file
       errors.add(:document, 'Must be an image')
     end
+  end
+
+  def invalidate_cache
+    Rails.cache.delete("user:#{id}")
   end
 end

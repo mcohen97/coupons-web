@@ -38,13 +38,56 @@
     margin: 0px auto 0px auto;
 }
 
+
+
+.filter-option{
+    margin: 5px 5px;
+    display: inline-block;
+}
+
+.filter-option input[type=text] {
+    padding: 5px;
+    border: .5px solid lightgray;
+    border-radius: 5px;
+}
+
+.filter-option input[type=radio] {
+    vertical-align: top;
+}
+
+.btn.btn-primary.search{
+    margin-left: 5px;
+    margin-right: 5px;
+    display: inline-block;
+    width: auto;
+  }
+
+#instances-count-field{
+    display: none;
+}
+
+.table-container{
+    width: 50%;
+    display: block;
+    margin: 20px auto;
+}
+
 @media screen and (max-width: 600px) {
     .promo-container{
-        width: 95%
+        width: 90%
     }
 
     .promo-option-label{
         display: none;
     }
-}
 
+    .filter-option{
+        width: 100%;
+        display: block;
+        clear: both;
+    }
+
+    .table-container{
+        width: 100%;
+    }
+}

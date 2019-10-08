@@ -29,6 +29,7 @@ class PromotionsController < ApplicationController
 
   def edit
     @form_title = "Edit promotion"
+    @is_edit = true
   end
 
   def create
@@ -184,7 +185,7 @@ class PromotionsController < ApplicationController
   end
 
   def coupon_instances_count
-    params.fetch(:instances_count, 15)
+    params.fetch(:instances_count, 15).to_i
   end
 
   def pagination_offset

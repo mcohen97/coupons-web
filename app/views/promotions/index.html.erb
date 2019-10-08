@@ -1,9 +1,35 @@
 <div class = 'home-container'>
     <h1 class="section-title">Promotions  </h1>
 <hr>
+    <div class = "filter-container">
+        <%= form_tag(promotions_path, method: :get) do %>
+            <div class = "filter-option">
+                Name: <%= text_field_tag :name, params[:name] %>
+            </div>
+            <div class = "filter-option">
+                Code: <%= text_field_tag :code, params[:code] %>
+            </div>
+            <div class = "filter-option">
+                Type: 
+                <%= radio_button_tag :type, 'Discount', params[:type] == 'Discount'%>Discount 
+                <%= radio_button_tag :type, 'Coupon', params[:type] == 'Coupon'%>Coupon
+            </div>
+            <div class = "filter-option">    
+                Active: 
+                <%= radio_button_tag :active, true, params[:active] == 'true'%>true 
+                <%= radio_button_tag :active, false, params[:active] == 'false'%>false
+            </div> 
+            <div class = "filter-option">    
+                <%= submit_tag "Search", name: nil, class: 'btn btn-primary search'%>
+                 <%= link_to  "Clear", promotions_path, class: 'btn btn-primary search' %>
+            </div>
+
+        <% end %>
+    </div>
+<hr>
     <% @promotions.each do |promo|%>
         <div class = "promo-container">
-            <h3><%=promo.name%> (<%=promo.code%>)</h3>
+            <h3><%=promo.name%></h3>
             <div class = "promo-info-container">
                 <b>Type:</b> <%= promo.type%>
                 <br><b>Code:</b> <%= promo.code%>
@@ -22,18 +48,18 @@
 
             <div class = "w3-bar">
                 <a class="w3-button" href=<%=promotion_path(promo)%>>
-                    <img src="/assets/loupe.png" style="margin-right:4px" width='24px'>
+                    <img src=<%=asset_url('loupe.png')%> style="margin-right:4px" width='24px'>
                     <span class = "promo-option-label">Show</span>
                 </a>
                 <a class="w3-button" href=<%=edit_promotion_path(promo)%>>
-                    <img src="/assets/edit.png" style="margin-right:4px" width='24px'>
+                    <img src=<%=asset_url('edit.png')%> style="margin-right:4px" width='24px'>
                     <span class = "promo-option-label">Edit</span>
                 </a>
                 <a data-confirm="Are you sure?" class="w3-button" rel="nofollow" data-method="delete" href=<%=promotion_path(promo)%>>
-                    <img src="/assets/delete.png" style="margin-right:4px" width='24px'>
+                    <img src=<%=asset_url('delete.png')%> style="margin-right:4px" width='24px'>
                     <span class = "promo-option-label">Delete</span></a>
                 <a class="w3-button" href=<%=generate_report_path(promo)%>>
-                    <img src="/assets/presentation_64.png" style="margin-right:4px" width='24px'>
+                    <img src=<%=asset_url('presentation_64.png')%> style="margin-right:4px" width='24px'>
                     <span class = "promo-option-label">Report</span>
                 </a>
             </div>

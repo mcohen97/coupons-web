@@ -1,23 +1,30 @@
-<h1 class="section-title">Promotions</h1>
 <%= render 'form', promotion: @promotion.becomes(Promotion), readonly: true %>
 <% if @promotion.type == 'Coupon'%>
-  <table>
-    <tr>
-      <th>Coupon Code</th>
-      <th>Reedemed</th>
-    </tr>
-    <% @coupon_instances.each do |ci| %>
-      <tr>
-        <td><%= ci.coupon_code %></td>
-        <td>
-          <%if ci.redeemed%>
-            yes
-          <%else%>
-            no
-          <%end%>
-        </td>
-      </tr>
-    <%end%>
-  </table>
+  <div class = "table-container">
+  <div class = "table-wrapper">
+    <table class="fl-table">
+      <thead>
+        <tr>
+          <th>Coupon Code</th>
+          <th>Reedemed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @coupon_instances.each do |ci| %>
+          <tr>
+            <td><%= ci.coupon_code %></td>
+            <td>
+              <%if ci.redeemed%>
+                yes
+              <%else%>
+                no
+              <%end%>
+            </td>
+          </tr>
+        <%end%>
+      </tbody>
+    </table>
+  </div>
+  </div>
 <% end%>
 
