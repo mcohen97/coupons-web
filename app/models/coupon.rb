@@ -6,6 +6,7 @@ require_relative '../../lib/error/promotion_arguments_error.rb'
 class Coupon < Promotion
 
   MAX_COUPON_INSTANCES = 100
+  DEFAULT_COUPON_INSTANCES = 5
   
   has_many :coupon_instances
 
