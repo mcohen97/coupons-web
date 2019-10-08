@@ -111,7 +111,7 @@ class PromotionsController < ApplicationController
 
   def respond_promotion_not_created(promotion)
     respond_to do |format|
-      format.html { render :new }
+      format.html { render :new, status: :unprocessable_entity  }
       format.json { render json: promotion.errors, status: :unprocessable_entity }
     end
   end
@@ -157,6 +157,9 @@ class PromotionsController < ApplicationController
 
   def set_promo
     @promotion = Promotion.find(params[:id])
+    if @promotion.deleted
+      promotion_not_found
+    end
     @promotion = @promotion.becomes(Promotion)
   end
 

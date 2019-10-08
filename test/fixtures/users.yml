@@ -3,13 +3,22 @@
 one:
   name: name1
   surname: surname1
-  encrypted_password: $2a$11$9mOxGv95uo/JqkNJNa7ideo1mHeKqa0n6E6tUgJxV4jQp6EK6XiKG
+  role: administrator
+  encrypted_password: <%= User.new.send(:password_digest, '123456') %>
   email: mail1@domain1.com
   organization_id: 1
 
 two:
   name: name2
   surname: surname2
-  encrypted_password: $2a$11$9mOxGv95uo/JqkNJNa7ideo1mHeKqa0n6E6tUgJxV4jQp6EK6XiKG
+  encrypted_password: <%= User.new.send(:password_digest, '123456') %>
   email: mail2@domain2.com
   organization_id: 2
+
+three:
+  name: name3
+  surname: surname3
+  role: org_user
+  encrypted_password: <%= User.new.send(:password_digest, '123456') %>
+  email: mail3@domain3.com
+  organization_id: 1
