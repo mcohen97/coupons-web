@@ -10,14 +10,14 @@
                 Code: <%= text_field_tag :code, params[:code] %>
             </div>
             <div class = "filter-option">
-                Type: 
-                <%= radio_button_tag :type, 'Discount', params[:type] == 'Discount'%>Discount 
-                <%= radio_button_tag :type, 'Coupon', params[:type] == 'Coupon'%>Coupon
+                &nbsp Type:&nbsp 
+                <%= radio_button_tag :type, 'Discount', params[:type] == 'Discount'%> Discount &nbsp  
+                <%= radio_button_tag :type, 'Coupon', params[:type] == 'Coupon'%> Coupon
             </div>
             <div class = "filter-option">    
-                Active: 
-                <%= radio_button_tag :active, true, params[:active] == 'true'%>true 
-                <%= radio_button_tag :active, false, params[:active] == 'false'%>false
+                &nbsp Active: &nbsp 
+                <%= radio_button_tag :active, true, params[:active] == 'true'%> True &nbsp 
+                <%= radio_button_tag :active, false, params[:active] == 'false'%> False
             </div> 
             <div class = "filter-option">    
                 <%= submit_tag "Search", name: nil, class: 'btn btn-primary search'%>
