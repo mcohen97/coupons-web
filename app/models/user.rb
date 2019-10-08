@@ -22,12 +22,12 @@ class User < ApplicationRecord
   attr_reader :organization
 
   def self.cached_find(id)
-    Rails.cache.fetch("user:#{id}"){find(id)}
+    Rails.cache.fetch([User.name,id]){find(id)}
   end
 
   def self.serialize_from_session(key, salt)
     single_key = key.is_a?(Array) ? key.first : key
-    user = Rails.cache.fetch("user:#{single_key}") do
+    user = Rails.cache.fetch([User.name, single_key]) do
        User.where(:id => single_key).entries.first
     end
     # validate user against stored salt in the session
