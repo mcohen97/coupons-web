@@ -157,6 +157,9 @@ class PromotionsController < ApplicationController
 
   def set_promo
     @promotion = Promotion.find(params[:id])
+    if @promotion.deleted
+      promotion_not_found
+    end
     @promotion = @promotion.becomes(Promotion)
   end
 

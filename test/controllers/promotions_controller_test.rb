@@ -20,7 +20,7 @@ class PromotionsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 2, @controller.instance_variable_get(:@promotions).count
   end
 
-  test "should not show deleted promotions" do
+  test "should not include deleted promotions in index" do
     do_login users(:two)
     get promotions_url
 
@@ -52,24 +52,49 @@ class PromotionsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 1, @controller.instance_variable_get(:@promotions).count
   end
 
-  test "should get promotion correctly" do
-    get promotion_url(promotions(:coupon1))
+  test "should get discount correctly" do
+    get promotion_url(promotions(:discount1))
     promo = @controller.instance_variable_get(:@promotion)
 
-    assert_equal 1, promo.id
-    assert_equal 'Promo verano', promo.name
-    assert_equal 'COMIDADESC5', promo.code
+    assert_equal 4, promo.id
+    assert_equal 'Descuento comienzo clases', promo.name
+    assert_equal 'CLASES', promo.code
     assert_equal 1, promo.organization_id
-    assert_equal 'percentaje', promo.return_type
-    assert_equal 10, promo.return_value
+    assert_equal 'fixed_value', promo.return_type
+    assert_equal 100, promo.return_value
     assert promo.active
-    assert_equal 'Coupon', promo.type
-    assert_equal 'total > 100 AND products_size >= 2', promo.condition
+    assert_equal 'Discount', promo.type
+    assert_equal '(total <= 1000 AND quantity >= 5) OR total > 1000', promo.condition  
+  end
+
+  test "should get coupon correctly" do
+    get promotion_url(promotions(:coupon1))
+    coupon = @controller.instance_variable_get(:@promotion)
+    coupon_instances = @controller.instance_variable_get(:@coupon_instances)
+
+    assert_equal 1, coupon.id
+    assert_equal 'Promo verano', coupon.name
+    assert_equal 'COMIDADESC5', coupon.code
+    assert_equal 1, coupon.organization_id
+    assert_equal 'percentaje', coupon.return_type
+    assert_equal 10, coupon.return_value
+    assert coupon.active
+    assert_equal 'Coupon', coupon.type
+    assert_equal 'total > 100 AND products_size >= 2', coupon.condition
+    
+    # associated coupon_codes
+    assert_equal 2, coupon_instances.count
   end
 
   test "should handle non-existent promotions request" do
     get promotion_url(53)
     assert_response :not_found
+  end
+
+  test "should not permit access to deleted promos" do
+    do_login users(:two)
+    get promotion_url(promotions(:discount2))
+    assert_response :not_found  
   end
 
   test "should not permit access to promos from another org" do
@@ -130,11 +155,57 @@ class PromotionsControllerTest < ActionDispatch::IntegrationTest
            } 
         end
       assert_response :unprocessable_entity
+      #puts "#{key} #{@controller.instance_variable_get(:@promotion).errors[key].any?}"
      }
   end
 
-  test "should not create percentaje promotion with negative return value" do
-    
+  test "should not create promotion with negative return value" do
+    assert_no_difference('Promotion.count') do
+      post promotions_url, params: { 
+        promotion: { name: '', code: 'COFEE_DISCOUNT', organization_id: 2, 
+          return_type: 'percentaje', return_value: -3, active: true, type: 'Coupon', condition: 'quantity = 3 OR total > 100' } 
+       } 
+    end
+    assert_response :unprocessable_entity
+  end
+
+  test "should not create percentaje promotion with return value over 100" do
+    assert_no_difference('Promotion.count') do
+      post promotions_url, params: { 
+        promotion: { name: '', code: 'COFEE_DISCOUNT', organization_id: 2, 
+          return_type: 'percentaje', return_value: 103, active: true, type: 'Coupon', condition: 'quantity = 3 OR total > 100' } 
+       } 
+    end
+    assert_response :unprocessable_entity
+  end
+
+  test "should not create promotion with wrong condition" do
+    assert_no_difference('Promotion.count') do
+      post promotions_url, params: { 
+        # lacks one operand
+        promotion: { name: '', code: 'COFEE_DISCOUNT', organization_id: 2, 
+          return_type: 'percentaje', return_value: 55, active: true, type: 'Coupon', condition: 'quantity = 3 OR total > 100 OR quantity = 2 AND total >' } 
+       } 
+    end
+    assert_response :unprocessable_entity
+
+    assert_no_difference('Promotion.count') do
+      post promotions_url, params: { 
+        # lacks operator
+        promotion: { name: '', code: 'COFEE_DISCOUNT', organization_id: 2, 
+          return_type: 'percentaje', return_value: 55, active: true, type: 'Coupon', condition: 'quantity total' } 
+       } 
+    end
+    assert_response :unprocessable_entity
+
+    assert_no_difference('Promotion.count') do
+      post promotions_url, params: { 
+        # wrong order
+        promotion: { name: '', code: 'COFEE_DISCOUNT', organization_id: 2, 
+          return_type: 'percentaje', return_value: 55, active: true, type: 'Coupon', condition: '= quantity 10' } 
+       } 
+    end
+    assert_response :unprocessable_entity
   end
 
 
