@@ -73,3 +73,4 @@ gem 'twitter-bootstrap-rails'
 gem "health_check"
 gem "bootstrap_form", "~> 4.0"
 gem 'coffee-rails'
+gem 'faker'
