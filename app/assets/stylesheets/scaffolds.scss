@@ -149,7 +149,7 @@ label.form-check-label{
   text-align: center;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 767px) {
   .new_user {
     width: 95%;
     padding: 0px 5px 5px 5px;
@@ -206,7 +206,7 @@ label.form-check-label{
   transition: all .5s linear;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 767px) {
   .new_promotion, 
   .edit_promotion, 
   .new_application_key, 

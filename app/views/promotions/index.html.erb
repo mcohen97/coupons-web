@@ -27,6 +27,7 @@
         <% end %>
     </div>
 <hr>
+    
     <% @promotions.each do |promo|%>
         <div class = "promo-container">
             <h3><%=promo.name%></h3>
@@ -65,7 +66,7 @@
             </div>
         </div>
     <%end%>
-    
-    <%= will_paginate @promotions %>
-
+    <div class = "digg_pagination" style="display:block; margin: 20px auto 0px auto; clear:both; background: none">
+        <%= will_paginate @promotions, inner_window: 0, outer_window:0 %>
+    </div>
 </div>
