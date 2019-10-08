@@ -36,7 +36,7 @@ class PromotionsController < ApplicationController
     @promotion = Promotion.new(promotion_parameters)
     is_coupon = @promotion.type == 'Coupon'
     if is_coupon && !valid_instances_count()
-      @promotion.errors.add(:base,"Coupon count must be positive and less or equal to #{Coupon::MAX_COUPON_INSTANCES}")
+      @promotion.errors.add(:coupon_instances,"Coupon count must be positive and less or equal to #{Coupon::MAX_COUPON_INSTANCES}")
       respond_promotion_not_created(@promotion) && return
     end
 
@@ -99,7 +99,7 @@ class PromotionsController < ApplicationController
   private
 
   def valid_instances_count
-    return coupon_instances_count < 5
+    return coupon_instances_count < Coupon::MAX_COUPON_INSTANCES
   end
 
   def respond_promotion_created(promotion)
@@ -185,7 +185,7 @@ class PromotionsController < ApplicationController
   end
 
   def coupon_instances_count
-    params.fetch(:instances_count, 15).to_i
+    params.fetch(:instances_count, Coupon::DEFAULT_COUPON_INSTANCES).to_i
   end
 
   def pagination_offset
