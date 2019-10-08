@@ -10,6 +10,7 @@ class ApplicationKeysController < ApplicationController
   # GET /application_keys.json
   def index
     @application_keys = ApplicationKey.all.includes(:promotions)
+    @application_keys = set_pagination(@application_keys)
   end
 
   # GET /application_keys/1
@@ -88,5 +89,19 @@ class ApplicationKeysController < ApplicationController
 
   def application_key_not_found
     logger.error('Application key not found.')
+  end
+
+  def set_pagination(collection)
+    offset = pagination_offset
+    per_page = pagination_per_page
+    collection.paginate(page: offset, per_page: per_page)
+  end
+
+  def pagination_offset
+    params[:page].present? ? params[:page] : 1
+  end
+
+  def pagination_per_page
+    params[:per_page].present? ? params[:per_page] : 10
   end
 end

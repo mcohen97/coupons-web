@@ -107,6 +107,8 @@ GEM
       devise (>= 4.6)
     erubi (1.8.0)
     execjs (2.7.0)
+    faker (2.5.0)
+      i18n (~> 1.6.0)
     ffi (1.11.1)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
@@ -288,6 +290,7 @@ DEPENDENCIES
   devise
   devise-bootstrap-views
   devise-i18n
+  faker
   health_check
   jbuilder (~> 2.7)
   jquery-rails
@@ -311,7 +314,7 @@ DEPENDENCIES
   will_paginate-bootstrap
 
 RUBY VERSION
-   ruby 2.6.3p62
+   ruby 2.6.4p104
 
 BUNDLED WITH
    1.17.3
