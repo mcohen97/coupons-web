@@ -156,7 +156,7 @@ class PromotionsController < ApplicationController
   end
 
   def set_promo
-    @promotion = Promotion.find(params[:id])
+    @promotion = Promotion.cached_find(params[:id])
     @promotion = @promotion.becomes(Promotion)
   end
 
