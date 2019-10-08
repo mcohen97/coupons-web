@@ -10,6 +10,8 @@ gem 'rubocop', '~> 0.74.0', require: false
 gem 'rails', '~> 6.0.0'
 # Use postgresql as the database for Active Record
 gem 'pg', '>= 0.18', '< 2.0'
+# Use Dalli memcached
+gem 'dalli'
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 # Use SCSS for stylesheets
