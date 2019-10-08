@@ -34,6 +34,10 @@
     .dashboard-item{
         width: 40%;
     }
+
+    ul.nav.navbar-nav.profile{
+        float: left;
+    }
 }
 .home-container{
     background: rgba(255,255,255,1);
@@ -66,4 +70,8 @@
     border: none;
     color: #000;
     margin-bottom: 20px;
+}
+
+ul.nav.navbar-nav.profile{
+    float: right;
 }
