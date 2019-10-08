@@ -11,6 +11,15 @@
       </elementProp>
     </TestPlan>
     <hashTree>
+      <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Constant Throughput Timer" enabled="true">
+        <doubleProp>
+          <name>throughput</name>
+          <value>1200.0</value>
+          <savedValue>0.0</savedValue>
+        </doubleProp>
+        <intProp name="calcMode">1</intProp>
+      </ConstantThroughputTimer>
+      <hashTree/>
       <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
         <collectionProp name="Arguments.arguments">
           <elementProp name="DOMAIN" elementType="Argument">
@@ -31,6 +40,11 @@
           <elementProp name="COUPON" elementType="Argument">
             <stringProp name="Argument.name">COUPON</stringProp>
             <stringProp name="Argument.value">couponcodetest</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="COUPON_KEY" elementType="Argument">
+            <stringProp name="Argument.name">COUPON_KEY</stringProp>
+            <stringProp name="Argument.value">eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiTEEga2V5IiwicHJvbW90aW9ucyI6WzZdfQ.IliVyRAnugPkRRWWNxIou4BV-TFvaFRw2y2h1A316ow  </stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -78,15 +92,6 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Constant Throughput Timer" enabled="true">
-            <doubleProp>
-              <name>throughput</name>
-              <value>1200.0</value>
-              <savedValue>0.0</savedValue>
-            </doubleProp>
-            <intProp name="calcMode">0</intProp>
-          </ConstantThroughputTimer>
-          <hashTree/>
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Evaluate promotion (discount) with correct data and applies" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Content-Type" elementType="Header">
@@ -129,8 +134,8 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">25</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">5</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -173,7 +178,7 @@
               </elementProp>
               <elementProp name="Authorization" elementType="Header">
                 <stringProp name="Header.name">Authorization</stringProp>
-                <stringProp name="Header.value">${APPKEY}</stringProp>
+                <stringProp name="Header.value">${COUPON_KEY}</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
