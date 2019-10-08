@@ -13,6 +13,7 @@
     border-radius: 5px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     padding: 10px;
+    vertical-align: middle;
 }
 
 .promo-container .w3-bar{
@@ -22,6 +23,9 @@
 .promo-container h3{
     font-weight: bold;
     margin-bottom: 20px;  
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .promo-container info-title{
@@ -33,6 +37,9 @@
 }
 
 .promo-info-container{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     text-align: left;
     width: 80%;
     margin: 0px auto 0px auto;
