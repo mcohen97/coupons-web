@@ -64,6 +64,7 @@
     <orderEntry type="library" scope="PROVIDED" name="devise-i18n (v1.8.2, RVM: ruby-2.6.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="erubi (v1.8.0, RVM: ruby-2.6.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="execjs (v2.7.0, RVM: ruby-2.6.4) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="faker (v2.5.0, RVM: ruby-2.6.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ffi (v1.11.1, RVM: ruby-2.6.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="globalid (v0.4.2, RVM: ruby-2.6.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="health_check (v3.0.0, RVM: ruby-2.6.4) [gem]" level="application" />
