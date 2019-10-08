@@ -28,6 +28,7 @@ class Promotion < ApplicationRecord
   validates :return_value, numericality: { greater_than: 0 }
   validates :return_value, numericality: { less_than_or_equal_to: 100 }, if: :percentaje?
   before_validation :parse_condition
+  after_commit :flush_promotions_cache
 
   # returns struct that indicates error if there is one, or result.
   def evaluate_applicability(arguments_values, appkey)
@@ -55,6 +56,10 @@ class Promotion < ApplicationRecord
     report
   end
 
+  def self.cached_find(id)
+    Rails.cache.fetch([Promotion.name, id]){find(id)}
+  end
+  
   protected
 
   # to be overriden.
@@ -162,5 +167,9 @@ class Promotion < ApplicationRecord
     rescue ParsingError => e
       errors.add(:condition, :invalid, message: e.message)
     end
+  end
+
+  def flush_promotions_cache
+    Rails.cache.delete([Promotion.name, id])
   end
 end

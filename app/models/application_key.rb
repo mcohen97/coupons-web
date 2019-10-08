@@ -23,15 +23,15 @@ class ApplicationKey < ApplicationRecord
   def self.get_from_token_if_valid(token)
     payload = JsonWebToken.decode(token)
     key_name = payload[:name]
-    app_key = Rails.cache.fetch([self.class.name, key_name]){ find_by_name(key_name) }
-    Rails.cache.write([self.class.name, app_key.id], app_key)
+    app_key = Rails.cache.fetch([ApplicationKey.name, "name", key_name]){ find_by_name(key_name) }
+    Rails.cache.write([ApplicationKey.name, "id", app_key.id], app_key)
     app_key
   rescue StandardError => e
     nil
   end
 
   def self.cached_find(id)
-    Rails.cache.fetch([self.class.name, id]){ find(id) }
+    Rails.cache.fetch([ApplicationKey.name, "id", id]){ find(id) }
   end
 
   def promotions_of_same_org
@@ -47,7 +47,7 @@ class ApplicationKey < ApplicationRecord
   private
 
   def flush_appkeys_cache
-    Rails.cache.delete([self.class.name, name])
-    Rails.cache.delete([self.class.name, id])
+    Rails.cache.delete([ApplicationKey.name,"name", name])
+    Rails.cache.delete([ApplicationKey.name,"id", id])
   end
 end
