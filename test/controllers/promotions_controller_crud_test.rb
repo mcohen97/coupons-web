@@ -333,7 +333,6 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
      }
      assert_response :unprocessable_entity
      promotion = @controller.instance_variable_get(:@promotion)
-     puts promotion.errors.inspect
      assert promotion.errors[:name].any?
   end
 
