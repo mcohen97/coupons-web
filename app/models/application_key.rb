@@ -13,8 +13,7 @@ class ApplicationKey < ApplicationRecord
 
   def generate_token
     payload = {
-      name: name,
-      promotions: promotion_ids
+      name: name
     }
 
     JsonWebToken.encode(payload)
