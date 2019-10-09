@@ -155,59 +155,256 @@ class PromotionsControllerTest < ActionDispatch::IntegrationTest
            } 
         end
       assert_response :unprocessable_entity
-      #puts "#{key} #{@controller.instance_variable_get(:@promotion).errors[key].any?}"
      }
   end
 
   test "should not create promotion with negative return value" do
     assert_no_difference('Promotion.count') do
       post promotions_url, params: { 
-        promotion: { name: '', code: 'COFEE_DISCOUNT', organization_id: 2, 
-          return_type: 'percentaje', return_value: -3, active: true, type: 'Coupon', condition: 'quantity = 3 OR total > 100' } 
+        promotion: { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
+        code: 'COFEE_DISCOUNT', organization_id: 2, return_type: 'percentaje', return_value: -3,
+         active: true, type: 'Coupon', condition: 'quantity = 3 OR total > 100' } 
        } 
     end
     assert_response :unprocessable_entity
+    promotion = @controller.instance_variable_get(:@promotion)
+    assert promotion.errors[:return_value].any?
   end
 
   test "should not create percentaje promotion with return value over 100" do
     assert_no_difference('Promotion.count') do
       post promotions_url, params: { 
-        promotion: { name: '', code: 'COFEE_DISCOUNT', organization_id: 2, 
-          return_type: 'percentaje', return_value: 103, active: true, type: 'Coupon', condition: 'quantity = 3 OR total > 100' } 
+        promotion: { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
+        code: 'COFEE_DISCOUNT', organization_id: 2, return_type: 'percentaje', return_value: 103,
+        active: true, type: 'Coupon', condition: 'quantity = 3 OR total > 100' } 
        } 
     end
     assert_response :unprocessable_entity
+    promotion = @controller.instance_variable_get(:@promotion)
+    assert promotion.errors[:return_value].any?
   end
 
   test "should not create promotion with wrong condition" do
     assert_no_difference('Promotion.count') do
       post promotions_url, params: { 
         # lacks one operand
-        promotion: { name: '', code: 'COFEE_DISCOUNT', organization_id: 2, 
-          return_type: 'percentaje', return_value: 55, active: true, type: 'Coupon', condition: 'quantity = 3 OR total > 100 OR quantity = 2 AND total >' } 
+        promotion: { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF', 
+        code: 'COFEE_DISCOUNT', organization_id: 2, return_type: 'percentaje', return_value: 55,
+         active: true, type: 'Coupon', condition: 'quantity = 3 OR total > 100 OR quantity = 2 AND total >' } 
        } 
     end
     assert_response :unprocessable_entity
+    promotion = @controller.instance_variable_get(:@promotion)
+    assert promotion.errors[:condition].any?
 
     assert_no_difference('Promotion.count') do
       post promotions_url, params: { 
         # lacks operator
-        promotion: { name: '', code: 'COFEE_DISCOUNT', organization_id: 2, 
+        promotion: { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF', code: 'COFEE_DISCOUNT', organization_id: 2, 
           return_type: 'percentaje', return_value: 55, active: true, type: 'Coupon', condition: 'quantity total' } 
        } 
     end
     assert_response :unprocessable_entity
+    promotion = @controller.instance_variable_get(:@promotion)
+    assert promotion.errors[:condition].any?
 
     assert_no_difference('Promotion.count') do
       post promotions_url, params: { 
         # wrong order
-        promotion: { name: '', code: 'COFEE_DISCOUNT', organization_id: 2, 
+        promotion: { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF', code: 'COFEE_DISCOUNT', organization_id: 2, 
           return_type: 'percentaje', return_value: 55, active: true, type: 'Coupon', condition: '= quantity 10' } 
        } 
     end
     assert_response :unprocessable_entity
+    promotion = @controller.instance_variable_get(:@promotion)
+    assert promotion.errors[:condition].any?
   end
 
+  test "should not create promotion with repeated name" do
+    assert_no_difference('Promotion.count') do
+    # same name as in coupon2 of promotions fixture 
+      post promotions_url, params: { 
+        promotion: 
+      { name: 'Obtené un cupón de 5% de descuento para tu primera compra en las cantinas de la Universidad ORT',
+       code: 'COFEE_DISCOUNT', 
+       organization_id: 2, 
+       return_type: 'percentaje',
+       return_value: 50, 
+       active: true,
+       type: 'Coupon',
+       condition: 'quantity = 3 OR total > 100' } 
+       }
+       
+    end
+    assert @controller.instance_variable_get(:@promotion).errors[:name].any?
+    assert_response :unprocessable_entity
+  end
+
+  test "should not create promotion with repeated code" do
+    assert_no_difference('Promotion.count') do
+      # same code as in coupon2 of promotions fixture 
+        post promotions_url, params: { 
+          promotion: 
+        { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
+         code: 'COMPRAYA', 
+         organization_id: 2, 
+         return_type: 'percentaje',
+         return_value: 50, 
+         active: true,
+         type: 'Coupon',
+         condition: 'quantity = 3 OR total > 100' } 
+         }
+         
+      end
+      assert @controller.instance_variable_get(:@promotion).errors[:code].any?
+      assert_response :unprocessable_entity
+  end
+
+  test "should not create with a type not in the permitted collection" do
+    assert_no_difference('Promotion.count') do
+      post_params = { promotion: { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF', code: 'COFEE_DISCOUNT', 
+       organization_id: 2, return_type: 'percentaje', return_value: 50, active: true, type: 'not_existent',
+       condition: 'quantity = 3 OR total > 100' } 
+       }
+      assert_raise(ActiveRecord::SubclassNotFound) do
+        post promotions_url, params: post_params
+      end
+       
+    end
+  end
+
+  test "should not create with return type not in the permitted collection" do
+    post_params = { promotion: { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
+    code: 'COFEE_DISCOUNT', organization_id: 2, return_type: 'not_existent', return_value: 50, 
+    active: true, type: 'Coupon', condition: 'quantity = 3 OR total > 100' } 
+    }
+    assert_raise(ArgumentError) do
+      post promotions_url, params: post_params
+    end
+  end
+
+  test "should update promotion with correct data" do
+    to_update = promotions(:coupon1)
+    assert_no_difference('Promotion.count') do
+      patch promotion_url(to_update), params: { 
+        promotion: 
+        { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
+          code: 'COFEE_DISCOUNT', 
+          organization_id: 2, 
+          return_type: 'percentaje',
+          return_value: 50, 
+          active: true,
+          type: 'Coupon',
+          condition: 'quantity = 3 OR total > 100' } 
+     }
+    end
+    assert_redirected_to promotion_url(to_update)
+    assert_equal 'Promotion was updated successfully.', flash[:notice]
+  end
+
+  test "should handle update of not existing promotion" do
+    patch promotion_url(38), params: { 
+      promotion: { } # parameters won't be necesary 
+    }
+    assert_response :not_found
+  end
+
+  test "should not update promotion with repeated name" do
+    to_update = promotions(:coupon1)
+      # same name as discount1 of promotions fixture
+      patch promotion_url(to_update), params: { 
+        promotion: 
+        { name: 'Descuento comienzo clases',
+          code: 'COFEE_DISCOUNT', 
+          organization_id: 2, 
+          return_type: 'percentaje',
+          return_value: 50, 
+          active: true,
+          type: 'Coupon',
+          condition: 'quantity = 3 OR total > 100' } 
+     }
+     assert_response :unprocessable_entity
+     promotion = @controller.instance_variable_get(:@promotion)
+     puts promotion.errors.inspect
+     assert promotion.errors[:name].any?
+  end
+
+  test "should not update promotion with repeated code" do
+    to_update = promotions(:coupon1)
+    # same code as coupon2 of promotions fixture
+    patch promotion_url(to_update), params: { 
+      promotion: 
+      { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
+        code: 'COMPRAYA', 
+        organization_id: 2, 
+        return_type: 'percentaje',
+        return_value: 50, 
+        active: true,
+        type: 'Coupon',
+        condition: 'quantity = 3 OR total > 100' } 
+   }
+   assert_response :unprocessable_entity
+   promotion = @controller.instance_variable_get(:@promotion)
+   assert promotion.errors[:code].any?
+  end
+
+  test "should not update promotion with negative return value" do
+    to_update = promotions(:coupon1)
+    assert_no_difference('Promotion.count') do
+      patch promotion_url(to_update), params: { 
+        promotion: 
+        { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
+          code: 'COFEE_DISCOUNT', 
+          organization_id: 2, 
+          return_type: 'percentaje',
+          return_value: -5, 
+          active: true,
+          type: 'Coupon',
+          condition: 'quantity = 3 OR total > 100' } 
+     }
+    end
+    assert_response :unprocessable_entity
+    promotion = @controller.instance_variable_get(:@promotion)
+    assert promotion.errors[:return_value].any?
+  end
+
+  test "should not update percentaje promotion with return value over 100" do
+    to_update = promotions(:coupon1)
+      patch promotion_url(to_update), params: { 
+        promotion: 
+        { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
+          code: 'COFEE_DISCOUNT', 
+          organization_id: 2, 
+          return_type: 'percentaje',
+          return_value: 102, 
+          active: true,
+          type: 'Coupon',
+          condition: 'quantity = 3 OR total > 100' } 
+     }
+    
+    assert_response :unprocessable_entity
+    promotion = @controller.instance_variable_get(:@promotion)
+    assert promotion.errors[:return_value].any?
+  end
+
+  test "should not update promotion with wrong condition" do
+    to_update = promotions(:coupon1)
+    patch promotion_url(to_update), params: { 
+      promotion: 
+      { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
+        code: 'COFEE_DISCOUNT', 
+        organization_id: 2, 
+        return_type: 'percentaje',
+        return_value: 50, 
+        active: true,
+        type: 'Coupon',
+        condition: 'quantity = 3 OR total >' } 
+   }
+   assert_response :unprocessable_entity
+   promotion = @controller.instance_variable_get(:@promotion)
+   assert promotion.errors[:condition].any?
+
+  end
 
   def do_login(user)
     get '/users/sign_in'
