@@ -70,7 +70,7 @@ class PromotionsController < ApplicationController
     respond_to do |format|
       logger.info("Successfully deleted promotion of id: #{@promotion.id}.")
       format.html { redirect_to promotions_path, notice: 'Promotion was successfully deleted.' }
-      format.json { head :no_content }
+      format.json { render json: {notice: 'Promotion was successfully deleted.'}, status: :success }
     end
   end
 
