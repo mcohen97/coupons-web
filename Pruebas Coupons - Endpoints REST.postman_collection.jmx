@@ -24,7 +24,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="DOMAIN" elementType="Argument">
             <stringProp name="Argument.name">DOMAIN</stringProp>
-            <stringProp name="Argument.value">coupons-web-app.azurewebsites.net</stringProp>
+            <stringProp name="Argument.value">couponsweb.azurewebsites.net</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="PORT" elementType="Argument">
@@ -34,7 +34,7 @@
           </elementProp>
           <elementProp name="APPKEY" elementType="Argument">
             <stringProp name="Argument.name">APPKEY</stringProp>
-            <stringProp name="Argument.value">eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiQWxsIHBlZGlkb3MgeWEifQ.cQYsmPdL3Kd_QtUyoqq1RcLMkXiOkz8FC49iO5i7CyA</stringProp>
+            <stringProp name="Argument.value">eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiQWxsIHBlZGlkb3MgeWEiLCJwcm9tb3Rpb25zIjpbNyw4LDksMTAsMTEsMTIsMTMsMTQsMTUsMTYsMTcsMTgsMTksMjAsMjEsMjIsMjMsMjQsMjUsMjYsMjcsMjgsMjksMzAsMzEsMzIsMzMsMzQsMzUsMzYsMzcsMzgsMzksNDAsNDEsNDIsNDMsNDQsNDUsNDYsNDcsNDgsNDksNTAsNTEsNTIsNTMsNTQsNTUsNTYsNTcsNTgsNTksNjAsNjEsNjIsNjMsNjQsNjUsNjYsNjcsNjgsNjksNzAsNzEsNzIsNzMsNzQsNzUsNzYsNzcsNzgsNzksODAsODEsODIsODMsODQsODUsODYsODcsODgsODksOTAsOTEsOTIsOTMsOTQsOTUsOTYsOTcsOTgsOTksMTAwLDEwMSwxMDIsMTAzLDEwNCwxMDUsMTA2LDEwNywxMDgsMTA5LDExMCwxMTEsMTEyLDExMywxMTQsMTE1LDExNiwxMTcsMTE4LDExOSwxMjAsMTIxLDEyMiwxMjMsMTI0LDEyNSwxMjYsMTI3LDEyOCwxMjksMTMwLDEzMSwxMzIsMTMzLDEzNCwxMzUsMTM2LDEzNywxMzgsMTM5LDE0MCwxNDEsMTQyLDE0MywxNDQsMTQ1LDE0NiwxNDcsMTQ4LDE0OSwxNTAsMTUxLDE1MiwxNTMsMTU0LDE1NSwxNTYsMTU3LDE1OCwxNTksMTYwLDE2MSwxNjIsMTYzLDE2NCwxNjUsMTY2LDE2NywxNjgsMTY5LDE3MCwxNzEsMTcyLDE3MywxNzQsMTc1LDE3NiwxNzcsMTc4LDE3OSwxODAsMTgxLDE4MiwxODMsMTg0LDE4NSwxODYsMTg3LDE4OCwxODksMTkwLDE5MSwxOTIsMTkzLDE5NCwxOTUsMTk2LDE5NywxOTgsMTk5LDIwMCwyMDEsMjAyLDIwMywyMDQsMjA1LDIwNiwyMDcsMjA4LDIwOSwyMTAsMjExLDIxMiwyMTMsMjE0LDIxNSwyMTYsMjE3LDIxOCwyMTksMjIwLDIyMSwyMjIsMjIzLDIyNCwyMjUsMjI2LDIyNywyMjgsMjI5LDIzMCwyMzEsMjMyLDIzMywyMzQsMjM1LDIzNiwyMzcsMjM4LDIzOSwyNDAsMjQxLDI0MiwyNDMsMjQ0LDI0NSwyNDYsMjQ3LDI0OCwyNDksMjUwLDI1MSwyNTIsMjUzLDI1NCwyNTUsMjU2LDI1NywyNTgsMjU5LDI2MCwyNjEsMjYyLDI2MywyNjQsMjY1LDI2NiwyNjcsMjY4LDI2OSwyNzAsMjcxLDI3MiwyNzMsMjc0LDI3NSwyNzYsMjc3LDI3OCwyNzksMjgwLDI4MSwyODIsMjgzLDI4NCwyODUsMjg2LDI4NywyODgsMjg5LDI5MCwyOTEsMjkyLDI5MywyOTQsMjk1LDI5NiwyOTcsMjk4LDI5OSwzMDAsMzAxLDMwMiwzMDMsMzA0LDMwNSwzMDYsMzA3LDMwOCwzMDksMzEwLDMxMSwzMTIsMzEzLDMxNCwzMTUsMzE2LDMxNywzMTgsMzE5LDMyMCwzMjEsMzIyLDMyMywzMjQsMzI1LDMyNiwzMjcsMzI4LDMyOSwzMzAsMzMxLDMzMiwzMzMsMzM0LDMzNSwzMzYsMzM3LDMzOCwzMzksMzQwLDM0MSwzNDIsMzQzLDM0NCwzNDUsMzQ2LDM0NywzNDgsMzQ5LDM1MCwzNTEsMzUyLDM1MywzNTQsMzU1LDM1NiwzNTcsMzU4LDM1OSwzNjAsMzYxLDM2MiwzNjMsMzY0LDM2NSwzNjYsMzY3LDM2OCwzNjksMzcwLDM3MSwzNzIsMzczLDM3NCwzNzUsMzc2LDM3NywzNzgsMzc5LDM4MCwzODEsMzgyLDM4MywzODQsMzg1LDM4NiwzODcsMzg4LDM4OSwzOTAsMzkxLDM5MiwzOTMsMzk0LDM5NSwzOTYsMzk3LDM5OCwzOTksNDAwLDQwMSw0MDIsNDAzLDQwNCw0MDUsNDA2LDQwNyw0MDgsNDA5LDQxMCw0MTEsNDEyLDQxMyw0MTQsNDE1LDQxNiw0MTcsNDE4LDQxOSw0MjAsNDIxLDQyMiw0MjMsNDI0LDQyNSw0MjYsNDI3LDQyOCw0MjksNDMwLDQzMSw0MzIsNDMzLDQzNCw0MzUsNDM2LDQzNyw0MzgsNDM5LDQ0MCw0NDEsNDQyLDQ0Myw0NDQsNDQ1LDQ0Niw0NDcsNDQ4LDQ0OSw0NTAsNDUxLDQ1Miw0NTMsNDU0LDQ1NSw0NTYsNDU3LDQ1OCw0NTksNDYwLDQ2MSw0NjIsNDYzLDQ2NCw0NjUsNDY2LDQ2Nyw0NjgsNDY5LDQ3MCw0NzEsNDcyLDQ3Myw0NzQsNDc1LDQ3Niw0NzcsNDc4LDQ3OSw0ODAsNDgxLDQ4Miw0ODMsNDg0LDQ4NSw0ODYsNDg3LDQ4OCw0ODksNDkwLDQ5MSw0OTIsNDkzLDQ5NCw0OTUsNDk2LDQ5Nyw0OTgsNDk5LDUwMCw1MDEsNTAyLDUwMyw1MDQsNTA1LDUwNiw1MDcsNTA4LDUwOSw1MTAsNTExLDUxMiw1MTMsNTE0LDUxNSw1MTYsNTE3LDUxOCw1MTksNl19.cEDDviYZXpm3tgaiIn9qP7lWhmKpYcbieLBygXQ1cHo</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="COUPON" elementType="Argument">
@@ -44,7 +44,7 @@
           </elementProp>
           <elementProp name="COUPON_KEY" elementType="Argument">
             <stringProp name="Argument.name">COUPON_KEY</stringProp>
-            <stringProp name="Argument.value">eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiU29tZSBzb21lIn0.Uv6jSQ5t3msNk9Mse1XYtAmA-2WcLpbXcz0x-5ecotw</stringProp>
+            <stringProp name="Argument.value">eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiU09tZSBjb3VwdSIsInByb21vdGlvbnMiOls2XX0.DbCHwU9J9WLkffpI1OcEv-qUlVvHLMT8f67X6M0gpP4</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
