@@ -2,12 +2,14 @@
 
 require 'test_helper'
 
-class PromotionsControllerTest < ActionDispatch::IntegrationTest
+class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   setup do
     do_login users(:one)
   end
+
+  ############# LIST #########
 
   test "should get promotions index" do
     get promotions_url
@@ -66,6 +68,8 @@ class PromotionsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'Discount', promo.type
     assert_equal '(total <= 1000 AND quantity >= 5) OR total > 1000', promo.condition  
   end
+  
+  ############# SHOW #########
 
   test "should get coupon correctly" do
     get promotion_url(promotions(:coupon1))
@@ -101,6 +105,8 @@ class PromotionsControllerTest < ActionDispatch::IntegrationTest
     get promotion_url(promotions(:coupon2))
     assert_response :not_found
   end
+
+  ############# CREATE #########
 
   test "should create promotion with correct data" do
     assert_difference('Promotion.count') do
@@ -283,6 +289,8 @@ class PromotionsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  ############# UPDATE #########
+
   test "should update promotion with correct data" do
     to_update = promotions(:coupon1)
     assert_no_difference('Promotion.count') do
@@ -404,6 +412,45 @@ class PromotionsControllerTest < ActionDispatch::IntegrationTest
    promotion = @controller.instance_variable_get(:@promotion)
    assert promotion.errors[:condition].any?
 
+  end
+
+  test "should not allow non-administrator to update promotions" do
+    do_login(users(:three))
+
+    assert_no_difference('Promotion.count') do
+      patch promotion_url(promotions(:coupon1)), params: { 
+        promotion: { } # params won't be needed in this test
+      }
+    end
+    assert_response :forbidden
+  end
+
+  ############# DELETE #########
+
+  test "should delete promotion logically, not showing it in searches" do
+    assert_no_difference('Promotion.count') do
+      delete promotion_url(promotions(:coupon1))
+    end
+    assert_redirected_to promotions_url
+    # can't be accessed any longer
+    get promotion_url(promotions(:coupon1))
+    assert_response :not_found
+  end
+
+  test "should not allow deletion of promotions of another org" do
+    assert_no_difference('Promotion.count') do
+      delete promotion_url(promotions(:coupon2))
+    end
+    assert_response :not_found
+  end
+
+  test "should not allow non-administrators to delete promotions" do
+    do_login(users(:three))
+
+    assert_no_difference('Promotion.count') do
+      delete promotion_url(promotions(:coupon1))
+    end
+    assert_response :forbidden
   end
 
   def do_login(user)
