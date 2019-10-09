@@ -44,7 +44,7 @@
           </elementProp>
           <elementProp name="COUPON_KEY" elementType="Argument">
             <stringProp name="Argument.name">COUPON_KEY</stringProp>
-            <stringProp name="Argument.value">eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiZmV3IiwicHJvbW90aW9ucyI6WzZdfQ.Gkmy0YS7oMgIgQqca4mKUyLPycpmgA6UBTkrI_a52nE</stringProp>
+            <stringProp name="Argument.value">eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiU29tZSBwcm9teSIsInByb21vdGlvbnMiOls2XX0.mpEWQYEJiQwLxwdI9kRdy6bKCjK1RgAXusZZ-vLA4NE</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
