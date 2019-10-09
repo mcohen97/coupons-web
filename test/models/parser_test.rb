@@ -55,6 +55,14 @@ class ParserTest < ActiveSupport::TestCase
     end
   end
 
+  def test_wrong_order
+    parser = Parser.new
+
+    assert_raise ParsingError do
+      parser.parse('= quantity 10')
+    end
+  end
+
   def test_conditionals_with_variable
     parser = Parser.new
     expr = parser.parse('boolean1 AND quantity <= 10')

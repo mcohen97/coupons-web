@@ -59,7 +59,7 @@ class PromotionsController < ApplicationController
         format.html { redirect_to @promotion, notice: 'Promotion was updated successfully.' }
         format.json { render :show, status: :ok, location: @promotion }
       else
-        format.html { render :edit }
+        format.html { render :edit, status: :unprocessable_entity  }
         format.json { render json: @promotion.errors, status: :unprocessable_entity }
       end
     end
@@ -70,7 +70,7 @@ class PromotionsController < ApplicationController
     respond_to do |format|
       logger.info("Successfully deleted promotion of id: #{@promotion.id}.")
       format.html { redirect_to promotions_path, notice: 'Promotion was successfully deleted.' }
-      format.json { head :no_content }
+      format.json { render json: {notice: 'Promotion was successfully deleted.'}, status: :success }
     end
   end
 

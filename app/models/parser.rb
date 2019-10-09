@@ -47,7 +47,7 @@ class Parser
 
   def reduce_operator(accum, operators, current_operator)
     if accum.empty?
-      # excepcion
+      raise ParsingError, "Found operator: #{current_operator}, with no left operand"
     end
 
     while !operators.empty? && operators.last != '(' && priority(operators.last) >= priority(current_operator)
@@ -105,9 +105,6 @@ class Parser
   end
 
   def add_condition(accum_result, left, right, op)
-    # if left[:type] == :literal || right[:type] == :literal
-    #  raise ParsingError, "Conditional with non-logical operands"
-    # end
     partial_result = { type: :comparator, symbol: op, left: left, right: right }
 
     accum_result.push(partial_result)
