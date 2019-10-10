@@ -45,7 +45,7 @@ class Promotion < ApplicationRecord
 
   def generate_report(app_key_validation = false, appkey = nil)
     if app_key_validation
-      validate_auth(appkey,false)
+      validate_same_org(appkey,false)
     end
     positive_responses = invocations - negative_responses
     negative_ratio = invocations > 0 ? Float(negative_responses) / invocations : 0
@@ -98,15 +98,19 @@ class Promotion < ApplicationRecord
       add_negative_response_if_evaluation(is_evaluation)
       raise NotAuthenticatedError, "No valid application key."
     end
-    evaluation_allowed = is_from_clients_organization(appkey)
+    validate_same_org(appkey,is_evaluation)
     key_includes_promotion = does_key_have_promotion(appkey)
-    unless evaluation_allowed
-      add_negative_response_if_evaluation(is_evaluation)
-      raise NotAuthorizedError, "Can't access promotion from another organization"
-    end
     unless key_includes_promotion
       add_negative_response_if_evaluation(is_evaluation)
       raise NotAuthorizedError, "Can't access promotion with this appkey"
+    end
+  end
+
+  def validate_same_org(appkey,is_evaluation)
+    evaluation_allowed = is_from_clients_organization(appkey)
+    unless evaluation_allowed
+      add_negative_response_if_evaluation(is_evaluation)
+      raise NotAuthorizedError, "Can't access promotion from another organization"
     end
   end
 
