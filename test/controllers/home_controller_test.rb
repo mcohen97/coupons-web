@@ -38,6 +38,13 @@ require 'test_helper'
 
   end
 
+  test "should logout correctly" do
+    delete destroy_user_session_url
+    assert_redirected_to root_url
+    get home_url
+    assert_redirected_to new_user_session_url
+  end
+
   def do_login(user)
     get '/users/sign_in'
     sign_in user
