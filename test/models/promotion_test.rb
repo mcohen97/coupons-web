@@ -167,11 +167,11 @@ class PromotionTest < ActiveSupport::TestCase
 
     first_report = coupon1.generate_report
 
-    assert_equal 0, first_report[:invocations_count]
-    assert_equal 0, first_report[:positive_ratio]
-    assert_equal 0, first_report[:negative_ratio]
+    assert_equal 7, first_report[:invocations_count]
+    assert_equal 3.0/7, first_report[:positive_ratio]
+    assert_equal 4.0/7, first_report[:negative_ratio]
     assert_equal 0, first_report[:average_response_time]
-    assert_equal 0, first_report[:total_money_spent]
+    assert_equal 48, first_report[:total_money_spent]
 
     coupon1.evaluate_applicability({ total: 200, products_size: 3, coupon_code: 'COMIDADESC5-3' }, @app_key)
     assert_raises PromotionArgumentsError do
@@ -181,10 +181,10 @@ class PromotionTest < ActiveSupport::TestCase
 
     second_report = coupon1.generate_report
 
-    assert_equal 3, second_report[:invocations_count]
-    assert_equal 2.0 / 3, second_report[:positive_ratio]
-    assert_equal 1.0 / 3, second_report[:negative_ratio]
-    assert_equal 50, second_report[:total_money_spent]
+    assert_equal 10, second_report[:invocations_count]
+    assert_equal 5.0 / 10, second_report[:positive_ratio]
+    assert_equal 5.0 / 10, second_report[:negative_ratio]
+    assert_equal 98, second_report[:total_money_spent]
   end
 
   test 'should apply filters specified in scope' do
