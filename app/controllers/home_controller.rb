@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class HomeController < ApplicationController
+  
+  before_action :authorize_user!, only: :invite
+
 
   def index
     unless user_signed_in?
