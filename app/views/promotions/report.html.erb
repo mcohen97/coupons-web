@@ -3,11 +3,29 @@
   <%if @report[:invocations_count] == 0%>
     <h3 style='color:black'>This promotion was never used</h3> <br/>
   <%else%>  
-    <u>Invocations count: </u> <%= @report[:invocations_count] %> <br/>
-    <u>Total money spent: </u> <%= @report[:total_money_spent] %> <br/>
-    <u>Positive response ratio: </u> <%= @report[:positive_ratio] %> <br/> 
-    <u>Negative response ratio: </u> <%= @report[:negative_ratio] %> <br/>
-    <u>Average response time: </u> <%= @report[:average_response_time] %> <br/>
+    <div class = "table-wrapper" style="margin-bottom: 20px;">
+      <table class="fl-table">
+        <thead>
+          <tr>
+            <th>Invocations count</th>
+            <th>Total money spent</th>
+            <th>Positive response ratio</th>
+            <th>Negative response ratio</th>
+            <th>Average response time</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td><%= @report[:invocations_count] %></td>
+            <td><%= @report[:total_money_spent] %></td>
+            <td><%= @report[:positive_ratio] %></td>
+            <td><%= @report[:negative_ratio] %></td>
+            <td><%= @report[:average_response_time] %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   <%end%>
   <%= link_to 'Back', promotions_path %>
 </div>
