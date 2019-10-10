@@ -9,13 +9,24 @@ require 'test_helper'
     do_login users(:one)
   end
 
-  test "invite friend" do
+  test "should get invitation view" do
+    get invitation_url
+    assert_response :success
+  end
+
+  test "should send invitation mail" do
     # Asserts the difference in the ActionMailer::Base.deliveries
     assert_emails 1 do
       post invite_url, params: { email: 'friend@example.com' }
     end
     assert_redirected_to home_path
     assert_equal 'Email succesfully sent!', flash[:success]
+  end
+
+  test "should not allow non-administrator access de invitation view" do
+    do_login users(:three)
+    get invitation_url
+    assert_response :forbidden
   end
 
   test "should not allow non-administrator invite" do
