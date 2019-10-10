@@ -36,7 +36,7 @@ class PromotionsController < ApplicationController
     @promotion = Promotion.new(promotion_parameters)
     is_coupon = @promotion.type == 'Coupon'
     if is_coupon && !valid_instances_count()
-      @promotion.errors.add(:base,"Coupon count must be positive and less or equal to #{Coupon::MAX_COUPON_INSTANCES}")
+      @promotion.errors.add(:coupon_instances,"Coupon count must be positive and less or equal to #{Coupon::MAX_COUPON_INSTANCES}")
       respond_promotion_not_created(@promotion) && return
     end
 
@@ -59,7 +59,7 @@ class PromotionsController < ApplicationController
         format.html { redirect_to @promotion, notice: 'Promotion was updated successfully.' }
         format.json { render :show, status: :ok, location: @promotion }
       else
-        format.html { render :edit }
+        format.html { render :edit, status: :unprocessable_entity  }
         format.json { render json: @promotion.errors, status: :unprocessable_entity }
       end
     end
@@ -70,7 +70,7 @@ class PromotionsController < ApplicationController
     respond_to do |format|
       logger.info("Successfully deleted promotion of id: #{@promotion.id}.")
       format.html { redirect_to promotions_path, notice: 'Promotion was successfully deleted.' }
-      format.json { head :no_content }
+      format.json { render json: {notice: 'Promotion was successfully deleted.'}, status: :success }
     end
   end
 
@@ -99,7 +99,7 @@ class PromotionsController < ApplicationController
   private
 
   def valid_instances_count
-    return coupon_instances_count < 5
+    return coupon_instances_count < Coupon::MAX_COUPON_INSTANCES
   end
 
   def respond_promotion_created(promotion)
@@ -111,7 +111,7 @@ class PromotionsController < ApplicationController
 
   def respond_promotion_not_created(promotion)
     respond_to do |format|
-      format.html { render :new }
+      format.html { render :new, status: :unprocessable_entity  }
       format.json { render json: promotion.errors, status: :unprocessable_entity }
     end
   end
@@ -157,6 +157,9 @@ class PromotionsController < ApplicationController
 
   def set_promo
     @promotion = Promotion.find(params[:id])
+    if @promotion.deleted
+      promotion_not_found
+    end
     @promotion = @promotion.becomes(Promotion)
   end
 
@@ -185,7 +188,7 @@ class PromotionsController < ApplicationController
   end
 
   def coupon_instances_count
-    params.fetch(:instances_count, 15).to_i
+    params.fetch(:instances_count, Coupon::DEFAULT_COUPON_INSTANCES).to_i
   end
 
   def pagination_offset
