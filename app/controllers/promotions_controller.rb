@@ -196,6 +196,6 @@ class PromotionsController < ApplicationController
   end
 
   def pagination_per_page
-    params[:per_page].present? ? params[:per_page] : 5
+    params[:per_page].present? ? params[:per_page] : 6
   end
 end
