@@ -2,7 +2,7 @@
 
 class ApplicationKeysController < ApplicationController
   prepend_before_action :authenticate_user!
-  before_action :authorize_user!, only: %i[new create edit update destroy]
+  before_action :authorize_user!
   before_action :set_application_key, only: %i[show edit update destroy]
   rescue_from ActiveRecord::RecordNotFound, with: :application_key_not_found
 
@@ -32,7 +32,6 @@ class ApplicationKeysController < ApplicationController
   def create
     logger.info("Creating application key of params: #{application_key_params.inspect}.")
     @application_key = ApplicationKey.new(application_key_params)
-
     respond_to do |format|
       if @application_key.save
         logger.info("Application key was successfully created, with id: #{@application_key.id}.")
@@ -40,7 +39,7 @@ class ApplicationKeysController < ApplicationController
         format.json { render :show, status: :created, location: @application_key }
       else
         logger.error("Invalid application key with params: #{@application_key.errors.inspect}.")
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity  }
         format.json { render json: @application_key.errors, status: :unprocessable_entity }
       end
     end
@@ -57,7 +56,7 @@ class ApplicationKeysController < ApplicationController
         format.json { render :show, status: :ok, location: @application_key }
       else
         logger.error("Invalid application key update, params: #{@application_key.errors.inspect}.")
-        format.html { render :edit }
+        format.html { render :edit, status: :unprocessable_entity  }
         format.json { render json: @application_key.errors, status: :unprocessable_entity }
       end
     end
@@ -87,6 +86,11 @@ class ApplicationKeysController < ApplicationController
   end
 
   def application_key_not_found
-    logger.error('Application key not found.')
+    respond_to do |format|
+      logger.error('Application key not found.')
+      format.html { render file: "#{Rails.root}/public/404", layout: false, status: :not_found }
+      format.json { render json: { error: 'Promotion not found.' }.to_json, status: :not_found }
+    end
   end
+
 end
