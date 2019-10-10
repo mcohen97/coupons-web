@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 Rails.application.configure do
-  config.hosts << ENV['HOSTS']
+  config.hosts << ENV.fetch("HOSTS") { 'localhost' }
+  config.hosts << "couponsweb.azurewebsites.net"
+  config.action_controller.default_url_options = { host: ENV.fetch("HOSTS") { 'localhost' } }
+  Rails.application.routes.default_url_options[:host] = ENV.fetch("HOSTS") { 'localhost' }
 
   # Settings specified here will take precedence over those in config/application.rb.
   raise 'JWT secret not set in enviroment' unless ENV['JWT_SECRET'].present?
@@ -89,7 +92,6 @@ Rails.application.configure do
     password: ENV['MAILER_PASSWORD']
   }
 
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
