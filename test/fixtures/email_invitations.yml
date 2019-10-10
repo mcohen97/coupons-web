@@ -1,0 +1,4 @@
+one:
+ user_id: 1 
+ invited_email: friend@example.com
+ organization_id: 1
