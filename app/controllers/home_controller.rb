@@ -2,6 +2,8 @@
 
 class HomeController < ApplicationController
   before_action :authenticate_user!
+  before_action :authorize_user!, only: :invite
+
 
   def index; end
 
