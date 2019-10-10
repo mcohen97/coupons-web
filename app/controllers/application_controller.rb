@@ -7,6 +7,14 @@ class ApplicationController < ActionController::Base
   set_current_tenant_through_filter
   before_action :set_current_user, :set_organization
 
+  def default_url_options
+    if Rails.env.production?
+      {:host => ENV['HOSTS']}
+    else  
+      {}
+    end
+  end
+
   def set_organization
     if user_signed_in?
       current_organization = Organization.cached_find (@current_user.organization_id)
