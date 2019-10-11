@@ -8,13 +8,13 @@ module ApplicationHelper
       @current_user = nil
     end
   end
-  
+
   def current_user_organization
-    org = Organization.cached_find (@current_user.organization_id)
-    return org
+    org = Organization.cached_find @current_user.organization_id
+    org
   end
 
   def is_current_user_admin
-    return @current_user.role == "administrator"
+    @current_user.role == 'administrator'
   end
 end

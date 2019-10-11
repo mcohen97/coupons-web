@@ -113,7 +113,7 @@ class ParserTest < ActiveSupport::TestCase
     condition = 'total > 10'
     expression = parser.parse(condition)
     assert_raise ParsingError do
-      expression.evaluate_condition(total: "a string")
+      expression.evaluate_condition(total: 'a string')
     end
   end
 end

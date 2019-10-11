@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateJoinTablePromotionsApplicationKeys < ActiveRecord::Migration[6.0]
   def change
     create_join_table :promotions, :application_keys do |t|

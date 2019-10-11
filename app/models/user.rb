@@ -6,8 +6,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   enum available_role: %i[administrator org_user]
-  
-  validates :role, presence: true, inclusion: { in: available_roles.keys}
+
+  validates :role, presence: true, inclusion: { in: available_roles.keys }
   validates :name, presence: true, allow_blank: false
   validates :surname, presence: true, allow_blank: false
   validates :email, presence: true, allow_blank: false
@@ -16,22 +16,22 @@ class User < ApplicationRecord
   validates :organization_id, presence: { message: 'invalid' }
   after_save :invalidate_cache
 
-
   attr_writer :organization
 
   attr_reader :organization
 
   def self.cached_find(id)
-    Rails.cache.fetch([User.name,id]){find(id)}
+    Rails.cache.fetch([User.name, id]) { find(id) }
   end
 
   def self.serialize_from_session(key, salt)
     single_key = key.is_a?(Array) ? key.first : key
     user = Rails.cache.fetch([User.name, single_key]) do
-       User.where(:id => single_key).entries.first
+      User.where(id: single_key).entries.first
     end
     # validate user against stored salt in the session
     return user if user && user.authenticatable_salt == salt
+
     # fallback to devise default method if user is blank or invalid
     super
   end

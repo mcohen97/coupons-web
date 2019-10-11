@@ -23,7 +23,7 @@ class Promotion < ApplicationRecord
   validates :code, uniqueness: true, presence: true
   validates :name, uniqueness: true, length: { minimum: 1 }
   validates :type, presence: true
-  validates :active, inclusion: { in: [ true, false ] }
+  validates :active, inclusion: { in: [true, false] }
   validates :return_type, presence: true, inclusion: { in: return_types.keys }
   validates :return_value, numericality: { greater_than: 0 }
   validates :return_value, numericality: { less_than_or_equal_to: 100 }, if: :percentaje?
@@ -44,22 +44,20 @@ class Promotion < ApplicationRecord
   end
 
   def generate_report(app_key_validation = false, appkey = nil)
-    if app_key_validation
-      validate_same_org(appkey,false)
-    end
+    validate_same_org(appkey, false) if app_key_validation
     positive_responses = invocations - negative_responses
     negative_ratio = invocations > 0 ? Float(negative_responses) / invocations : 0
     positive_ratio = invocations > 0 ? Float(positive_responses) / invocations : 0
     report = { invocations_count: invocations, positive_ratio: positive_ratio, negative_ratio: negative_ratio,
                average_response_time: average_response_time, total_money_spent: total_spent }
-    
+
     report
   end
 
   def self.cached_find(id)
-    Rails.cache.fetch([Promotion.name, id]){find(id)}
+    Rails.cache.fetch([Promotion.name, id]) { find(id) }
   end
-  
+
   protected
 
   # to be overriden.
@@ -96,9 +94,9 @@ class Promotion < ApplicationRecord
   def validate_auth(appkey, is_evaluation = true)
     if appkey.nil?
       add_negative_response_if_evaluation(is_evaluation)
-      raise NotAuthenticatedError, "No valid application key."
+      raise NotAuthenticatedError, 'No valid application key.'
     end
-    validate_same_org(appkey,is_evaluation)
+    validate_same_org(appkey, is_evaluation)
     key_includes_promotion = does_key_have_promotion(appkey)
     unless key_includes_promotion
       add_negative_response_if_evaluation(is_evaluation)
@@ -106,7 +104,7 @@ class Promotion < ApplicationRecord
     end
   end
 
-  def validate_same_org(appkey,is_evaluation)
+  def validate_same_org(appkey, is_evaluation)
     evaluation_allowed = is_from_clients_organization(appkey)
     unless evaluation_allowed
       add_negative_response_if_evaluation(is_evaluation)
@@ -115,9 +113,7 @@ class Promotion < ApplicationRecord
   end
 
   def add_negative_response_if_evaluation(evaluation)
-    if evaluation
-      add_negative_response
-    end
+    add_negative_response if evaluation
   end
 
   def validate_total_specified(arguments_values)

@@ -19,37 +19,34 @@ class PromotionsController < ApplicationController
   def show
     if @promotion.type == 'Coupon'
       @coupon_instances = CouponInstance.where(promotion_id: @promotion.id)
-    end 
+    end
   end
 
   def new
     @promotion = Promotion.new
-    @form_title = "New promotion"
+    @form_title = 'New promotion'
   end
 
   def edit
-    @form_title = "Edit promotion"
+    @form_title = 'Edit promotion'
     @is_edit = true
   end
 
   def create
     @promotion = Promotion.new(promotion_parameters)
     is_coupon = @promotion.type == 'Coupon'
-    if is_coupon && !valid_instances_count()
-      @promotion.errors.add(:coupon_instances,"Coupon count must be positive and less or equal to #{Coupon::MAX_COUPON_INSTANCES}")
+    if is_coupon && !valid_instances_count
+      @promotion.errors.add(:coupon_instances, "Coupon count must be positive and less or equal to #{Coupon::MAX_COUPON_INSTANCES}")
       respond_promotion_not_created(@promotion) && return
     end
 
     if @promotion.save
-      if is_coupon
-        generate_coupon_instances(@promotion)
-      end
+      generate_coupon_instances(@promotion) if is_coupon
       logger.info("Successfully created promotion of id: #{@promotion.id}")
       respond_promotion_created(@promotion) && return
     else
       respond_promotion_not_created(@promotion)
     end
-
   end
 
   def update
@@ -59,7 +56,7 @@ class PromotionsController < ApplicationController
         format.html { redirect_to @promotion, notice: 'Promotion was updated successfully.' }
         format.json { render :show, status: :ok, location: @promotion }
       else
-        format.html { render :edit, status: :unprocessable_entity  }
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @promotion.errors, status: :unprocessable_entity }
       end
     end
@@ -70,7 +67,7 @@ class PromotionsController < ApplicationController
     respond_to do |format|
       logger.info("Successfully deleted promotion of id: #{@promotion.id}.")
       format.html { redirect_to promotions_path, notice: 'Promotion was successfully deleted.' }
-      format.json { render json: {notice: 'Promotion was successfully deleted.'}, status: :success }
+      format.json { render json: { notice: 'Promotion was successfully deleted.' }, status: :success }
     end
   end
 
@@ -99,19 +96,19 @@ class PromotionsController < ApplicationController
   private
 
   def valid_instances_count
-    return coupon_instances_count < Coupon::MAX_COUPON_INSTANCES
+    coupon_instances_count < Coupon::MAX_COUPON_INSTANCES
   end
 
   def respond_promotion_created(promotion)
     respond_to do |format|
-      format.html { redirect_to promotions_path, notice: 'Promotion was successfully created.'}
+      format.html { redirect_to promotions_path, notice: 'Promotion was successfully created.' }
       format.json { render :show, status: :created, location: promotion }
     end
   end
 
   def respond_promotion_not_created(promotion)
     respond_to do |format|
-      format.html { render :new, status: :unprocessable_entity  }
+      format.html { render :new, status: :unprocessable_entity }
       format.json { render json: promotion.errors, status: :unprocessable_entity }
     end
   end
@@ -145,21 +142,19 @@ class PromotionsController < ApplicationController
 
   def respond_to_external
     appkey = get_app_key
-    @report = @promotion.generate_report(true,appkey)
+    @report = @promotion.generate_report(true, appkey)
     render json: @report, status: :ok
   rescue NotAuthenticatedError => e
     logger.error('No valid application key.')
     render(json: { error_message: e.message }, status: :unauthorized)
   rescue NotAuthorizedError => e
     logger.error('User not authorized.')
-    render(json: { error_message: e.message}, status: :forbidden) 
+    render(json: { error_message: e.message }, status: :forbidden)
   end
 
   def set_promo
     @promotion = Promotion.find(params[:id])
-    if @promotion.deleted
-      promotion_not_found
-    end
+    promotion_not_found if @promotion.deleted
     @promotion = @promotion.becomes(Promotion)
   end
 

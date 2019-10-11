@@ -7,9 +7,6 @@ class CouponInstance < ApplicationRecord
   validate :belongs_to_coupon
 
   def belongs_to_coupon
-    if promotion.type != 'Coupon'
-      errors.add(:base, 'Must belong to coupon')
-    end
+    errors.add(:base, 'Must belong to coupon') if promotion.type != 'Coupon'
   end
-
 end

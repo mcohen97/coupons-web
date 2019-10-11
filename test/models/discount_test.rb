@@ -10,7 +10,7 @@ class DiscountTest < ActiveSupport::TestCase
   test 'should return false when promo does not apply' do
     promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
                          return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10', organization_id: 1)
-    
+
     @app_key.promotions << promo
     result = promo.evaluate_applicability({ total: 9, quantity: 0 }, @app_key)
 
@@ -35,7 +35,7 @@ class DiscountTest < ActiveSupport::TestCase
                          return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10', organization_id: 1)
     @app_key.promotions << promo
     assert_raise PromotionArgumentsError do
-      result = promo.evaluate_applicability({amount: 15, tax: 3 }, @app_key)
+      result = promo.evaluate_applicability({ amount: 15, tax: 3 }, @app_key)
     end
   end
 
@@ -46,10 +46,9 @@ class DiscountTest < ActiveSupport::TestCase
     result = promo.evaluate_applicability({ total: 11, quantity: 0, transaction_id: 4 }, @app_key)
 
     assert_not result[:error]
-    
+
     assert_raise PromotionArgumentsError do
       result = promo.evaluate_applicability({ total: 11, quantity: 0, transaction_id: 4 }, @app_key)
     end
   end
-  
 end

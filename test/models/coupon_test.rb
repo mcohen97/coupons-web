@@ -33,7 +33,7 @@ class CouponTest < ActiveSupport::TestCase
   test 'should raise error when wrong arguments given' do
     promo = Coupon.new(code: 'code', name: 'a promotion', return_type: :percentaje,
                        return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10', organization_id: 1)
-    
+
     @app_key.promotions << promo
     assert_raise PromotionArgumentsError do
       promo.evaluate_applicability({ amount: 15, tax: 3 }, @app_key)

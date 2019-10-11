@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 Rails.application.configure do
-  config.hosts << ENV.fetch("HOSTS") { 'localhost' }
-  config.hosts << "couponsweb.azurewebsites.net"
-  config.action_controller.default_url_options = { host: ENV.fetch("HOSTS") { 'localhost' } }
-  Rails.application.routes.default_url_options[:host] = ENV.fetch("HOSTS") { 'localhost' }
+  config.hosts << ENV.fetch('HOSTS') { 'localhost' }
+  config.hosts << 'couponsweb.azurewebsites.net'
+  config.action_controller.default_url_options = { host: ENV.fetch('HOSTS') { 'localhost' } }
+  Rails.application.routes.default_url_options[:host] = ENV.fetch('HOSTS') { 'localhost' }
 
   # Settings specified here will take precedence over those in config/application.rb.
   raise 'JWT secret not set in enviroment' unless ENV['JWT_SECRET'].present?
@@ -16,7 +16,7 @@ Rails.application.configure do
   config.assets.digest = true
   config.serve_static_assets = false
 
-  Rails.application.config.assets.precompile += %w( *.js ^[^_]*.css *.css.erb )
+  Rails.application.config.assets.precompile += %w(*.js ^[^_]*.css *.css.erb)
   # Code is not reloaded between requests.
   config.cache_classes = true
 
@@ -27,7 +27,7 @@ Rails.application.configure do
   config.eager_load = true
 
   # Full error reports are disabled and caching is turned on.
-  config.consider_all_requests_local = ENV.fetch("ENABLE_ERRORS") { false }
+  config.consider_all_requests_local = ENV.fetch('ENABLE_ERRORS') { false }
   config.action_controller.perform_caching = true
 
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
@@ -83,15 +83,14 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-      address: 'smtp.gmail.com',
-      port: 587,
-      domain: 'coupons.com',
-      authentication: 'plain',
-      enable_starttls_auto: true,
-      user_name: ENV['MAILER_USER_NAME'],
-      password: ENV['MAILER_PASSWORD']
+    address: 'smtp.gmail.com',
+    port: 587,
+    domain: 'coupons.com',
+    authentication: 'plain',
+    enable_starttls_auto: true,
+    user_name: ENV['MAILER_USER_NAME'],
+    password: ENV['MAILER_PASSWORD']
   }
-
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.

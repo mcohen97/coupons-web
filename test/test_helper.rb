@@ -16,10 +16,10 @@ class ActiveSupport::TestCase
 
   def log_in(user)
     if integration_test?
-      #use warden helper
-      login_as(user, :scope => :user)
+      # use warden helper
+      login_as(user, scope: :user)
     else
-      #use devise helper
+      # use devise helper
       sign_in(user)
     end
   end

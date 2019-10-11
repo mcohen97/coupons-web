@@ -24,7 +24,7 @@ class ApplicationKeysController < ApplicationController
   end
 
   # GET /application_keys/1/edit
-  def edit; 
+  def edit
     @form_title = 'Edit application key'
   end
 
@@ -40,7 +40,7 @@ class ApplicationKeysController < ApplicationController
         format.json { render :show, status: :created, location: @application_key }
       else
         logger.error("Invalid application key with params: #{@application_key.errors.inspect}.")
-        format.html { render :new, status: :unprocessable_entity  }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @application_key.errors, status: :unprocessable_entity }
       end
     end
@@ -57,7 +57,7 @@ class ApplicationKeysController < ApplicationController
         format.json { render :show, status: :ok, location: @application_key }
       else
         logger.error("Invalid application key update, params: #{@application_key.errors.inspect}.")
-        format.html { render :edit, status: :unprocessable_entity  }
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @application_key.errors, status: :unprocessable_entity }
       end
     end

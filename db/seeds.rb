@@ -32,16 +32,16 @@ coup2 = Coupon.create!(code: 'coupon2', name: 'another coupon', return_type: :pe
 
 rand_promotions = []
 
-coup = Coupon.create!(code: "couponcodetest", name: "Some coupy coupon", return_type: :percentaje,
+coup = Coupon.create!(code: 'couponcodetest', name: 'Some coupy coupon', return_type: :percentaje,
                       return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2', organization_id: pablo.organization_id)
 
-(0..512).each { |i|
+(0..512).each do |i|
   dis = Discount.create!(code: Faker::Commerce.unique.promotion_code, name: Faker::Commerce.unique.product_name, return_type: :percentaje,
                          return_value: 10, active: true, condition: '( total <= 100 AND quantity >= 5 ) OR total > 10', organization_id: pablo.organization_id)
   CouponInstance.create!(promotion_id: coup.id, coupon_code: "coupon#{coup.id}-#{i}")
 
   rand_promotions << dis
-}
+end
 rand_promotions << coup
 
 CouponInstance.create!(promotion_id: 4, coupon_code: 'coupon1-1')

@@ -4,10 +4,9 @@ require 'parser.rb'
 require_relative '../../lib/error/promotion_arguments_error.rb'
 
 class Coupon < Promotion
-
   MAX_COUPON_INSTANCES = 100
   DEFAULT_COUPON_INSTANCES = 5
-  
+
   has_many :coupon_instances
 
   def apply_promo(arguments)
@@ -24,15 +23,12 @@ class Coupon < Promotion
   end
 
   def generate_coupon_instances(count)
-
     ActiveRecord::Base.transaction do
-      i = 0  
-      while i < count do
+      i = 0
+      while i < count
         CouponInstance.new(promotion_id: id, coupon_code: "#{code}_#{SecureRandom.uuid[0, 5]}").save
         i += 1
       end
     end
-
   end
-
 end
