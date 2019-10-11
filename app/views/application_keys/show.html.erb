@@ -1,0 +1,20 @@
+<div class = "white-container">
+  <p>
+    <strong>Name:</strong>
+    <br>
+    <%= @application_key.name %>
+  </p>
+  <p style = "white-space:break-all;word-break:break-all;">
+    <strong>Token:</strong>
+    <br>
+    <%= @application_key.generate_token %>
+  </p>
+  <p>
+    <strong>Promotions:</strong>
+    <br>
+    <%= @application_key.promotions.pluck(:name).join(', ') %>
+  </p>
+
+  <%= link_to 'Edit', edit_application_key_path(@application_key) %> |
+  <%= link_to 'Back', application_keys_path %>
+</div>

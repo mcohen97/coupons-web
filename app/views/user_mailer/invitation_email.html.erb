@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h3>Hi</h3>
+    <p>
+      <%=@sender.name%> <%=@sender.surname%> invited you to join <%=@organization_name%> at Coupons! <br>
+    </p>
+    <p>
+      To sign up to the site, just follow this link: <a><%= link_to "Sign up", new_user_registration_url(invitation_code: @invitation.invitation_code) %></a>
+    </p>
+    <p>Thanks for joining and have a great day!</p>
+  </body>
+</html>

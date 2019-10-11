@@ -1,0 +1,278 @@
+@import "animate.css";
+
+body {
+  background-image: image-url("coupon.png");
+  background-repeat: repeat;
+  background-size: 120px;
+  color: #333;
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+  height: 100%;
+}
+
+p, ol, ul, td {
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+pre {
+  background-color: #eee;
+  padding: 10px;
+  font-size: 11px;
+}
+
+th {
+  padding-bottom: 5px;
+}
+
+td {
+  padding: 0 5px 7px;
+}
+
+div {
+  &.field, &.actions {
+    margin-bottom: 10px;
+  }
+}
+
+#notice {
+  color: green;
+}
+
+.field_with_errors .form-control{
+  padding: 2px;
+  border: 2px solid red;
+  width: 60%;
+  display: inline-block;
+}
+
+#error_explanation {
+  width: 450px;
+  border: 2px solid red;
+  padding: 7px 7px 0;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+
+  h2 {
+    text-align: left;
+    font-weight: bold;
+    padding: 5px 5px 5px 15px;
+    font-size: 12px;
+    margin: -7px -7px 0;
+    background-color: #c00;
+    color: #fff;
+  }
+
+  ul li {
+    font-size: 12px;
+    list-style: square;
+  }
+}
+
+label {
+  clear: both;
+  display: block;
+  margin-bottom: 5px;
+}
+
+label.form-check-label{
+  clear: none;
+  font-weight: normal;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0px 5px 5px 5px
+}
+
+.form-control {
+  width: 60%;
+  display: inline-block;
+}
+
+.form-control.is-invalid{
+  border: 1px solid red
+}
+
+.form-control.shorter {
+  width: 40%;
+  display: inline-block;
+}
+
+.invalid-feedback{
+  color: rgb(200, 0, 0)
+}
+
+.form-group {
+  text-align: center
+}
+
+.new_user {
+  background-image: image-url("gradient-background.jpg");
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 50%;
+  padding: 0px 20px 20px 20px;
+  border-radius: 15px;
+  border: 1px solid #000;
+  margin-top: 70px;
+  margin-bottom: 70px;
+  margin-left: auto;
+  margin-right: auto;
+  animation: fadeIn .5s;
+  transition: all .5s linear;
+}
+
+.form-centered {
+  background: rgba(255,255,255,1);
+  background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(245,245,245,1) 47%, rgba(237,237,237,1) 100%);
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,1)), color-stop(47%, rgba(245,245,245,1)), color-stop(100%, rgba(237,237,237,1)));
+  background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(245,245,245,1) 47%, rgba(237,237,237,1) 100%);
+  background: -o-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(245,245,245,1) 47%, rgba(237,237,237,1) 100%);
+  background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(245,245,245,1) 47%, rgba(237,237,237,1) 100%);
+  background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(245,245,245,1) 47%, rgba(237,237,237,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed', GradientType=0 );
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 50%;
+  padding: 20px 20px 20px 20px;
+  border-radius: 15px;
+  border: 1px solid #000;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  animation: fadeIn .5s;
+  transition: all .5s linear;
+  text-align: center;
+}
+
+@media screen and (max-width: 767px) {
+  .new_user {
+    width: 95%;
+    padding: 0px 5px 5px 5px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+
+  .form-centered {
+    width: 95%;
+    padding: 0px 5px 5px 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .form-centered h3{
+    font-size: 16px
+  }
+
+  .form-control{
+    width: 80%;
+  }
+
+}
+
+.new_user h1 {
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.new_promotion, 
+.edit_promotion, 
+.new_application_key, 
+.edit_application_key {
+  background: rgba(255,255,255,1);
+  background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(245,245,245,1) 47%, rgba(237,237,237,1) 100%);
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,1)), color-stop(47%, rgba(245,245,245,1)), color-stop(100%, rgba(237,237,237,1)));
+  background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(245,245,245,1) 47%, rgba(237,237,237,1) 100%);
+  background: -o-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(245,245,245,1) 47%, rgba(237,237,237,1) 100%);
+  background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(245,245,245,1) 47%, rgba(237,237,237,1) 100%);
+  background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(245,245,245,1) 47%, rgba(237,237,237,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed', GradientType=0 );
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 50%;
+  padding: 20px 20px 20px 20px;
+  border-radius: 15px;
+  border: 1px solid #000;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  animation: fadeIn .5s;
+  transition: all .5s linear;
+}
+
+@media screen and (max-width: 767px) {
+  .new_promotion, 
+  .edit_promotion, 
+  .new_application_key, 
+  .edit_application_key {
+    
+    width: 95%;
+    padding: 5px 5px 5px 5px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+}
+
+.new_promotion h1, 
+.edit_promotion h1, 
+.new_application_key h1, 
+.edit_application_key h1 {
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.btn.btn-primary{
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  width: auto;
+}
+
+.btn.btn-primary.margin{
+  margin: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  width: auto;
+}
+
+.form-text.text-muted{
+  clear: both;
+  display: block;
+}
+
+.file-chooser{
+  margin: auto;
+}
+
+.login-icon{
+  margin-right: 10px;
+}
+
+
+#error_explanation {
+  color: #f00;
+  ul {
+    list-style: none;
+    margin: 0 0 18px 0;
+  }
+}
+
+
+.white-container{
+  background-color: rgba(250, 250, 250, 0.9);
+  border: 1px solid rgb(250, 250, 250);
+  padding: 10px;
+  padding-bottom: 10px;
+  border-radius: 10px;
+  animation: fadeIn .3s;
+  text-align: center;
+  transition: all .5s ease-in-out;
+}

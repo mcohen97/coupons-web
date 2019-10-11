@@ -1,0 +1,1168 @@
+{
+	"info": {
+		"_postman_id": "31aed15c-d8b3-4880-b6a1-51bf45f01e24",
+		"name": "Pruebas Coupons - Endpoints REST",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Evaluate promotion (discount) with correct data and applies",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 200\",function(){",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns applicable, with correct return type and value\", function(){",
+							"    pm.expect(jsonData).to.have.property('applicable');",
+							"    pm.expect(jsonData).to.have.property('return_type');",
+							"    pm.expect(jsonData).to.have.property('return_value');",
+							"",
+							"",
+							"    pm.expect(jsonData.applicable).to.eql(true);",
+							"    pm.expect(jsonData.return_type).to.eql(\"percentaje\");",
+							"    pm.expect(jsonData.return_value).to.eql(10);",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{organization1AppKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"code\": \"discount1\",\n\t\"attributes\": {\"total\": 15, \"quantity\": 3, \"transaction_id\":6}\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/evaluate",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"evaluate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Evaluate promotion (coupon), with correct data, and applies",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 200\",function(){",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns applicable, with correct return type and value\", function(){",
+							"    pm.expect(jsonData).to.have.property('applicable');",
+							"    pm.expect(jsonData).to.have.property('return_type');",
+							"    pm.expect(jsonData).to.have.property('return_value');",
+							"",
+							"",
+							"    pm.expect(jsonData.applicable).to.eql(true);",
+							"    pm.expect(jsonData.return_type).to.eql(\"percentaje\");",
+							"    pm.expect(jsonData.return_value).to.eql(10);",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization2AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"code\": \"coupon1\",\n\t\"attributes\": {\"total\": 115, \"products_size\": 3, \"coupon_code\":\"coupon1-1\"}\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/evaluate",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"evaluate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Evaluate promotion with incorrect data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 200\",function(){",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns not applicable\", function(){",
+							"    pm.expect(jsonData).to.have.property('applicable');",
+							"",
+							"    pm.expect(jsonData.applicable).to.eql(false);",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization1AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"code\": \"discount1\",\n\t\"attributes\": {\"total\": 10, \"quantity\": 3, \"transaction_id\":5}\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/evaluate",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"evaluate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Evaluate percentaje discount, with total missing",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 400\",function(){",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns error message\", function(){",
+							"    pm.expect(jsonData).to.have.property('error_message');",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization1AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"code\": \"discount1\",\n\t\"attributes\": {\"quantity\": 3, \"transaction_id\":5}\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/evaluate",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"evaluate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Evaluate fixed value discount, with total missing",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 200\",function(){",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns not applicable\", function(){",
+							"    pm.expect(jsonData).to.have.property('applicable');",
+							"",
+							"    pm.expect(jsonData.applicable).to.eql(false);",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization1AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"code\": \"discount3\",\n\t\"attributes\": {\"quantity\": 3, \"transaction_id\":2}\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/evaluate",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"evaluate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Evaluate discount, with quantity missing",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 400\",function(){",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns error message\", function(){",
+							"    pm.expect(jsonData).to.have.property('error_message');",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization1AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"code\": \"discount1\",\n\t\"attributes\": {\"total\": 10, \"transaction_id\":5}\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/evaluate",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"evaluate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Evaluate discount, with transaction_id missing",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 400\",function(){",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns error\", function(){",
+							"    pm.expect(jsonData).to.have.property('error_message');",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization1AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"code\": \"discount1\",\n\t\"attributes\": {\"total\": 14, \"quantity\": 3}\n\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/evaluate",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"evaluate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Evaluate discount with transaction_id taken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 400\",function(){",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns error message\", function(){",
+							"    pm.expect(jsonData).to.have.property('error_message');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization1AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"code\": \"discount1\",\n\t\"attributes\": {\"total\": 14, \"quantity\": 3, \"transaction_id\":6}\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/evaluate",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"evaluate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Evaluate coupon with coupon_code already redeemed",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 400\",function(){",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns error message\", function(){",
+							"    pm.expect(jsonData).to.have.property('error_message');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization2AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"code\": \"coupon1\",\n\t\"attributes\": {\"total\": 115, \"products_size\": 3, \"coupon_code\":\"coupon1-1\"}\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/evaluate",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"evaluate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Evaluate coupon with not existent coupon_code",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 400\",function(){",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns error message\", function(){",
+							"    pm.expect(jsonData).to.have.property('error_message');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization2AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"code\": \"coupon1\",\n\t\"attributes\": {\"total\": 115, \"products_size\": 3, \"coupon_code\":\"unexistent\"}\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/evaluate",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"evaluate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Evaluate unexistent promotion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 404\",function(){",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns error message\", function(){",
+							"    pm.expect(jsonData).to.have.property('error_message');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization1AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"code\": \"unexistent\",\n\t\"attributes\": {\"total\": 14, \"quantity\": 3, \"transaction_id\":6}\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/evaluate",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"evaluate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Evaluate promotion, not being authenticated",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 401\",function(){",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Returns error message\", function(){",
+							"    pm.expect(jsonData).to.have.property('error_message');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"code\": \"discount1\",\n\t\"attributes\": {\"total\": 14, \"quantity\": 3, \"transaction_id\":6}\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/evaluate",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"evaluate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Evaluate promotion from another organization",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 403\",function(){",
+							"    pm.response.to.have.status(403);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns error message\", function(){",
+							"    pm.expect(jsonData).to.have.property('error_message');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization1AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"code\": \"coupon1\",\n\t\"attributes\": {\"total\": 14, \"products_size\": 3, \"coupon_code\":7}\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/evaluate",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"evaluate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Evaluate inactive promotion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 200\",function(){",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns not applicable\", function(){",
+							"    pm.expect(jsonData).to.have.property('applicable');",
+							"",
+							"    pm.expect(jsonData.applicable).to.eql(false);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization1AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"code\": \"discount2\",\n\t\"attributes\": {\"total\": 15, \"quantity\": 5, \"transaction_id\":9}\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/evaluate",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"evaluate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Evaluate deleted promotion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 200\",function(){",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns not applicable\", function(){",
+							"    pm.expect(jsonData).to.have.property('applicable');",
+							"",
+							"    pm.expect(jsonData.applicable).to.eql(false);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization2AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"code\": \"coupon2\",\n\t\"attributes\": {\"total\": 15, \"products_size\": 5, \"coupon_code\":9}\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/evaluate",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"evaluate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Evaluate correct promotion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 200\",function(){",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns applicable, with correct return type and value\", function(){",
+							"    pm.expect(jsonData).to.have.property('applicable');",
+							"    pm.expect(jsonData).to.have.property('return_type');",
+							"    pm.expect(jsonData).to.have.property('return_value');",
+							"",
+							"",
+							"    pm.expect(jsonData.applicable).to.eql(true);",
+							"    pm.expect(jsonData.return_type).to.eql(\"percentaje\");",
+							"    pm.expect(jsonData.return_value).to.eql(10);",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization1AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"code\": \"discount1\",\n\t\"attributes\": {\"total\": 1000, \"quantity\": 3, \"transaction_id\":16}\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/evaluate",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"evaluate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get report of used promotion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 200\",function(){",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns applicable, with correct return type and value\", function(){",
+							"    pm.expect(jsonData).to.have.property('total_money_spent');",
+							"    pm.expect(jsonData).to.have.property('invocations_count');",
+							"    pm.expect(jsonData).to.have.property('positive_ratio');",
+							"    pm.expect(jsonData).to.have.property('negative_ratio');",
+							"",
+							"",
+							"    pm.expect(jsonData.total_money_spent).to.eql(101.5);",
+							"    pm.expect(jsonData.invocations_count).to.eql(8);",
+							"    pm.expect(jsonData.positive_ratio).to.eql(2/8);",
+							"    pm.expect(jsonData.negative_ratio).to.eql(6/8);",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization1AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/report/1",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"report",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get report of other organizations promotion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3d35d8a-65ba-4e80-aebf-4fc1b79333da",
+						"exec": [
+							"pm.test(\"Status code is 403\",function(){",
+							"    pm.response.to.have.status(403);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Returns error message\", function(){",
+							"    pm.expect(jsonData).to.have.property('error_message');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization2AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/report/1",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"report",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get report of unexistent promotion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "14885612-bcd8-4539-9b05-3a15d128a9c7",
+						"exec": [
+							"pm.test(\"Status code is 404\",function(){",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{organization1AppKey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{domain}}/promotions/report/7.json",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"promotions",
+						"report",
+						"7.json"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "47ef478f-823a-4afb-af23-8fc8d611b384",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "dae17b2a-855e-40b2-9a3a-27e6c1336d61",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "6c0f16ee-b54e-49ff-8bce-ba51059e2f7a",
+			"key": "domain",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"id": "a5630fda-05bd-4f47-954c-e20d17a62882",
+			"key": "organization1AppKey",
+			"value": "eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoicGVkaWRvc1lhS2V5In0.GNNzFnIoYltyKsMZ18HbVtDPI74W-nimChf08sBOzCk",
+			"type": "string"
+		},
+		{
+			"id": "7cddc742-ed6a-48db-b5ff-b34437813aa1",
+			"key": "organization2AppKey",
+			"value": "eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoicmFwcGlLZXkifQ.zyr-GZNs55IGEgGzeoBvOwoFohscJYB1CiLa6No6AIY",
+			"type": "string"
+		}
+	]
+}

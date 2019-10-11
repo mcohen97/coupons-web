@@ -1,0 +1,29 @@
+<div class = "dashboard-container">
+  <%if is_current_user_admin%>
+    <a class = "dashboard-item" href= <%= invitation_path %>>
+      <div class = "w3-btn" style = "display:inline-block; width:100%; word-wrap: break-word; white-space: initial; transition: box-shadow 0.2s ease-in-out;">
+        <img src=<%=asset_url('add-friend.png')%> style="width: 70%; margin:10px"><br/>
+        <h4 class = 'dashboard-title'>Send invitation</h4>
+      </div>
+    </a>
+    <a class = "dashboard-item" href= <%= new_promotion_path %>>
+      <div class = "w3-btn" style = "width:100%;word-wrap: break-word; white-space: initial; transition: box-shadow 0.2s ease-in-out;">
+        <img src=<%=asset_url('coupon_star.png')%> style="width: 70%; margin:10px">
+        <h4 class = 'dashboard-title'>New promotion</h4>
+      </div>
+    </a>
+  <a class = "dashboard-item" href= <%= application_keys_path(:per_page => 6, :page => 1) %>>
+    <div class = "w3-btn" style = "display:inline-block; width:100%; white-space: initial; transition: box-shadow 0.2s ease-in-out;">
+      <img src=<%=asset_url('key_color.png')%> style="width: 70%; margin:10px">
+      <h4 class = 'dashboard-title'>Applications keys</h4>
+    </div>
+  </a>
+  <%end%> 
+
+  <a class = "dashboard-item" href= <%= promotions_path(:per_page => 6, :page => 1) %>>
+    <div class = "w3-btn" style = "display:inline-block; width:100%;word-wrap: break-word; white-space: initial; transition: box-shadow 0.2s ease-in-out;">
+      <img src=<%=asset_url('coupons.png')%> style="width: 70%; margin:10px">
+      <h4 class = 'dashboard-title'>Promotions list</h4>
+    </div>
+  </a>
+</div>

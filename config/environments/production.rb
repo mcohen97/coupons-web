@@ -1,6 +1,22 @@
-Rails.application.configure do
-  # Settings specified here will take precedence over those in config/application.rb.
+# frozen_string_literal: true
 
+Rails.application.configure do
+  config.hosts << ENV.fetch('HOSTS') { 'localhost' }
+  config.hosts << 'couponsweb.azurewebsites.net'
+  config.action_controller.default_url_options = { host: ENV.fetch('HOSTS') { 'localhost' } }
+  Rails.application.routes.default_url_options[:host] = ENV.fetch('HOSTS') { 'localhost' }
+
+  # Settings specified here will take precedence over those in config/application.rb.
+  raise 'JWT secret not set in enviroment' unless ENV['JWT_SECRET'].present?
+
+  config.jwt_secret = ENV['JWT_SECRET']
+
+  config.require_master_key = true
+  config.assets.compile = false
+  config.assets.digest = true
+  config.serve_static_assets = false
+
+  Rails.application.config.assets.precompile += %w(*.js ^[^_]*.css *.css.erb)
   # Code is not reloaded between requests.
   config.cache_classes = true
 
@@ -11,7 +27,7 @@ Rails.application.configure do
   config.eager_load = true
 
   # Full error reports are disabled and caching is turned on.
-  config.consider_all_requests_local       = false
+  config.consider_all_requests_local = ENV.fetch('ENABLE_ERRORS') { false }
   config.action_controller.perform_caching = true
 
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
@@ -36,7 +52,7 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  config.active_storage.service = :microsoft
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
@@ -48,10 +64,11 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = :debug
+  # detection and identification of failures
+  config.log_level = :info
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
+  config.log_tags = %i[request_id remote_ip]
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
@@ -61,6 +78,19 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "Coupons_production"
 
   config.action_mailer.perform_caching = false
+
+  config.action_mailer.raise_delivery_errors = true
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: 'smtp.gmail.com',
+    port: 587,
+    domain: 'coupons.com',
+    authentication: 'plain',
+    enable_starttls_auto: true,
+    user_name: ENV['MAILER_USER_NAME'],
+    password: ENV['MAILER_PASSWORD']
+  }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
@@ -80,10 +110,10 @@ Rails.application.configure do
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
-    logger           = ActiveSupport::Logger.new(STDOUT)
+  if ENV['RAILS_LOG_TO_STDOUT'].present?
+    logger = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
-    config.logger    = ActiveSupport::TaggedLogging.new(logger)
+    config.logger = ActiveSupport::TaggedLogging.new(logger)
   end
 
   # Do not dump schema after migrations.

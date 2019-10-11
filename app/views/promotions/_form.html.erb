@@ -1,0 +1,81 @@
+<script>
+function hide_instances_field(){
+  document.getElementById('instances-count-field').style.display ='none';
+}
+function show_instances_field(){
+  document.getElementById('instances-count-field').style.display = 'block';
+}
+</script>
+
+<%= bootstrap_form_for @promotion.becomes(Promotion), local: true do |form| %>
+  <h1><%=@form_title%></h1>
+
+  <div class="form-group" style="text-align:left">
+    <%= form.alert_message "Please fix the errors below." %>
+  </div>  
+
+  <div class="form-group">
+    <%= form.text_field :name, readonly: readonly %>
+  </div>
+  <div class="form-group">
+    <%= form.text_field :code, readonly: readonly %>
+  </div>
+
+  <%if not @is_edit%>
+    <div class="form-group">
+      <%=form.label :type%>
+      <%if !readonly%>
+        <%= form.radio_button :type, :Coupon, readonly: readonly, onclick: "show_instances_field();" %>
+        <%= form.radio_button :type, :Discount, readonly: readonly, onclick: "hide_instances_field();"%> 
+      <%else%>
+        <%= @promotion.type%>
+      <%end%>
+    </div>
+
+
+    <div class="form-group" id="instances-count-field" >
+      Instances: <br>
+      <%= number_field_tag 'instances_count', '1', min:1, max:10000, class: 'form-control shorter' %>
+    </div>
+  <%else%>
+    <div class="form-group">
+      <%=form.label :type%>
+      <%= @promotion.type%>
+    </div>
+  <%end%>
+  <div class="form-group">
+    <%= form.text_area :condition, readonly: readonly%>
+  </div>
+
+  <div class="form-group">
+    <%=form.label :returned_value_type%>
+    <%if !readonly%>
+      <%= form.radio_button :return_type, :fixed_value, readonly: readonly %>
+      <%= form.radio_button :return_type, :percentaje, readonly: readonly %>
+    <%else%>
+      <%= @promotion.return_type %>
+    <%end%>
+  </div>
+
+  <div class="form-group">
+    <%= form.number_field :return_value, readonly: readonly%>
+  </div>
+
+
+  <div class="form-group">
+    <%=form.label :active%>
+    <%if !readonly%>
+      <%= form.radio_button :active, 'true', readonly: readonly%>
+      <%= form.radio_button :active, 'false', readonly: readonly%>  
+    <%else%>
+      <%= @promotion.active ? "Active" : "Inactive" %>
+    <%end%>
+  </div>
+
+
+  <%if !readonly%>
+    <div class="actions">
+      <%= form.submit class: "btn btn-primary" %>
+    </div>
+  <%end%>
+<% end %>

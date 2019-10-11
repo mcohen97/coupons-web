@@ -1,0 +1,74 @@
+<div class = 'home-container'>
+    <h1 class="section-title">Promotions  </h1>
+<hr>
+    <div class = "filter-container">
+        <%= form_tag(promotions_path, method: :get) do %>
+            <div class = "filter-option">
+                Name: <%= text_field_tag :name, params[:name] %>
+            </div>
+            <div class = "filter-option">
+                Code: <%= text_field_tag :code, params[:code] %>
+            </div>
+            <div class = "filter-option">
+                &nbsp Type:&nbsp 
+                <%= radio_button_tag :type, 'Discount', params[:type] == 'Discount'%> Discount &nbsp  
+                <%= radio_button_tag :type, 'Coupon', params[:type] == 'Coupon'%> Coupon
+            </div>
+            <div class = "filter-option">    
+                &nbsp Active: &nbsp 
+                <%= radio_button_tag :active, true, params[:active] == 'true'%> True &nbsp 
+                <%= radio_button_tag :active, false, params[:active] == 'false'%> False
+            </div> 
+            <div class = "filter-option">    
+                <%= submit_tag "Search", name: nil, class: 'btn btn-primary search'%>
+                 <%= link_to  "Clear", promotions_path, class: 'btn btn-primary search' %>
+            </div>
+
+        <% end %>
+    </div>
+<hr>
+    
+    <% @promotions.each do |promo|%>
+        <div class = "promo-container">
+            <h3><%=promo.name%></h3>
+            <div class = "promo-info-container">
+                <b>Type:</b> <%= promo.type%>
+                <br><b>Code:</b> <%= promo.code%>
+                <br><b>Return value:</b> 
+
+                <% if promo.percentaje? %>
+                <%=promo.return_value%>%
+                <% else %>
+                $<%=promo.return_value%>
+                <% end %>
+
+                <br><b>Active: </b><%= promo.active%> 
+                <br><b>Condition: </b><%= promo.condition%>
+                <br>
+            </div>
+
+            <div class = "w3-bar">
+                <a class="w3-button" href=<%=promotion_path(promo)%>>
+                    <img src=<%=asset_url('loupe.png')%> style="margin-right:4px" width='24px'>
+                    <span class = "promo-option-label">Show</span>
+                </a>
+                <%if is_current_user_admin%>
+                <a class="w3-button" href=<%=edit_promotion_path(promo)%>>
+                    <img src=<%=asset_url('edit.png')%> style="margin-right:4px" width='24px'>
+                    <span class = "promo-option-label">Edit</span>
+                </a>
+                <a data-confirm="Are you sure?" class="w3-button" rel="nofollow" data-method="delete" href=<%=promotion_path(promo)%>>
+                    <img src=<%=asset_url('delete.png')%> style="margin-right:4px" width='24px'>
+                    <span class = "promo-option-label">Delete</span></a>
+                <%end%>
+                <a class="w3-button" href=<%=generate_report_path(promo)%>>
+                    <img src=<%=asset_url('presentation_64.png')%> style="margin-right:4px" width='24px'>
+                    <span class = "promo-option-label">Report</span>
+                </a>
+            </div>
+        </div>
+    <%end%>
+    <div class = "digg_pagination" style="display:block; margin: 20px auto 0px auto; clear:both; background: none">
+        <%= will_paginate @promotions, inner_window: 0, outer_window:0 %>
+    </div>
+</div>

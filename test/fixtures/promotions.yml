@@ -1,0 +1,75 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined. If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+coupon1:
+  id: 1
+  name: Promo verano
+  code: COMIDADESC5
+  organization_id: 1
+  return_type: percentaje
+  return_value: 10
+  active: true
+  type: Coupon
+  condition: total > 100 AND products_size >= 2
+  invocations: 7
+  negative_responses: 4
+  total_spent: 48
+
+coupon2:
+  id: 2
+  name: Obtené un cupón de 5% de descuento para tu primera compra en las cantinas de la Universidad ORT 
+  code: COMPRAYA
+  organization_id: 2
+  return_type: percentaje
+  return_value: 5
+  active: false
+  type: Coupon
+  condition: total > 50 AND estudiante_ort
+
+coupon3:
+  id: 3
+  name: Con tu primera compra en Mochileros.uy un cupón de $150 de descuento para tu próxima compra
+  code: MOCHIUY
+  organization_id: 2
+  return_type: fixed_value
+  return_value: 150
+  active: true
+  type: Coupon
+  condition: primera_compra OR total > 1000
+
+discount1:
+  id: 4
+  name: Descuento comienzo clases
+  code: CLASES
+  organization_id: 1
+  return_type: fixed_value
+  return_value: 100
+  active: true
+  type: Discount
+  condition: (total <= 1000 AND quantity >= 5) OR total > 1000
+
+discount2: 
+  id: 5
+  name: Compras mayores de $1000 obtienes un 10% de descuento
+  code: 10XCIEN
+  organization_id: 2
+  return_type: percentaje
+  return_value: 10
+  active: true
+  type: Discount
+  condition: total > 1000
+  deleted: true
+
+discount3:
+  id: 6
+  name: Comprando 3 unidades de nuestras mochilas escolares te descontamos $300
+  code: MOCHIX3
+  organization_id: 2
+  return_type: fixed_value
+  return_value: 300
+  active: false
+  type: Discount
+  condition: quantity = 3

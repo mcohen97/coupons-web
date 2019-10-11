@@ -1,15 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Coupons</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= content_for?(:title) ? yield(:title) : "Coupons" %></title>
     <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag "application", :media => "all" %>
+
+
+    <%= javascript_include_tag "application" %>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js" type="text/javascript"></script>
+    <![endif]-->
   </head>
-
   <body>
-    <%= yield %>
+  <%if user_signed_in?%>
+    <div class="navbar navbar-default navbar-static-top" >
+      <div class="container">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/home/index" style="color:black">Coupons</a>
+        <div class="navbar-collapse collapse navbar-responsive-collapse">
+          <ul class="nav navbar-nav profile">
+            
+          </ul>
+          <ul class="nav navbar-nav">
+            <li>
+              <%if @current_user.avatar.attached?%>
+                <a style="color:black" href= <%= home_path %>>
+                  <img width= "20px" height="20px" src=<%=url_for(@current_user.avatar)%>>
+                  <%=@current_user.name%> <%=@current_user.surname%>
+                </a>
+              <%end%>
+            </li>
+            <li>
+              <a style="color:black" href= <%= home_path %>>
+                <img width="16px" style="vertical-align:sub" src=<%=asset_url('home.png')%>>
+                Home
+              </a>
+            </li>
+            <li>
+              <a style="color:black" rel="nofollow" data-method="delete" href=<%= destroy_user_session_path%>>
+                <img width="16px" style="vertical-align:sub" src=<%=asset_url('logout.png')%>>
+                Log out
+              </a>
+            </li>
+            
+          </ul>
+
+        </div>
+      </div>
+    </div>
+  <%end%>
+    <div class="container">
+      <%if user_signed_in?%>
+        <%= bootstrap_flash %>
+      <%end%>
+      <%= yield %>
+    </div> <!-- /container -->
   </body>
 </html>

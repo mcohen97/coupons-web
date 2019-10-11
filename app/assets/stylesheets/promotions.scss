@@ -1,0 +1,100 @@
+// Place all the styles related to the Promotions controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.promo-container{
+    background-image: image-url("yellow-paper.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 45%;
+    display: inline-block;
+    margin: 10px;
+    border: 3px dashed black;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 10px;
+    vertical-align: middle;
+}
+
+.promo-container .w3-bar{
+    margin: 10px auto 10px auto;
+}
+
+.promo-container h3{
+    font-weight: bold;
+    margin-bottom: 20px;  
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.promo-container info-title{
+    font-weight: bold;
+}
+
+.promo-options-container{
+    margin:10px;
+}
+
+.promo-info-container{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+    width: 80%;
+    margin: 0px auto 0px auto;
+}
+
+
+
+.filter-option{
+    margin: 5px 5px;
+    display: inline-block;
+}
+
+.filter-option input[type=text] {
+    padding: 5px;
+    border: .5px solid lightgray;
+    border-radius: 5px;
+}
+
+.filter-option input[type=radio] {
+    vertical-align: top;
+}
+
+.btn.btn-primary.search{
+    margin-left: 5px;
+    margin-right: 5px;
+    display: inline-block;
+    width: auto;
+  }
+
+#instances-count-field{
+    display: none;
+}
+
+.table-container{
+    width: 50%;
+    display: block;
+    margin: 20px auto;
+}
+
+@media screen and (max-width: 767px) {
+    .promo-container{
+        width: 90%
+    }
+
+    .promo-option-label{
+        display: none;
+    }
+
+    .filter-option{
+        width: 100%;
+        display: block;
+        clear: both;
+    }
+
+    .table-container{
+        width: 100%;
+    }
+}
