@@ -314,6 +314,7 @@ DEPENDENCIES
   devise-bootstrap-views
   devise-i18n
   faker
+  faraday
   health_check
   jbuilder (~> 2.7)
   jquery-rails

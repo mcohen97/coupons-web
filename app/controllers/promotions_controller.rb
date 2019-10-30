@@ -72,6 +72,12 @@ class PromotionsController < ApplicationController
   end
 
   def evaluate
+    response =Services.promotions_service.evaluate(params[:code],params[:attributes], get_authorization_header)
+    render json: response, status: :success
+  end
+
+    
+=begin    
     logger.info("Evaluating promotion #{params[:code]}.")
     appkey = get_app_key
     promotion = Promotion.find_by(code: params[:code])
@@ -83,7 +89,8 @@ class PromotionsController < ApplicationController
       logger.error('Promotion not found')
       render json: { error_message: 'Promotion not found' }, status: :not_found
     end
-  end
+=end
+  
 
   def report
     if is_backoffice_client
@@ -167,8 +174,12 @@ class PromotionsController < ApplicationController
   end
 
   def get_app_key
-    token = request.headers['Authorization']
+    token = get_authorization_header
     ApplicationKey.get_from_token_if_valid(token)
+  end
+
+  def get_authorization_header
+    return request.headers['Authorization']
   end
 
   def set_pagination(collection)
