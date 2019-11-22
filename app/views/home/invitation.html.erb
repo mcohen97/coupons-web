@@ -4,6 +4,10 @@
 
   <%= form_tag(invite_path, :method => "post") do %>
     <%= text_field_tag(:email, nil, class: 'form-control', placeholder: "Email")%>
+    <br>
+    Organization user <%= radio_button_tag(:role, "organization_user", true, class:'centered-radio') %>
+    <br>
+    Finance user <%= radio_button_tag(:role, "finance_user", false, class:'centered-radio') %>
     <%= submit_tag "Send", class:"btn btn-primary margin"%>
   <% end %>
 
