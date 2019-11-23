@@ -5,6 +5,10 @@ function hide_instances_field(){
 function show_instances_field(){
   document.getElementById('instances-count-field').style.display = 'block';
 }
+
+$(document).ready(function(){
+  $('.datepicker').datepicker({autoclose: true});
+});
 </script>
 
 <%= bootstrap_form_for @promotion.becomes(Promotion), local: true do |form| %>
@@ -36,6 +40,9 @@ function show_instances_field(){
     <div class="form-group" id="instances-count-field" >
       Instances: <br>
       <%= number_field_tag 'instances_count', '1', min:1, max:10000, class: 'form-control shorter' %>
+      <br>
+      Expiration: <br>
+      <%= text_field_tag "instance_expiration_date", "", class: 'datepicker' %>
     </div>
   <%else%>
     <div class="form-group">
@@ -70,6 +77,10 @@ function show_instances_field(){
     <%else%>
       <%= @promotion.active ? "Active" : "Inactive" %>
     <%end%>
+  </div>
+
+  <div class="form-group">
+    <%= form.text_field :expiration_date, readonly: readonly, class: 'datepicker' %>
   </div>
 
 

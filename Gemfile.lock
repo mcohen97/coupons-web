@@ -84,6 +84,8 @@ GEM
     bindex (0.8.1)
     bootsnap (1.4.5)
       msgpack (~> 1.0)
+    bootstrap-datepicker-rails (1.6.1.1)
+      railties (>= 3.0)
     bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
       sassc (>= 2.0.0)
@@ -305,6 +307,7 @@ DEPENDENCIES
   azure-storage-blob
   bcrypt (~> 3.1.7)
   bootsnap (>= 1.4.2)
+  bootstrap-datepicker-rails
   bootstrap-sass
   bootstrap_form (~> 4.0)
   byebug

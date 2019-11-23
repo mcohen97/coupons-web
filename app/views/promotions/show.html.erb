@@ -7,6 +7,7 @@
         <tr>
           <th>Coupon Code</th>
           <th>Reedemed</th>
+          <th>Expiration date</th>
         </tr>
       </thead>
       <tbody>
@@ -19,6 +20,9 @@
               <%else%>
                 no
               <%end%>
+            </td>
+            <td>
+              <%=ci.instance_expiration_date%>
             </td>
           </tr>
         <%end%>

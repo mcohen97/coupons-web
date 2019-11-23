@@ -121,7 +121,8 @@ class PromotionsController < ApplicationController
   end
 
   def generate_coupon_instances(promotion)
-    promotion.generate_coupon_instances(coupon_instances_count)
+    puts instance_expiration_date
+    promotion.generate_coupon_instances(coupon_instances_count, instance_expiration_date)
   end
 
   def evaluate_existing_promotion(promotion, appkey)
@@ -190,11 +191,15 @@ class PromotionsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def promotion_parameters
-    params.require(:promotion).permit(:code, :name, :type, :return_type, :return_value, :active, :condition)
+    params.require(:promotion).permit(:code, :name, :type, :return_type, :return_value, :active, :condition, :expiration_date)
   end
 
   def coupon_instances_count
     params.fetch(:instances_count, Coupon::DEFAULT_COUPON_INSTANCES).to_i
+  end
+
+  def instance_expiration_date
+    params.fetch(:instance_expiration_date, @promotion.expiration_date)
   end
 
   def pagination_offset
