@@ -10,11 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_04_172104) do
+ActiveRecord::Schema.define(version: 2019_11_23_134619) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_buffercache"
-  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -58,6 +56,7 @@ ActiveRecord::Schema.define(version: 2019_10_04_172104) do
     t.bigint "promotion_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "instance_expiration_date"
     t.index ["promotion_id", "coupon_code"], name: "index_coupon_instances_on_promotion_id_and_coupon_code", unique: true
     t.index ["promotion_id"], name: "index_coupon_instances_on_promotion_id"
   end
@@ -105,6 +104,7 @@ ActiveRecord::Schema.define(version: 2019_10_04_172104) do
     t.integer "negative_responses", default: 0, null: false
     t.float "average_response_time", default: 0.0
     t.float "total_spent", default: 0.0
+    t.datetime "expiration_date"
     t.index ["code"], name: "index_promotions_on_code", unique: true
     t.index ["organization_id"], name: "index_promotions_on_organization_id"
   end

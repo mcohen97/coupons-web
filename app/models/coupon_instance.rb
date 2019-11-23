@@ -5,6 +5,7 @@ class CouponInstance < ApplicationRecord
   validates :coupon_code, presence: true
   validates_uniqueness_of :coupon_code
   validate :belongs_to_coupon
+  validate :instance_expiration_date
 
   def belongs_to_coupon
     if promotion.type != 'Coupon'

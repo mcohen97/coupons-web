@@ -23,13 +23,14 @@ class Coupon < Promotion
     end
   end
 
-  def generate_coupon_instances(count)
+  def generate_coupon_instances(count, instance_expiration_date)
 
     ActiveRecord::Base.transaction do
-      i = 0  
-      while i < count do
-        CouponInstance.new(promotion_id: id, coupon_code: "#{code}_#{SecureRandom.uuid[0, 5]}").save
-        i += 1
+      instances = 1..count
+      puts "creating #{count} instances"
+      instances.each do
+        puts instance_expiration_date
+        CouponInstance.new(promotion_id: id, coupon_code: "#{code}_#{SecureRandom.uuid[0, 5]}", instance_expiration_date: instance_expiration_date).save
       end
     end
 

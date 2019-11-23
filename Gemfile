@@ -76,3 +76,4 @@ gem 'coffee-rails'
 gem 'faker'
 gem "azure-storage-blob"
 gem "azure-storage"
+gem 'bootstrap-datepicker-rails'
