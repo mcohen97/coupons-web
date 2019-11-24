@@ -21,6 +21,20 @@ def get_promotions(filters, authorization)
   get route, authorization
 end
 
+def get_promotion_by_id(id, authorization)
+  route  = '/v1/promotions/'+id
+  get route, authorization
+end
+
+def create_promotion(payload, authorization)
+  route  = '/v1/promotions'
+  post route, payload, authorization
+end
+
+def update_promotion(id, payload, authorization)
+
+end
+
 
 private
 
