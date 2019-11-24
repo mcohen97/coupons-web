@@ -49,6 +49,17 @@ $(document).ready(function(){
       <%=form.label :type%>
       <%= @promotion.type%>
     </div>
+
+    <%if @promotion.type == "Coupon"%>
+      <div class="form-group" id="new-instances-count-field" >
+        Add Instances: <br>
+        <%= number_field_tag 'instances_count', '1', min:1, max:10000, class: 'form-control shorter' %>
+        <br>
+        Expiration: <br>
+        <%= text_field_tag "instance_expiration_date", "", class: 'datepicker' %>
+      </div>
+    <%end%>
+    
   <%end%>
   <div class="form-group">
     <%= form.text_area :condition, readonly: readonly%>
