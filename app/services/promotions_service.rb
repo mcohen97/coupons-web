@@ -32,9 +32,9 @@ def create_promotion(payload, authorization)
 end
 
 def update_promotion(id, payload, authorization)
-
+  route  = '/v1/promotions/' + id
+  put route, payload, authorization
 end
-
 
 private
 
@@ -81,6 +81,27 @@ private
       request.headers["Authorization"] = authorization
       request.headers['Content-Type'] = 'application/json'
       request.body = payload.to_json
+    end
+
+    handle_response(resp)
+  end
+
+  def put (url, payload, authorization)
+    print('se va a invocar el url')
+
+    resp = @connection.put url do |request|
+      request.headers["Authorization"] = authorization
+      request.headers['Content-Type'] = 'application/json'
+      request.body = payload.to_json
+    end
+
+    handle_response(resp)
+  end
+
+  def delete (url, authorization)
+    resp = @connection.delete url do |request|
+      request.headers["Authorization"] = authorization
+      request.headers['Content-Type'] = 'application/json'
     end
 
     handle_response(resp)
