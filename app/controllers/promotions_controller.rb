@@ -8,12 +8,23 @@ class PromotionsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :promotion_not_found
 
   def index
-    @promotions = Promotion.not_deleted
-    @promotions = @promotions.by_code(params[:code]) if params[:code].present?
-    @promotions = @promotions.by_name(params[:name]) if params[:name].present?
-    @promotions = @promotions.by_type(params[:type]) if params[:type].present?
-    @promotions = @promotions.active?(params[:active]) if params[:active].present?
-    @promotions = set_pagination(@promotions)
+    # hardcoded token for testing
+    authorization = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJwZXJtaXNzaW9ucyI6WyJBRE1JTiJdLCJvcmdhbml6YXRpb25faWQiOiIxIn0.MHE0qub_tdm-10PVT8yQya5STu3-kVnSuO-K5Kj2dvE'
+    filters = {}
+    filters[:code] = params[:code] if params[:code].present?
+    filters[:name] = params[:name] if params[:name].present?
+    filters[:type] = params[:type] if params[:type].present?
+    filters[:active] = params[:active] if params[:active].present?
+
+    
+    @promotions = PromotionsService.instance.get_promotions(filters, authorization)
+    puts @promotions.inspect
+    #@promotions = Promotion.not_deleted
+    #@promotions = @promotions.by_code(params[:code]) if params[:code].present?
+    #@promotions = @promotions.by_name(params[:name]) if params[:name].present?
+    #@promotions = @promotions.by_type(params[:type]) if params[:type].present?
+    #@promotions = @promotions.active?(params[:active]) if params[:active].present?
+    #@promotions = set_pagination(@promotions)
   end
 
   def show
