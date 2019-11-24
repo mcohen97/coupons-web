@@ -18,7 +18,8 @@ def get_promotions(filters, authorization)
     route += add_filters(filters)
   end
   puts route
-  get route, authorization
+  promos = get route, authorization
+  promos.map{ |p| PromotionDto.new(p)}
 end
 
 def get_promotion_by_id(id, authorization)
