@@ -18,7 +18,7 @@ class Promotion < ApplicationRecord
   scope :by_name, ->(name) { where('name ILIKE ?', "%#{name}%") }
   scope :by_type, ->(type) { where(type: type) }
   scope :active?, ->(status) { where(active: status) }
-  enum return_type: %i[percentaje fixed_value]
+  enum return_type: %i[percentage fixed]
 
   validates :code, uniqueness: true, presence: true
   validates :name, uniqueness: true, length: { minimum: 1 }
@@ -26,7 +26,7 @@ class Promotion < ApplicationRecord
   validates :active, inclusion: { in: [true, false] }
   validates :return_type, presence: true, inclusion: { in: return_types.keys }
   validates :return_value, numericality: { greater_than: 0 }
-  validates :return_value, numericality: { less_than_or_equal_to: 100 }, if: :percentaje?
+  validates :return_value, numericality: { less_than_or_equal_to: 100 }, if: :percentage?
   before_validation :parse_condition
   after_commit :flush_promotions_cache
 
@@ -144,7 +144,7 @@ class Promotion < ApplicationRecord
   end
 
   def calculate_saving(total)
-    if percentaje?
+    if percentage?
       Float(total * return_value) / 100.0
     else
       return_value

@@ -9,7 +9,7 @@ coupon1:
   name: Promo verano
   code: COMIDADESC5
   organization_id: 1
-  return_type: percentaje
+  return_type: percentage
   return_value: 10
   active: true
   type: Coupon
@@ -23,7 +23,7 @@ coupon2:
   name: Obtené un cupón de 5% de descuento para tu primera compra en las cantinas de la Universidad ORT 
   code: COMPRAYA
   organization_id: 2
-  return_type: percentaje
+  return_type: percentage
   return_value: 5
   active: false
   type: Coupon
@@ -56,7 +56,7 @@ discount2:
   name: Compras mayores de $1000 obtienes un 10% de descuento
   code: 10XCIEN
   organization_id: 2
-  return_type: percentaje
+  return_type: percentage
   return_value: 10
   active: true
   type: Discount

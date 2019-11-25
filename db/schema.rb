@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(version: 2019_11_23_134619) do
     t.integer "negative_responses", default: 0, null: false
     t.float "average_response_time", default: 0.0
     t.float "total_spent", default: 0.0
-    t.datetime "expiration_date"
+    t.datetime "expiration"
     t.index ["code"], name: "index_promotions_on_code", unique: true
     t.index ["organization_id"], name: "index_promotions_on_organization_id"
   end

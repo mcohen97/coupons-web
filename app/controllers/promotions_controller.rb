@@ -7,9 +7,11 @@ class PromotionsController < ApplicationController
   before_action :set_promo, only: %i[show edit update destroy report]
   rescue_from ActiveRecord::RecordNotFound, with: :promotion_not_found
 
+  #temporary
+  TOKEN = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJwZXJtaXNzaW9ucyI6WyJBRE1JTiJdLCJvcmdhbml6YXRpb25faWQiOiIxIn0.MHE0qub_tdm-10PVT8yQya5STu3-kVnSuO-K5Kj2dvE'
+
   def index
     # hardcoded token for testing
-    authorization = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJwZXJtaXNzaW9ucyI6WyJBRE1JTiJdLCJvcmdhbml6YXRpb25faWQiOiIxIn0.MHE0qub_tdm-10PVT8yQya5STu3-kVnSuO-K5Kj2dvE'
     filters = {}
     filters[:code] = params[:code] if params[:code].present?
     filters[:name] = params[:name] if params[:name].present?
@@ -17,14 +19,7 @@ class PromotionsController < ApplicationController
     filters[:active] = params[:active] if params[:active].present?
 
     
-    @promotions = PromotionsService.instance.get_promotions(filters, authorization)
-    puts @promotions.inspect
-    #@promotions = Promotion.not_deleted
-    #@promotions = @promotions.by_code(params[:code]) if params[:code].present?
-    #@promotions = @promotions.by_name(params[:name]) if params[:name].present?
-    #@promotions = @promotions.by_type(params[:type]) if params[:type].present?
-    #@promotions = @promotions.active?(params[:active]) if params[:active].present?
-    #@promotions = set_pagination(@promotions)
+    @promotions = PromotionsService.instance.get_promotions(filters, TOKEN)
   end
 
   def show
@@ -44,6 +39,7 @@ class PromotionsController < ApplicationController
   end
 
   def create
+    puts "PARAMETERS #{promotion_parameters.inspect}"
     @promotion = Promotion.new(promotion_parameters)
     is_coupon = @promotion.type == 'Coupon'
     if is_coupon && !valid_instances_count
@@ -51,22 +47,27 @@ class PromotionsController < ApplicationController
       respond_promotion_not_created(@promotion) && return
     end
 
-    if @promotion.save
-      generate_coupon_instances(@promotion) if is_coupon
-      logger.info("Successfully created promotion of id: #{@promotion.id}")
+    result = PromotionsService.instance.create_promotion(promotion_parameters, TOKEN)
+    if result.success
+      logger.info("Successfully updated promotion of id: #{@promotion.id}.")
       respond_promotion_created(@promotion) && return
     else
+      @promotion.errors.add(:error, result.data.to_s)
       respond_promotion_not_created(@promotion)
     end
   end
 
   def update
     respond_to do |format|
-      if @promotion.update(promotion_parameters)
+      result = PromotionsService.instance.update_promotion(params[:promotion][:id],promotion_parameters, TOKEN)
+      if result.success
+        @promotion = result.data
         logger.info("Successfully updated promotion of id: #{@promotion.id}.")
         format.html { redirect_to @promotion, notice: 'Promotion was updated successfully.' }
         format.json { render :show, status: :ok, location: @promotion }
       else
+        @promotion.errors.add(:error, result.data.to_s)
+
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @promotion.errors, status: :unprocessable_entity }
       end
@@ -74,7 +75,7 @@ class PromotionsController < ApplicationController
   end
 
   def destroy
-    @promotion.update(deleted: true)
+    result = PromotionsService.instance.delete_promotion(@promotion.id, TOKEN)
     respond_to do |format|
       logger.info("Successfully deleted promotion of id: #{@promotion.id}.")
       format.html { redirect_to promotions_path, notice: 'Promotion was successfully deleted.' }
@@ -86,21 +87,6 @@ class PromotionsController < ApplicationController
     response =Services.promotions_service.evaluate(params[:code],params[:attributes], get_authorization_header)
     render json: response, status: :success
   end
-
-    
-=begin    
-    logger.info("Evaluating promotion #{params[:code]}.")
-    appkey = get_app_key
-    promotion = Promotion.find_by(code: params[:code])
-
-    if !promotion.nil?
-      logger.info("Successfully evaluated promotion of code: #{params[:code]}")
-      evaluate_existing_promotion(promotion, appkey)
-    else
-      logger.error('Promotion not found')
-      render json: { error_message: 'Promotion not found' }, status: :not_found
-    end
-=end
   
 
   def report
@@ -172,7 +158,9 @@ class PromotionsController < ApplicationController
   end
 
   def set_promo
-    @promotion = Promotion.find(params[:id])
+    #@promotion = Promotion.find(params[:id])
+    puts "PROMOTION ID #{params[:id]}"
+    @promotion = PromotionsService.instance.get_promotion_by_id(params[:id], TOKEN)
     promotion_not_found if @promotion.deleted
     @promotion = @promotion.becomes(Promotion)
   end
@@ -202,7 +190,10 @@ class PromotionsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def promotion_parameters
-    params.require(:promotion).permit(:code, :name, :type, :return_type, :return_value, :active, :condition, :expiration_date)
+    p = params.require(:promotion).permit(:name,:code ,:type, :condition,:return_type, :return_value, :active, :expiration).to_h
+    p[:return_value] = p[:return_value].to_i
+    p[:active] = p[:active] == "true"
+    return p
   end
 
   def coupon_instances_count

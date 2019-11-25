@@ -15,39 +15,40 @@ rappi = Organization.create!(organization_name: 'Rappi')
 pablo = User.create!(name: 'Pablo', surname: 'Villas', email: 'pv@gmail.com', password: '123456', role: 'administrator', organization_id: pedidos_ya.id)
 simon = User.create!(name: 'Simon', surname: 'Borreo', email: 'sb@gmail.com', password: '123456', role: 'administrator', organization_id: rappi.id)
 
-dis1 = Discount.create!(code: 'discount1', name: 'a discount', return_type: :percentaje,
+dis1 = Discount.create!(code: 'discount1', name: 'a discount', return_type: :percentage,
                         return_value: 10, active: true, condition: '( total <= 100 AND quantity >= 5 ) OR total > 10', organization_id: pablo.organization_id)
 
-dis2 = Discount.create!(code: 'discount2', name: 'another discount', return_type: :percentaje,
+dis2 = Discount.create!(code: 'discount2', name: 'another discount', return_type: :percentage,
                         return_value: 10, active: false, condition: '( total <= 100 AND quantity >= 5 ) OR total > 10', organization_id: pablo.organization_id)
 
 dis3 = Discount.create!(code: 'discount3', name: 'and yet another discount', return_type: :fixed_value,
                         return_value: 10, active: false, condition: 'quantity >= 5', organization_id: pablo.organization_id)
 
-coup1 = Coupon.create!(code: 'coupon1', name: 'a coupon', return_type: :percentaje,
+coup1 = Coupon.create!(code: 'coupon1', name: 'a coupon', return_type: :percentage,
                        return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2', organization_id: simon.organization_id)
 
-coup2 = Coupon.create!(code: 'coupon2', name: 'another coupon', return_type: :percentaje,
+coup2 = Coupon.create!(code: 'coupon2', name: 'another coupon', return_type: :percentage,
                        return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2', organization_id: simon.organization_id, deleted: true)
 
 rand_promotions = []
 
-coup = Coupon.create!(code: 'couponcodetest', name: 'Some coupy coupon', return_type: :percentaje,
+coup = Coupon.create!(code: 'couponcodetest', name: 'Some coupy coupon', return_type: :percentage,
                       return_value: 10, active: true, condition: 'total > 100 AND products_size >= 2', organization_id: pablo.organization_id)
-
+=begin
 (0..512).each do |i|
-  dis = Discount.create!(code: Faker::Commerce.unique.promotion_code, name: Faker::Commerce.unique.product_name, return_type: :percentaje,
+  dis = Discount.create!(code: Faker::Commerce.unique.promotion_code, name: Faker::Commerce.unique.product_name, return_type: :percentage,
                          return_value: 10, active: true, condition: '( total <= 100 AND quantity >= 5 ) OR total > 10', organization_id: pablo.organization_id)
   CouponInstance.create!(promotion_id: coup.id, coupon_code: "coupon#{coup.id}-#{i}")
 
   rand_promotions << dis
 end
 rand_promotions << coup
+=end
 
 CouponInstance.create!(promotion_id: 4, coupon_code: 'coupon1-1')
 CouponInstance.create!(promotion_id: 4, coupon_code: 'coupon1-2')
 
-ApplicationKey.create!(name: 'All pedidos ya', organization_id: pedidos_ya.id, promotion_ids: rand_promotions.pluck(:id))
+#ApplicationKey.create!(name: 'All pedidos ya', organization_id: pedidos_ya.id, promotion_ids: rand_promotions.pluck(:id))
 ApplicationKey.create!(name: 'pedidosYaKey', organization_id: pedidos_ya.id, promotion_ids: [dis1.id, dis2.id, dis3.id])
 ApplicationKey.create!(name: 'pedidosYaKeyIncompleto', organization_id: pedidos_ya.id, promotion_ids: [dis1.id])
 ApplicationKey.create!(name: 'rappiKey', organization_id: rappi.id, promotion_ids: [coup1.id, coup2.id])

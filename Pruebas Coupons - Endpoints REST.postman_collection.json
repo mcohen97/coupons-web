@@ -27,7 +27,7 @@
 							"",
 							"",
 							"    pm.expect(jsonData.applicable).to.eql(true);",
-							"    pm.expect(jsonData.return_type).to.eql(\"percentaje\");",
+							"    pm.expect(jsonData.return_type).to.eql(\"percentage\");",
 							"    pm.expect(jsonData.return_value).to.eql(10);",
 							"",
 							"});",
@@ -91,7 +91,7 @@
 							"",
 							"",
 							"    pm.expect(jsonData.applicable).to.eql(true);",
-							"    pm.expect(jsonData.return_type).to.eql(\"percentaje\");",
+							"    pm.expect(jsonData.return_type).to.eql(\"percentage\");",
 							"    pm.expect(jsonData.return_value).to.eql(10);",
 							"",
 							"});",
@@ -193,7 +193,7 @@
 			"response": []
 		},
 		{
-			"name": "Evaluate percentaje discount, with total missing",
+			"name": "Evaluate percentage discount, with total missing",
 			"event": [
 				{
 					"listen": "test",
@@ -896,7 +896,7 @@
 							"",
 							"",
 							"    pm.expect(jsonData.applicable).to.eql(true);",
-							"    pm.expect(jsonData.return_type).to.eql(\"percentaje\");",
+							"    pm.expect(jsonData.return_type).to.eql(\"percentage\");",
 							"    pm.expect(jsonData.return_value).to.eql(10);",
 							"",
 							"});",

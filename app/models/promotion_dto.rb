@@ -2,7 +2,7 @@ class PromotionDto
 
   attr_accessor :name, :code, :type, :return_type, :return_value, :condition ,:active, :promotion_type, :expiration
 
-  def initialize(args)
+  def initialize(args = {})
     @name = args['name']
     @code = args['code']
     @type = args['type']
@@ -15,8 +15,8 @@ class PromotionDto
 
   end
 
-  def percentaje?
-    @return_type == 'percentaje'
+  def percentage?
+    @return_type == 'percentage'
   end
 
 end

@@ -36,7 +36,7 @@
                 <br><b>Code:</b> <%= promo.code%>
                 <br><b>Return value:</b> 
 
-                <% if promo.percentaje? %>
+                <% if promo.percentage? %>
                 <%=promo.return_value%>%
                 <% else %>
                 $<%=promo.return_value%>
