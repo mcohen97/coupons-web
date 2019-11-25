@@ -12,18 +12,15 @@ class Users::SessionsController < Devise::SessionsController
   def create
     email = sign_in_params[:email];
     password = sign_in_params[:password];
-    response = UsersService.instance().sign_in(email,password);
-    if response.success?
-      userData = UsersService.instance().get_user(email);
-      session[:user_id] = email;
-      @current_user = userData;
-      redirect_to home_path
-    else 
-      flash[:error] = "Wrong email or password"
-      redirect_to user_session_path
-    end
-    #super
-    #UsersService.instance().sign_in()
+    UsersService.instance().sign_in(email,password);
+    userData = UsersService.instance().get_user(email);
+    puts userData
+    session[:user_id] = email;
+    @current_user = userData;
+    redirect_to home_path and return 
+  rescue ServiceResponseError => error
+    flash[:error] = "Wrong email or password"
+    redirect_to user_session_path
   end
 
   # DELETE /resource/sign_out

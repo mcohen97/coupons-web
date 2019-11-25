@@ -31,10 +31,14 @@ def create_user(invitation_code, payload)
 end
 
 def get_user(email)
-  route= 'v1/users/'+email
+  route= '/v1/users/'+email
   get route, ''
 end
 
+def get_organization(org_id)
+  route='/v1/organizations/'+org_id
+  get route, ''
+end
 private
 
   def initialize
@@ -58,9 +62,7 @@ private
       request.headers['Content-Type'] = 'application/json'
     end
 
-    resp
-    #handle_response(resp)
-
+    handle_response(resp)
   end
 
   def post(url, payload, authorization)
@@ -72,15 +74,15 @@ private
       request.body = payload.to_json
     end
 
-    return resp
-    #handle_response(resp)
+    handle_response(resp)
   end
 
   def handle_response(response)
     if response.success?
       return JSON.parse response.body
     else
-      return JSON.parse response.body     
+      puts response.body
+      raise ServiceResponseError
     end
   end
 

@@ -15,8 +15,8 @@ class ApplicationController < ActionController::Base
   end
 
   def set_organization
-    if user_signed_in?
-      current_organization = Organization.cached_find @current_user.organization_id
+    if is_user_signed_in
+      current_organization = UsersService.instance().get_organization(@current_user['org_id'])
     end
   end
 
@@ -36,8 +36,12 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user_organization
-    org = Organization.cached_find @current_user.organization_id
-    return org
+    if is_user_signed_in
+      @current_organization = UsersService.instance().get_organization(current_user['org_id'])
+    else
+      @current_organization = nil
+    end
+    return @current_organization
   end
 
   def is_current_user_admin
@@ -49,7 +53,8 @@ class ApplicationController < ActionController::Base
     return not(session[:user_id].nil?)
   end
 
-  def authenticate
+  def authenticate!
+    
     if not is_user_signed_in
       redirect_to new_user_session_path
     end
@@ -71,4 +76,6 @@ class ApplicationController < ActionController::Base
 
   helper_method :is_user_signed_in
   helper_method :is_current_user_admin
+  helper_method :current_user_organization
+  helper_method :current_user
 end
