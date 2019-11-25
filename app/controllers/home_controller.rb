@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class HomeController < ApplicationController
-  before_action :authenticate!
+  #before_action :authenticate!
 
   def index
     puts is_user_signed_in
@@ -12,11 +12,12 @@ class HomeController < ApplicationController
   end
 
   def invite
-    invited_email = params[:email]
-    invitation = EmailInvitation.create(user: current_user, invited_email: invited_email, organization_id: current_user.organization_id)
-    UserMailer.with(email_invited: invited_email, sender: current_user, organization_name: current_user.organization, invitation: invitation).invitation_email.deliver_later
+    email_invited = params[:email]
+    role = params[:role]
+    remittent = current_user.email
+    UsersService.instance().send_invitation(email_invited,remittent,role, '')
     flash[:success] = 'Email succesfully sent!'
     redirect_to home_path
-    logger.info("Email sent, from #{current_user.email}, to #{invited_email}")
+    logger.info("Email sent, from #{current_user.email}, to #{email_invited}")
   end
 end

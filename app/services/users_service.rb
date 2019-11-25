@@ -7,7 +7,6 @@ class UsersService
 GATEWAY_URL = 'https://coupons-auth.herokuapp.com'
 
 
-
 def self.instance()
   @instance = @instance || UsersService.new()
   return @instance
@@ -18,7 +17,10 @@ def self.cached_find(id)
 end
 
 
-def send_invitation(authorization)
+def send_invitation(email_invited, remittent, role, authorization)
+  route = '/v1/invitations/'
+
+  post route, {email_invited: email_invited, remittent: remittent, role: role}, authorization
 end
 
 def sign_in(email, password)
@@ -32,12 +34,14 @@ end
 
 def get_user(email)
   route= '/v1/users/'+email
-  get route, ''
+  user_data = get route, ''
+  return UserDto.new(user_data)
 end
 
 def get_organization(org_id)
   route='/v1/organizations/'+org_id
-  get route, ''
+  org_data = get route, ''
+  return OrganizationDto.new(org_data)
 end
 private
 

@@ -13,10 +13,8 @@ class Users::SessionsController < Devise::SessionsController
     email = sign_in_params[:email];
     password = sign_in_params[:password];
     UsersService.instance().sign_in(email,password);
-    userData = UsersService.instance().get_user(email);
-    puts userData
+    @current_user = UsersService.instance().get_user(email);
     session[:user_id] = email;
-    @current_user = userData;
     redirect_to home_path and return 
   rescue ServiceResponseError => error
     flash[:error] = "Wrong email or password"
@@ -25,8 +23,8 @@ class Users::SessionsController < Devise::SessionsController
 
   # DELETE /resource/sign_out
   def destroy
-    puts "ENTRO ACA"
     reset_session
+    @current_user = nil;
     redirect_to new_user_session_path
     puts session
   end

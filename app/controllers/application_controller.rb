@@ -4,7 +4,7 @@ require_relative '../../lib/error/not_authorized_error.rb'
 
 class ApplicationController < ActionController::Base
   #rescue_from NotAuthorizedError, with: :not_authorized
- #before_action :set_current_user#, :set_organization
+  before_action :set_current_user, :set_organization
 
   def default_url_options
     if Rails.env.production?
@@ -16,14 +16,13 @@ class ApplicationController < ActionController::Base
 
   def set_organization
     if is_user_signed_in
-      current_organization = UsersService.instance().get_organization(@current_user['org_id'])
+      puts current_user.org_id
+      @current_organization = UsersService.instance().get_organization(current_user.org_id)
     end
   end
 
   def authorize_user!
-    if @current_user.role != 'administrator'
-      raise NotAuthorizedError, 'Must be an administrator to access this functionality'
-    end
+      raise NotAuthorizedError, 'Must be an administrator to access this functionality' unless @current_user.is_admin
   end
 
   def current_user
@@ -37,7 +36,7 @@ class ApplicationController < ActionController::Base
 
   def current_user_organization
     if is_user_signed_in
-      @current_organization = UsersService.instance().get_organization(current_user['org_id'])
+      @current_organization ||= UsersService.instance().get_organization(current_user.org_id)
     else
       @current_organization = nil
     end
@@ -45,8 +44,7 @@ class ApplicationController < ActionController::Base
   end
 
   def is_current_user_admin
-    puts @current_user
-    return true
+    @current_user.is_admin
   end
 
   def is_user_signed_in
@@ -54,10 +52,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate!
-    
-    if not is_user_signed_in
-      redirect_to new_user_session_path
-    end
+    redirect_to new_user_session_path unless is_user_signed_in
   end
 
   private

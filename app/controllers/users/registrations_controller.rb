@@ -12,13 +12,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
         redirect_to(new_user_registration_url, flash: { error: 'The invitation is invalid. Please, contact your organization administrator and ask for a new invitation.' }) && return
       end
     end
-    super
   end
 
   # POST /resource
   def create
-    super
-
     @org.delete if !@user.valid? && @org_created
 
     if @user.valid? && is_valid_invitation_code(@user.invitation_code)
@@ -30,7 +27,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # GET /resource/edit
   def edit
-    super
   end
 
   # PUT /resource
@@ -56,7 +52,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
-    params[:user][:role] = 'administrator'
+    params[:user][:role] = 'ADMIN'
 
     if is_invitation_sign_up
       invitation_code = params[:invitation_code]
@@ -69,7 +65,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       end
     end
 
-    if params[:user][:role] == 'administrator'
+    if params[:user][:role] == 'ADMIN'
       @org = Organization.new organization_name: params[:user][:organization]
       @org_created = @org.save
       params[:user][:organization_id] = @org.id
