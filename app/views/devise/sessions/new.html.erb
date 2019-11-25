@@ -13,15 +13,6 @@
     <%= f.password_field :password, autocomplete: 'current-password', class: 'form-control', placeholder: "Password" %>
   </div>
 
-  <% if devise_mapping.rememberable? %>
-    <div class="form-group form-check">
-      <%= f.check_box :remember_me, class: 'form-check-input' %>
-      <%= f.label :remember_me, class: 'form-check-label' do %>
-        <%= resource.class.human_attribute_name('remember_me') %>
-      <% end %>
-    </div>
-  <% end %>
-
   <div style = "width: 70%; margin-left: auto; margin-right: auto; display: block">
     <%= bootstrap_flash %>
   </div>
@@ -30,5 +21,4 @@
     <%= f.submit  t('.sign_in'), class: 'btn btn-primary' %>
   </div>
 
-  <%= render 'devise/shared/links' %>
 <% end %>

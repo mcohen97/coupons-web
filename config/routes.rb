@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     get '/users', to: 'devise/registrations#new'
+    get '/users/sign_out', to: 'devise/sessions#destroy'
   end
 
   get 'home/index', to: 'home#index', as: 'home'

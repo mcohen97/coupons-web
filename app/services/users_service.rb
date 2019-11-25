@@ -4,12 +4,19 @@ require_relative '../../lib/error/service_response_error.rb'
 class UsersService
 
 #temporarily against microservice
-GATEWAY_URL = 'https://coupons-gateway.herokuapp.com'
+GATEWAY_URL = 'https://coupons-auth.herokuapp.com'
+
+
 
 def self.instance()
   @instance = @instance || UsersService.new()
   return @instance
 end
+
+def self.cached_find(id)
+  Rails.cache.fetch([UserDto.email, id]) { find(id) }
+end
+
 
 def send_invitation(authorization)
 end
@@ -21,6 +28,11 @@ def sign_in(email, password)
 end
 
 def create_user(invitation_code, payload)
+end
+
+def get_user(email)
+  route= 'v1/users/'+email
+  get route, ''
 end
 
 private
@@ -46,7 +58,8 @@ private
       request.headers['Content-Type'] = 'application/json'
     end
 
-    handle_response(resp)
+    resp
+    #handle_response(resp)
 
   end
 
@@ -59,14 +72,15 @@ private
       request.body = payload.to_json
     end
 
-    handle_response(resp)
+    return resp
+    #handle_response(resp)
   end
 
   def handle_response(response)
     if response.success?
       return JSON.parse response.body
     else
-      raise ServiceResponseError
+      return JSON.parse response.body     
     end
   end
 

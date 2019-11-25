@@ -3,9 +3,8 @@
 require_relative '../../lib/error/not_authorized_error.rb'
 
 class ApplicationController < ActionController::Base
-  rescue_from NotAuthorizedError, with: :not_authorized
-  set_current_tenant_through_filter
-  before_action :set_current_user, :set_organization
+  #rescue_from NotAuthorizedError, with: :not_authorized
+ #before_action :set_current_user#, :set_organization
 
   def default_url_options
     if Rails.env.production?
@@ -18,7 +17,6 @@ class ApplicationController < ActionController::Base
   def set_organization
     if user_signed_in?
       current_organization = Organization.cached_find @current_user.organization_id
-      set_current_tenant(current_organization)
     end
   end
 
@@ -28,10 +26,39 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def current_user
+    if is_user_signed_in
+      @current_user ||= UsersService.instance().get_user(session[:user_id])
+    else
+      @current_user = nil
+    end
+    return @current_user
+  end
+
+  def current_user_organization
+    org = Organization.cached_find @current_user.organization_id
+    return org
+  end
+
+  def is_current_user_admin
+    puts @current_user
+    return true
+  end
+
+  def is_user_signed_in
+    return not(session[:user_id].nil?)
+  end
+
+  def authenticate
+    if not is_user_signed_in
+      redirect_to new_user_session_path
+    end
+  end
+
   private
 
   def set_current_user
-    @current_user = current_user if user_signed_in?
+    @current_user = current_user
   end
 
   def not_authorized
@@ -41,4 +68,7 @@ class ApplicationController < ActionController::Base
       format.json { render json: { error: 'Promotion not found.' }.to_json, status: :forbidden }
     end
   end
+
+  helper_method :is_user_signed_in
+  helper_method :is_current_user_admin
 end

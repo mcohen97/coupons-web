@@ -2,21 +2,37 @@
 
 class Users::SessionsController < Devise::SessionsController
   # before_action :configure_sign_in_params, only: [:create]
-
+  skip_before_action :verify_signed_out_user
   # GET /resource/sign_in
-  # def new
-  #   super
-  # end
+  def new
+    super
+  end
 
   # POST /resource/sign_in
-  # def create
-  #   super
-  # end
+  def create
+    email = sign_in_params[:email];
+    password = sign_in_params[:password];
+    response = UsersService.instance().sign_in(email,password);
+    if response.success?
+      userData = UsersService.instance().get_user(email);
+      session[:user_id] = email;
+      @current_user = userData;
+      redirect_to home_path
+    else 
+      flash[:error] = "Wrong email or password"
+      redirect_to user_session_path
+    end
+    #super
+    #UsersService.instance().sign_in()
+  end
 
   # DELETE /resource/sign_out
-  # def destroy
-  #   super
-  # end
+  def destroy
+    puts "ENTRO ACA"
+    reset_session
+    redirect_to new_user_session_path
+    puts session
+  end
 
   # protected
 
