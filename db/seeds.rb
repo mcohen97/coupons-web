@@ -21,7 +21,7 @@ dis1 = Discount.create!(code: 'discount1', name: 'a discount', return_type: :per
 dis2 = Discount.create!(code: 'discount2', name: 'another discount', return_type: :percentage,
                         return_value: 10, active: false, condition: '( total <= 100 AND quantity >= 5 ) OR total > 10', organization_id: pablo.organization_id)
 
-dis3 = Discount.create!(code: 'discount3', name: 'and yet another discount', return_type: :fixed_value,
+dis3 = Discount.create!(code: 'discount3', name: 'and yet another discount', return_type: :fixed,
                         return_value: 10, active: false, condition: 'quantity >= 5', organization_id: pablo.organization_id)
 
 coup1 = Coupon.create!(code: 'coupon1', name: 'a coupon', return_type: :percentage,

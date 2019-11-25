@@ -23,4 +23,12 @@ Rails.application.routes.draw do
 
   resources :promotions
   resources :application_keys
+
+  #get '/application_keys', to: 'application_keys#index', as: 'application_keys'
+  #get '/application_keys/new', to: 'application_keys#new', as: 'new_application_key'
+  #get '/application_keys/:id', to: 'application_keys#show', as: 'application_key'
+  #get '/application_keys/:id/edit', to: 'application_keys#edit', as: 'edit_application_key'
+  #delete '/application_keys/:id', to: 'application_keys#destroy', as: 'destroy_application_key'
+  #post '/application_keys', to: 'application_keys#create', as: 'create_application_key'
+
 end

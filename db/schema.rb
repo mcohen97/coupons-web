@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 2019_11_23_134619) do
 
   create_table "application_keys", force: :cascade do |t|
     t.string "name"
+    t.string "token"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "organization_id", null: false

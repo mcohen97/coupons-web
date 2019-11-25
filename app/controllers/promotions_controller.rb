@@ -4,11 +4,11 @@ class PromotionsController < ApplicationController
   protect_from_forgery except: :evaluate
   prepend_before_action :authenticate_user!, except: %i[evaluate report]
   before_action :authorize_user!, only: %i[new create edit update destroy]
-  before_action :set_promo, only: %i[show edit update destroy report]
+  before_action :set_promo, only: %i[show edit]
   rescue_from ActiveRecord::RecordNotFound, with: :promotion_not_found
 
   #temporary
-  TOKEN = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJwZXJtaXNzaW9ucyI6WyJBRE1JTiJdLCJvcmdhbml6YXRpb25faWQiOiIxIn0.MHE0qub_tdm-10PVT8yQya5STu3-kVnSuO-K5Kj2dvE'
+  TOKEN = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJwZXJtaXNzaW9ucyI6WyJBRE1JTiJdLCJvcmdhbml6YXRpb25faWQiOiIxIn0.nYin-dizU6SogXdNqWns6OuUdJBzGmZKIZDxH-fCJH0'
 
   def index
     # hardcoded token for testing
