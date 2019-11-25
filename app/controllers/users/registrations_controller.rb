@@ -56,13 +56,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     if is_invitation_sign_up
       invitation_code = params[:invitation_code]
-      if is_valid_invitation_code(invitation_code)
-        organization = Organization.find(@invitation.organization_id)
-        params[:user][:organization] = organization.organization_name
-        params[:user][:organization_id] = organization.id
-        params[:user][:role] = 'org_user'
-        params[:user][:invitation_code] = invitation_code
-      end
+      userDto = UserDto.new
+      userDto.email = params[:user][:email]
+      userDto.password = params[:user][:password]
+      userDto.name = params[:user][:name]
+      userDto.surname = params[:user][:surname]
+      UsersService.instance().create_user(userDto)
     end
 
     if params[:user][:role] == 'ADMIN'

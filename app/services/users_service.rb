@@ -16,7 +16,6 @@ def self.cached_find(id)
   Rails.cache.fetch([UserDto.email, id]) { find(id) }
 end
 
-
 def send_invitation(email_invited, remittent, role, authorization)
   route = '/v1/invitations/'
 
@@ -29,7 +28,16 @@ def sign_in(email, password)
   post route, {password: password}, ''
 end
 
-def create_user(invitation_code, payload)
+def create_user(userDto)
+  route = '/v1/users/'
+
+  post route, {
+    username: userDto.email,
+    password: userDto.password,
+    name: userDto.name,
+    surname: userDto.surname,
+    invitation_id: userDto.invitation_id
+  }, ''
 end
 
 def get_user(email)
