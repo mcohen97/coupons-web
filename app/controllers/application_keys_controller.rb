@@ -58,12 +58,13 @@ class ApplicationKeysController < ApplicationController
         format.html { redirect_to @application_key, notice: 'Application key was successfully updated.' }
         format.json { render :show, status: :ok, location: @application_key }
       else
-        
-        logger.error("Invalid application key update, params: #{@application_key.errors.inspect}.")
+        @application_key.errors.add(:error, result.data.to_s)
+        logger.error("Invalid application key update, params: #{result.data.inspect}.")
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @application_key.errors, status: :unprocessable_entity }
       end
     end
+    
   end
 
   def destroy

@@ -161,8 +161,8 @@ class PromotionsController < ApplicationController
     #@promotion = Promotion.find(params[:id])
     puts "PROMOTION ID #{params[:id]}"
     @promotion = PromotionsService.instance.get_promotion_by_id(params[:id], TOKEN)
-    promotion_not_found if @promotion.deleted
-    @promotion = @promotion.becomes(Promotion)
+    #promotion_not_found if @promotion.deleted
+    #@promotion = @promotion.becomes(Promotion)
   end
 
   def promotion_not_found
