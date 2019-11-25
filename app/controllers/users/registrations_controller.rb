@@ -2,27 +2,24 @@
 
 class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_sign_up_params, only: [:create]
+  helper_method :is_invitation_sign_up
+
   # before_action :configure_account_update_params, only: [:update]
 
   # GET /resource/sign_up
   def new
+    super
     if is_invitation_sign_up
       invitation_code = params['invitation_code']
-      unless is_valid_invitation_code(invitation_code)
-        redirect_to(new_user_registration_url, flash: { error: 'The invitation is invalid. Please, contact your organization administrator and ask for a new invitation.' }) && return
-      end
     end
   end
 
   # POST /resource
   def create
-    @org.delete if !@user.valid? && @org_created
+    UsersService.instance().create_user(@newUserDto)
+    UsersService.instance().sign_in(@newUserDto.email, @newUserDto.password)
+    redirect_to home_path and return 
 
-    if @user.valid? && is_valid_invitation_code(@user.invitation_code)
-      invitation = EmailInvitation.find_by invitation_code: @user.invitation_code
-      invitation.already_used = true
-      invitation.save
-    end
   end
 
   # GET /resource/edit
@@ -52,37 +49,29 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
-    params[:user][:role] = 'ADMIN'
-
-    if is_invitation_sign_up
-      invitation_code = params[:invitation_code]
-      userDto = UserDto.new
-      userDto.email = params[:user][:email]
-      userDto.password = params[:user][:password]
-      userDto.name = params[:user][:name]
-      userDto.surname = params[:user][:surname]
-      UsersService.instance().create_user(userDto)
+    if not is_invitation_sign_up
+      puts 'entra en not is invitation'
+      role = {'name'=>'ADMIN','permissions'=>[]}
+    else
+      puts 'entra en invitation'
+      role = {'name'=>'','permissions'=>[]}
     end
+    args = {
+      'username'=>params[:user][:email],
+      'password'=>params[:user][:password],
+      'name'=>params[:user][:name],
+      'surname'=>params[:user][:surname],
+      'org_id'=>params[:user][:organization],
+      'role'=>role,
+      'invitation_id'=>params[:invitation_code]
+    }
 
-    if params[:user][:role] == 'ADMIN'
-      @org = Organization.new organization_name: params[:user][:organization]
-      @org_created = @org.save
-      params[:user][:organization_id] = @org.id
-    end
-
+    @newUserDto = UserDto.new(args)
     devise_parameter_sanitizer.permit(:sign_up, keys: %i[name surname role organization organization_id avatar invitation_code])
   end
 
   def is_invitation_sign_up
     params.key?('invitation_code') || params.key?(:invitation_code)
-  end
-
-  def is_valid_invitation_code(invitation_code)
-    invitation_exists = EmailInvitation.exists?(invitation_code: invitation_code)
-    if invitation_exists
-      @invitation = EmailInvitation.find_by invitation_code: invitation_code
-    end
-    invitation_exists && !@invitation.already_used
   end
 
   # If you have extra params to permit, append them to the sanitizer.
@@ -100,6 +89,4 @@ class Users::RegistrationsController < Devise::RegistrationsController
   #   super(resource)
   # end
 
-  helper_method :is_invitation_sign_up
-  helper_method :is_valid_invitation_code
 end

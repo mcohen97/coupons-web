@@ -9,3 +9,10 @@
 //= require twitter/bootstrap
 //= require bootstrap-datepicker
 //= require_tree .
+
+function hide_spiner(){
+    document.getElementById('spiner').style.display ='none';
+}
+function show_spiner(){
+    document.getElementById('spiner').style.display = 'block';
+}

@@ -30,14 +30,18 @@ end
 
 def create_user(userDto)
   route = '/v1/users/'
-
-  post route, {
+  body = {
     username: userDto.email,
     password: userDto.password,
     name: userDto.name,
     surname: userDto.surname,
+    organization: userDto.org_id,
+    role: userDto.role.name,
     invitation_id: userDto.invitation_id
-  }, ''
+  }
+
+  puts body
+  post route, body, ''
 end
 
 def get_user(email)

@@ -1,4 +1,12 @@
 
+
+<div class="sk-folding-cube" id='spiner' style="display:none">
+  <div class="sk-cube1 sk-cube"></div>
+  <div class="sk-cube2 sk-cube"></div>
+  <div class="sk-cube4 sk-cube"></div>
+  <div class="sk-cube3 sk-cube"></div>
+</div>
+
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <h1><%= t('.sign_in') %></h1>
   <%= bootstrap_devise_error_messages! %>
@@ -17,8 +25,12 @@
     <%= bootstrap_flash %>
   </div>
   <br>
+
+
   <div class="form-group">
-    <%= f.submit  t('.sign_in'), class: 'btn btn-primary' %>
+    <%= f.submit  t('.sign_in'), class: 'btn btn-primary', onclick: "show_spiner();" %>
   </div>
 
+
 <% end %>
+
