@@ -53,8 +53,11 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate!
-    redirect_to new_user_session_path unless is_user_signed_in
-  end
+    if not is_user_signed_in
+      flash[:error] = 'You must sign in first'
+      redirect_to new_user_session_path and return
+    end
+  end 
 
   private
 
