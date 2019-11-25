@@ -13,7 +13,6 @@ class Users::SessionsController < Devise::SessionsController
     email = sign_in_params[:email];
     password = sign_in_params[:password];
     UsersService.instance().sign_in(email,password);
-    @current_user = UsersService.instance().get_user(email);
     session[:user_id] = email;
     redirect_to home_path and return 
   rescue ServiceResponseError => error

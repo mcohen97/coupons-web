@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class HomeController < ApplicationController
-  #before_action :authenticate!
+  before_action :authenticate!
 
   def index
     puts is_user_signed_in
-    redirect_to promotions_path unless is_current_user_admin
+    redirect_to promotions_path unless current_user.is_admin
   end
 
   def invitation

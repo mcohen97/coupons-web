@@ -43,14 +43,19 @@ end
 def get_user(email)
   route= '/v1/users/'+email
   user_data = get route, ''
-  return UserDto.new(user_data)
+  return user_data
 end
+
+
 
 def get_organization(org_id)
   route='/v1/organizations/'+org_id
   org_data = get route, ''
-  return OrganizationDto.new(org_data)
+  return org_data
 end
+
+
+
 private
 
   def initialize
@@ -69,6 +74,7 @@ private
   end
 
   def get (url, authorization)
+    puts 'GET ' + url
     resp = @connection.get url do |request|
       request.headers["Authorization"] = authorization
       request.headers['Content-Type'] = 'application/json'
@@ -78,7 +84,7 @@ private
   end
 
   def post(url, payload, authorization)
-    print('se va a invocar el url')
+    puts 'POST ' + url
 
     resp = @connection.post url do |request|
       request.headers["Authorization"] = authorization
