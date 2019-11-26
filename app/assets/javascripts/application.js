@@ -13,6 +13,11 @@
 function hide_spiner(){
     document.getElementById('spiner').style.display ='none';
 }
+
+$("form").submit(function(){
+    $(this).hide();
+})
+
 function show_spiner(){
     document.getElementById('spiner').style.display = 'block';
 }

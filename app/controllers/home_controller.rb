@@ -16,7 +16,7 @@ class HomeController < ApplicationController
     email_invited = params[:email]
     role = params[:role]
     remittent = current_user.email
-    UsersService.instance().send_invitation(email_invited,remittent,role, '')
+    UsersService.instance().send_invitation(email_invited,remittent,role)
     flash[:success] = 'Email succesfully sent!'
     redirect_to home_path
     logger.info("Email sent, from #{current_user.email}, to #{email_invited}")
