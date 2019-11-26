@@ -8,40 +8,40 @@ class ApplicationKeysService
     return @instance
   end
 
-  def get_application_keys(authorization, page = nil, offset = nil)
+  def get_application_keys(page = nil, offset = nil)
     route = '/v1/app_keys'
-    keys = (get route , authorization).data
+    keys = (get route).data
     keys.map{ |key| build_app_key(key)}
   end
 
-  def get_application_key(token, authorization)
+  def get_application_key(token)
     route = '/v1/app_keys/' + token
-    result = get route , authorization
+    result = get route
     if result.success
       build_app_key(result.data)
     end
   end
 
-  def delete_application_key(name, authorization)
+  def delete_application_key(name)
     route = '/v1/app_keys/' + name
-    delete route, authorization
+    delete route
   end
 
-  def create_application_key(payload, authorization)
+  def create_application_key(payload)
     ids  = payload[:promotion_ids]
     payload.delete(:promotion_ids)
     payload[:promotions] =ids.select{|id| !id.empty?}.map{ |id| id.to_i}
     route = '/v1/app_keys'
-    result = post route, payload, authorization
+    result = post route, payload
     if result.success
       result.data = build_app_key(result.data)
     end
     return result
   end
 
-  def update_application_key(name, payload, authorization)
+  def update_application_key(name, payload)
     route = '/v1/app_keys/'+ name
-    put route, payload, authorization
+    put route, payload
   end
 
 private

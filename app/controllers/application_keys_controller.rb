@@ -4,11 +4,8 @@ class ApplicationKeysController < ApplicationController
   #prepend_before_action :authenticate_user!
   before_action :set_application_key, only: %i[show edit]
 
-  #temporary
-  TOKEN = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJwZXJtaXNzaW9ucyI6WyJBRE1JTiJdLCJvcmdhbml6YXRpb25faWQiOiIxIn0.nYin-dizU6SogXdNqWns6OuUdJBzGmZKIZDxH-fCJH0'
-
   def index
-    @application_keys = ApplicationKeysService.instance.get_application_keys(TOKEN, page = nil, offset = nil)
+    @application_keys = ApplicationKeysService.instance.get_application_keys(page = nil, offset = nil)
   end
 
   def show; 
@@ -17,7 +14,7 @@ class ApplicationKeysController < ApplicationController
   def new
     @application_key = ApplicationKey.new
     @form_title = 'New application key'
-    @promotions = PromotionsService.instance.get_promotions({}, TOKEN)
+    @promotions = PromotionsService.instance.get_promotions({})
   end
 
   def edit
@@ -29,7 +26,7 @@ class ApplicationKeysController < ApplicationController
   def create
     logger.info("Creating application key of params: #{application_key_params.inspect}.")
 
-    result = ApplicationKeysService.instance.create_application_key(application_key_params, TOKEN)
+    result = ApplicationKeysService.instance.create_application_key(application_key_params)
     respond_to do |format|
       if result.success
         @application_key = result.data
@@ -48,7 +45,7 @@ class ApplicationKeysController < ApplicationController
 
   def update
     logger.info("Updating appkey of id: #{params[:id]}.")
-    result = ApplicationKeysService.instance.update_application_key(application_key_params, TOKEN)
+    result = ApplicationKeysService.instance.update_application_key(application_key_params)
     @application_key = ApplicationKey.new(application_key_params)
     respond_to do |format|
       if result.success
@@ -66,7 +63,7 @@ class ApplicationKeysController < ApplicationController
   end
 
   def destroy
-    result = ApplicationKeysService.instance.delete_application_key(params[:id], TOKEN)
+    result = ApplicationKeysService.instance.delete_application_key(params[:id])
     respond_to do |format|
       logger.info('Application key was successfully deleted.')
       format.html { redirect_to application_keys_url, notice: 'Application key was successfully destroyed.' }
@@ -78,7 +75,7 @@ class ApplicationKeysController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_application_key
-    @application_key = ApplicationKeysService.instance.get_application_key(params[:id], TOKEN)
+    @application_key = ApplicationKeysService.instance.get_application_key(params[:id])
     puts @application_key.inspect
     puts @application_key.promotions.map{|p| p.name}
   end

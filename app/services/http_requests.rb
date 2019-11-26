@@ -1,7 +1,16 @@
 module HttpRequests
   
+  @@authorization = ''
+
+  def self.setToken(token)
+    @@authorization = 'Bearer '+token
+  end
+
+  def self.token
+    @@authorization
+  end
+
   def create_connection(gateway_url)
-    
     conn = Faraday.new(url: gateway_url) do |c|
       c.response :logger
       c.request :json
@@ -11,20 +20,20 @@ module HttpRequests
     return conn
   end
 
-  def get (url, authorization)
+  def get (url)
     resp = @connection.get url do |request|
-      request.headers["Authorization"] = authorization
+      request.headers["Authorization"] = @@authorization
       request.headers['Content-Type'] = 'application/json'
     end
 
     handle_response(resp)
   end
 
-  def post(url, payload, authorization)
+  def post(url, payload)
     print('se va a invocar el url')
 
     resp = @connection.post url do |request|
-      request.headers["Authorization"] = authorization
+      request.headers["Authorization"] = @@authorization
       request.headers['Content-Type'] = 'application/json'
       request.body = payload.to_json
     end
@@ -32,11 +41,11 @@ module HttpRequests
     handle_response(resp)
   end
 
-  def put (url, payload, authorization)
+  def put (url, payload)
     print('se va a invocar el url')
 
     resp = @connection.put url do |request|
-      request.headers["Authorization"] = authorization
+      request.headers["Authorization"] = @@authorization
       request.headers['Content-Type'] = 'application/json'
       request.body = payload.to_json
     end
@@ -44,9 +53,9 @@ module HttpRequests
     handle_response(resp)
   end
 
-  def delete (url, authorization)
+  def delete (url)
     resp = @connection.delete url do |request|
-      request.headers["Authorization"] = authorization
+      request.headers["Authorization"] = @@authorization
       request.headers['Content-Type'] = 'application/json'
     end
     puts "RESPONSE #{resp.inspect}"

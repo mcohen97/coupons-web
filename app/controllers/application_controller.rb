@@ -75,6 +75,10 @@ class ApplicationController < ActionController::Base
     @current_organization = current_organization
   end
 
+  def token
+    session[:token]
+  end
+
   def not_authorized
     respond_to do |format|
       logger.error('User not authorized to perform that ac.')

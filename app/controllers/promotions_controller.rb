@@ -6,11 +6,7 @@ class PromotionsController < ApplicationController
   #before_action :authorize_user!, only: %i[new create edit update destroy]
   before_action :set_promo, only: %i[show edit]
 
-  #temporary
-  TOKEN = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJwZXJtaXNzaW9ucyI6WyJBRE1JTiJdLCJvcmdhbml6YXRpb25faWQiOiIxIn0.nYin-dizU6SogXdNqWns6OuUdJBzGmZKIZDxH-fCJH0'
-
   def index
-    # hardcoded token for testing
     filters = {}
     filters[:code] = params[:code] if params[:code].present?
     filters[:name] = params[:name] if params[:name].present?
@@ -18,7 +14,7 @@ class PromotionsController < ApplicationController
     filters[:active] = params[:active] if params[:active].present?
 
     
-    @promotions = PromotionsService.instance.get_promotions(filters, TOKEN)
+    @promotions = PromotionsService.instance.get_promotions(filters)
   end
 
   def show
@@ -46,7 +42,7 @@ class PromotionsController < ApplicationController
       respond_promotion_not_created(@promotion) && return
     end
 
-    result = PromotionsService.instance.create_promotion(promotion_parameters, TOKEN)
+    result = PromotionsService.instance.create_promotion(promotion_parameters)
     if result.success
       logger.info("Successfully updated promotion of id: #{@promotion.id}.")
       respond_promotion_created(@promotion) && return
@@ -58,7 +54,7 @@ class PromotionsController < ApplicationController
 
   def update
     respond_to do |format|
-      result = PromotionsService.instance.update_promotion(params[:promotion][:id],promotion_parameters, TOKEN)
+      result = PromotionsService.instance.update_promotion(params[:promotion][:id],promotion_parameters)
       if result.success
         @promotion = result.data
         logger.info("Successfully updated promotion of id: #{@promotion.id}.")
@@ -74,7 +70,7 @@ class PromotionsController < ApplicationController
   end
 
   def destroy
-    result = PromotionsService.instance.delete_promotion(params[:id], TOKEN)
+    result = PromotionsService.instance.delete_promotion(params[:id])
     respond_to do |format|
       logger.info("Successfully deleted promotion of id: #{params[:id]}.")
       format.html { redirect_to promotions_path, notice: 'Promotion was successfully deleted.' }
@@ -83,7 +79,7 @@ class PromotionsController < ApplicationController
   end
 
   def evaluate
-    response =Services.promotions_service.evaluate(params[:code],params[:attributes], get_authorization_header)
+    response =Services.promotions_service.evaluate(params[:code],params[:attributes])
     render json: response, status: :success
   end
   
@@ -135,31 +131,10 @@ class PromotionsController < ApplicationController
     render json: { error_message: e.message }, status: :bad_request
   end
 
-  def is_backoffice_client
-    !request.headers['Content-Type'].present? || request.headers['Content-Type'] == 'text/html'
-  end
-
-  def respond_to_backoffice
-    authenticate_user!
-    @report = @promotion.generate_report
-  end
-
-  def respond_to_external
-    appkey = get_app_key
-    @report = @promotion.generate_report(true, appkey)
-    render json: @report, status: :ok
-  rescue NotAuthenticatedError => e
-    logger.error('No valid application key.')
-    render(json: { error_message: e.message }, status: :unauthorized)
-  rescue NotAuthorizedError => e
-    logger.error('User not authorized.')
-    render(json: { error_message: e.message }, status: :forbidden)
-  end
-
   def set_promo
     #@promotion = Promotion.find(params[:id])
     puts "PROMOTION ID #{params[:id]}"
-    @promotion = PromotionsService.instance.get_promotion_by_id(params[:id], TOKEN)
+    @promotion = PromotionsService.instance.get_promotion_by_id(params[:id])
     #promotion_not_found if @promotion.deleted
     #@promotion = @promotion.becomes(Promotion)
   end
@@ -170,15 +145,6 @@ class PromotionsController < ApplicationController
       format.html { render file: "#{Rails.root}/public/404", layout: false, status: :not_found }
       format.json { render json: { error: 'Promotion not found.' }.to_json, status: :not_found }
     end
-  end
-
-  def get_app_key
-    token = get_authorization_header
-    ApplicationKey.get_from_token_if_valid(token)
-  end
-
-  def get_authorization_header
-    return request.headers['Authorization']
   end
 
   def set_pagination(collection)

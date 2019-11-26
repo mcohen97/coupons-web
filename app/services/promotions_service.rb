@@ -14,48 +14,48 @@ def self.instance()
   return @instance
 end
 
-def get_promotions(filters, authorization, page =nil, offset = nil)
+def get_promotions(filters, page =nil, offset = nil)
   route  = '/v1/promotions'
   if filters.any?
     route += add_filters(filters)
   end
   puts route
-  promos = (get route, authorization).data
+  promos = (get route).data
   promos.map{ |p| build_promo(p)}
 end
 
-def get_promotion_by_id(id, authorization)
+def get_promotion_by_id(id)
   route  = '/v1/promotions/'+id
-  result = get route, authorization
+  result = get route
   if result.success
     build_promo(result.data)
   end
 end
 
-def get_coupon_instances(id, authorization)
+def get_coupon_instances(id)
   route = '/v1/promotions/'+id+'/coupons'
-  get route, authorization
+  get route
 end
 
-def create_promotion(payload, authorization)
+def create_promotion(payload)
   route  = '/v1/promotions'
   format_payload(payload)
   puts "payload #{payload.inspect}"
-  result = post route, payload, authorization
+  result = post route, payload
   if result.success
     result.data = PromotionDto.new(result.data)
   end
   return result
 end
 
-def update_promotion(id, payload, authorization)
+def update_promotion(id, payload)
   route  = '/v1/promotions/' + id
-  put route, payload, authorization
+  put route, payload
 end
 
-def delete_promotion(id, authorization)
+def delete_promotion(id)
   route  = '/v1/promotions/' + id.to_s
-  delete route, authorization
+  delete route
 end
 
 private
@@ -85,6 +85,7 @@ private
   end
 
   def build_promo(data)
+    puts data
     data['new'] = false
     return Promotion.new(data)
   end
