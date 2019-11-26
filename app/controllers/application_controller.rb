@@ -3,7 +3,7 @@
 require_relative '../../lib/error/not_authorized_error.rb'
 
 class ApplicationController < ActionController::Base
-  rescue_from NotAuthorizedError, with: :not_authorized
+  rescue_from UnauthorizedError, with: :not_authorized
   rescue_from ExpiredTokenError, with: :ask_sign_in
   before_action :set_current_user, :set_current_organization
 
@@ -95,7 +95,7 @@ class ApplicationController < ActionController::Base
   def not_authorized
     respond_to do |format|
       logger.error('User not authorized to perform that ac.')
-      format.html { render file: "#{Rails.root}/public/404", layout: false, status: :forbidden }
+      format.html { render file: "#{Rails.root}/public/401", layout: false, status: :forbidden }
       format.json { render json: { error: 'Promotion not found.' }.to_json, status: :forbidden }
     end
   end

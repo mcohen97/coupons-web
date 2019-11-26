@@ -79,6 +79,9 @@ module HttpRequests
       result = response.body.empty? ? {} : (JSON.parse response.body)
       RequestResult.new(true, result)
     else
+      if response.status == 401
+        raise UnauthorizedError
+      end
       result = response.body.empty? ? {} : (JSON.parse response.body)
       RequestResult.new(false, result)
     end
