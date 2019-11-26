@@ -18,7 +18,7 @@
     <![endif]-->
   </head>
   <body>
-  <%if user_signed_in?%>
+  <%if is_user_signed_in%>
     <div class="navbar navbar-default navbar-static-top" >
       <div class="container">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
@@ -33,12 +33,9 @@
           </ul>
           <ul class="nav navbar-nav">
             <li>
-              <%if @current_user.avatar.attached?%>
-                <a style="color:black" href= <%= home_path %>>
-                  <img width= "20px" height="20px" src=<%=url_for(@current_user.avatar)%>>
-                  <%=@current_user.name%> <%=@current_user.surname%>
-                </a>
-              <%end%>
+              <a style="color:black" href= <%= home_path %>>
+                <%=current_user.email%>
+              </a>
             </li>
             <li>
               <a style="color:black" href= <%= home_path %>>
@@ -60,7 +57,7 @@
     </div>
   <%end%>
     <div class="container">
-      <%if user_signed_in?%>
+      <%if is_user_signed_in%>
         <%= bootstrap_flash %>
       <%end%>
       <%= yield %>

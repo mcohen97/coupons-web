@@ -1,5 +1,5 @@
 <div class = "dashboard-container">
-  <%if is_current_user_admin%>
+  <%if current_user.is_admin%>
     <a class = "dashboard-item" href= <%= invitation_path %>>
       <div class = "w3-btn" style = "display:inline-block; width:100%; word-wrap: break-word; white-space: initial; transition: box-shadow 0.2s ease-in-out;">
         <img src=<%=asset_url('add-friend.png')%> style="width: 70%; margin:10px"><br/>

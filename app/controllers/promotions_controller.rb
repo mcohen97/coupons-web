@@ -2,10 +2,9 @@
 
 class PromotionsController < ApplicationController
   protect_from_forgery except: :evaluate
-  prepend_before_action :authenticate_user!, except: %i[evaluate report]
-  before_action :authorize_user!, only: %i[new create edit update destroy]
+  prepend_before_action :authenticate!
+  #before_action :authorize_user!, only: %i[new create edit update destroy]
   before_action :set_promo, only: %i[show edit]
-  rescue_from ActiveRecord::RecordNotFound, with: :promotion_not_found
 
   #temporary
   TOKEN = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJwZXJtaXNzaW9ucyI6WyJBRE1JTiJdLCJvcmdhbml6YXRpb25faWQiOiIxIn0.nYin-dizU6SogXdNqWns6OuUdJBzGmZKIZDxH-fCJH0'
@@ -75,9 +74,9 @@ class PromotionsController < ApplicationController
   end
 
   def destroy
-    result = PromotionsService.instance.delete_promotion(@promotion.id, TOKEN)
+    result = PromotionsService.instance.delete_promotion(params[:id], TOKEN)
     respond_to do |format|
-      logger.info("Successfully deleted promotion of id: #{@promotion.id}.")
+      logger.info("Successfully deleted promotion of id: #{params[:id]}.")
       format.html { redirect_to promotions_path, notice: 'Promotion was successfully deleted.' }
       format.json { render json: { notice: 'Promotion was successfully deleted.' }, status: :success }
     end

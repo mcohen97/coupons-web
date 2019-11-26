@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 class ApplicationKeysController < ApplicationController
-  prepend_before_action :authenticate_user!
-  before_action :authorize_user!
+  #prepend_before_action :authenticate_user!
   before_action :set_application_key, only: %i[show edit]
-  rescue_from ActiveRecord::RecordNotFound, with: :application_key_not_found
 
   #temporary
   TOKEN = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJwZXJtaXNzaW9ucyI6WyJBRE1JTiJdLCJvcmdhbml6YXRpb25faWQiOiIxIn0.nYin-dizU6SogXdNqWns6OuUdJBzGmZKIZDxH-fCJH0'

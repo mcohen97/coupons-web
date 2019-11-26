@@ -12,7 +12,11 @@
   end
   %>
 
-  <%= hidden_field_tag 'invitation_code', invitation_code %>
+  <%= 
+    if is_invitation_sign_up 
+      hidden_field_tag 'invitation_code', invitation_code 
+    end
+  %>
 
   <div class="form-group">
     <%= f.label :email %>
@@ -29,7 +33,7 @@
     <%= f.text_field :surname, autofocus: true, autocomplete: "surname", class: 'form-control' %>
   </div>
 
-  <% if not is_invitation_sign_up or not is_valid_invitation_code(invitation_code)%>
+  <% if not is_invitation_sign_up%>
     <div class="form-group">
       <%= f.label :organization %>
       <%= f.text_field :organization, autofocus: true, autocomplete: "org", class: 'form-control' %>
