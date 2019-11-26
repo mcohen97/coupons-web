@@ -29,10 +29,10 @@ $(document).ready(function(){
     <div class="form-group">
       <%=form.label :type%>
       <%if !readonly%>
-        <%= form.radio_button :type, :Coupon, readonly: readonly, onclick: "show_instances_field();" %>
-        <%= form.radio_button :type, :Discount, readonly: readonly, onclick: "hide_instances_field();"%> 
+        <%= form.radio_button :promotion_type, :Coupon, readonly: readonly, onclick: "show_instances_field();" %>
+        <%= form.radio_button :promotion_type, :Discount, readonly: readonly, onclick: "hide_instances_field();"%> 
       <%else%>
-        <%= @promotion.type%>
+        <%= @promotion.promotion_type%>
       <%end%>
     </div>
 

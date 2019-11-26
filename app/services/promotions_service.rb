@@ -43,7 +43,7 @@ def create_promotion(payload)
   puts "payload #{payload.inspect}"
   result = post route, payload
   if result.success
-    result.data = PromotionDto.new(result.data)
+    result.data = Promotion.new(result.data)
   end
   return result
 end
@@ -77,6 +77,7 @@ private
 
   def format_payload(payload)
     #payload[:promotion_type] = payload[:type].downcase
+    #payload.delete(:type)
     date_tokens = payload[:expiration].split('/')
     day = date_tokens[1].to_i
     month = date_tokens[0].to_i
