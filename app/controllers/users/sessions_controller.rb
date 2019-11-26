@@ -15,6 +15,12 @@ class Users::SessionsController < Devise::SessionsController
     result = UsersService.instance().sign_in(email,password);
     if result.success
       session[:user_id] = email;
+      session[:password] = password;
+      session[:token] = result.data['token']
+      puts 'DATAAAAAAAA'
+      puts result.data
+      HttpRequests.setToken(result.data["token"])
+      puts HttpRequests.token
       redirect_to home_path and return 
     else
       flash[:error] = "Wrong email or password"

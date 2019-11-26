@@ -1,4 +1,6 @@
 class UserDto 
+    include ActiveModel::Model
+   
     attr_accessor :email, :password, :name, :surname, :org_id, :role, :invitation_id
 
     def initialize(args)

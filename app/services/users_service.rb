@@ -13,16 +13,16 @@ def self.instance()
   return @instance
 end
 
-def send_invitation(email_invited, remittent, role, authorization)
+def send_invitation(email_invited, remittent, role)
   route = '/v1/invitations/'
 
-  post route, {email_invited: email_invited, remittent: remittent, role: role}, authorization
+  post route, {email_invited: email_invited, remittent: remittent, role: role}
 end
 
 def sign_in(email, password)
   route = '/v1/signin/'+ email 
 
-  post route, {password: password}, ''
+  post route, {password: password}
 end
 
 def create_user(userDto)
@@ -38,12 +38,12 @@ def create_user(userDto)
   }
 
   puts body
-  post route, body, ''
+  post route, body
 end
 
 def get_user(email)
   route= '/v1/users/'+email
-  user_data = get route, ''
+  user_data = get route
   return user_data
 end
 
@@ -51,7 +51,7 @@ end
 
 def get_organization(org_id)
   route='/v1/organizations/'+org_id
-  org_data = get route, ''
+  org_data = get route
   return org_data
 end
 
