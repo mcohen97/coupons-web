@@ -36,7 +36,7 @@ class PromotionsController < ApplicationController
   def create
     puts "PARAMETERS #{promotion_parameters.inspect}"
     @promotion = Promotion.new(promotion_parameters)
-    is_coupon = @promotion.type == 'Coupon'
+    is_coupon = @promotion.type == 'coupon'
     if is_coupon && !valid_instances_count
       @promotion.errors.add(:coupon_instances, "Coupon count must be positive and less or equal to #{Coupon::MAX_COUPON_INSTANCES}")
       respond_promotion_not_created(@promotion) && return
@@ -155,7 +155,7 @@ class PromotionsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def promotion_parameters
-    p = params.require(:promotion).permit(:name,:code ,:type, :condition,:return_type, :return_value, :active, :expiration).to_h
+    p = params.require(:promotion).permit(:name,:code ,:type, :condition,:return_type, :return_value, :active, :expiration, :promotion_type).to_h
     p[:return_value] = p[:return_value].to_i
     p[:active] = p[:active] == "true"
     return p
