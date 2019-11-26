@@ -76,7 +76,7 @@ private
   end
 
   def format_payload(payload)
-    payload[:promotion_type] = payload[:type].downcase
+    #payload[:promotion_type] = payload[:type].downcase
     date_tokens = payload[:expiration].split('/')
     day = date_tokens[1].to_i
     month = date_tokens[0].to_i
@@ -85,9 +85,8 @@ private
   end
 
   def build_promo(data)
-    promo_type = data['promotion_type']
-    data.delete('promotion_type')
-    return promo_type == 'discount' ? Discount.new(data) : Coupon.new(data)
+    data['new'] = false
+    return Promotion.new(data)
   end
 
 end

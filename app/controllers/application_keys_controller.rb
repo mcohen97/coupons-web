@@ -15,9 +15,9 @@ class ApplicationKeysController < ApplicationController
   end
 
   def new
-    puts 'SE VA A CREAR APP KEY'
     @application_key = ApplicationKey.new
     @form_title = 'New application key'
+    @promotions = PromotionsService.instance.get_promotions({}, TOKEN)
   end
 
   def edit

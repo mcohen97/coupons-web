@@ -1,4 +1,4 @@
-<%= bootstrap_form_for @application_key.becomes(ApplicationKey), local: true do |form| %>
+<%= bootstrap_form_for @application_key, local: true do |form| %>
   <h1><%=@form_title%></h1>
   <div class="form-group" style="text-align:left">
     <%= form.alert_message "Please fix the errors below." %>
@@ -10,7 +10,7 @@
 
   <div class="form-group">
     <%= form.label "Promotions" %><br />
-    <%= form.collection_check_boxes :promotion_ids, Promotion.all, :id, :name do |b| %>
+    <%= form.collection_check_boxes :promotions, @promotions, :id, :name do |b| %>
       <div class="collection-check-box">
         <%= b.check_box %>
         <%= b.label %>
