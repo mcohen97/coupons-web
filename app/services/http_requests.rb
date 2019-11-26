@@ -1,11 +1,12 @@
 module HttpRequests
   
   @@authorization = ''
-  @@token = ''
+  @@token = nil
 
   def self.setToken(token)
     @@authorization = 'Bearer '+token
     @@token = token
+    puts @@token
   end
 
   def self.authorization
@@ -27,6 +28,8 @@ module HttpRequests
   end
 
   def get (url)
+    check_token_validity
+
     resp = @connection.get url do |request|
       request.headers["Authorization"] = @@authorization
       request.headers['Content-Type'] = 'application/json'
@@ -36,7 +39,7 @@ module HttpRequests
   end
 
   def post(url, payload)
-    print('se va a invocar el url')
+    check_token_validity
 
     resp = @connection.post url do |request|
       request.headers["Authorization"] = @@authorization
@@ -48,8 +51,8 @@ module HttpRequests
   end
 
   def put (url, payload)
-    print('se va a invocar el url')
-
+    check_token_validity
+    
     resp = @connection.put url do |request|
       request.headers["Authorization"] = @@authorization
       request.headers['Content-Type'] = 'application/json'
@@ -60,6 +63,8 @@ module HttpRequests
   end
 
   def delete (url)
+    check_token_validity
+
     resp = @connection.delete url do |request|
       request.headers["Authorization"] = @@authorization
       request.headers['Content-Type'] = 'application/json'
@@ -80,6 +85,21 @@ module HttpRequests
     rescue JSON::ParserError
       result = {error:"There was an error"}
       return RequestResult.new(false, result)
+  end
+
+  def check_token_validity
+    if not @@token.nil?
+      puts 'TOKEN'
+      puts @@token
+      payload = JsonWebToken.decode(@@token)
+      actual_time = Time.now.to_i
+      if payload['expires'] < actual_time
+        raise ExpiredTokenError
+      end
+    end
+  rescue JWT::DecodeError
+    puts 'decode error'
+    raise ExpiredTokenError
   end
 
 end

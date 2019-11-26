@@ -4,7 +4,13 @@ require_relative '../../lib/error/not_authorized_error.rb'
 
 class ApplicationController < ActionController::Base
   rescue_from NotAuthorizedError, with: :not_authorized
+  rescue_from ExpiredTokenError, with: :ask_sign_in
   before_action :set_current_user, :set_current_organization
+
+  helper_method :is_user_signed_in
+  helper_method :is_current_user_admin
+  helper_method :current_organization
+  helper_method :current_user
 
   def default_url_options
     if Rails.env.production?
@@ -55,7 +61,7 @@ class ApplicationController < ActionController::Base
   end
 
   def is_user_signed_in
-    return not(session[:user_id].nil?)
+    return not(session[:token].nil?)
   end
 
   def authenticate!
@@ -66,6 +72,13 @@ class ApplicationController < ActionController::Base
   end 
 
   private
+
+  def ask_sign_in
+    reset_session
+    @current_user = nil;
+    flash[:error] = "Session expired. Please, sign in again."
+    redirect_to new_user_session_path
+  end
 
   def set_current_user
     @current_user = current_user
@@ -87,8 +100,4 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  helper_method :is_user_signed_in
-  helper_method :is_current_user_admin
-  helper_method :current_organization
-  helper_method :current_user
 end

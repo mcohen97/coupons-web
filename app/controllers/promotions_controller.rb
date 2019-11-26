@@ -18,7 +18,7 @@ class PromotionsController < ApplicationController
   end
 
   def show
-    if @promotion.type == 'Coupon'
+    if @promotion.type == 'coupon'
       @coupon_instances = CouponInstance.where(promotion_id: @promotion.id)
     end
   end

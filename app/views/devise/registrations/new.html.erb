@@ -62,15 +62,15 @@
     <%= f.file_field :avatar, class: "file-chooser"%>
   </div>
 
-  <div class="form-group">
-    <%= f.submit t('.sign_up'), class: 'btn btn-primary'%>
-  </div>
-  
   <div class="sk-folding-cube" id='spiner' style="display:none">
   <div class="sk-cube1 sk-cube"></div>
   <div class="sk-cube2 sk-cube"></div>
   <div class="sk-cube4 sk-cube"></div>
   <div class="sk-cube3 sk-cube"></div>  
+  </div>
+
+  <div class="form-group">
+    <%= f.submit t('.sign_up'), class: 'btn btn-primary'%>
   </div>
 
   <%= render 'devise/shared/links' %> 

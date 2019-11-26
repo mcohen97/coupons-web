@@ -47,13 +47,13 @@ def get_user(email)
   return user_data
 end
 
-
-
 def get_organization(org_id)
   route='/v1/organizations/'+org_id
   org_data = get route
   return org_data
 end
+
+
 
 
 

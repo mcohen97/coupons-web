@@ -11,8 +11,8 @@
             </div>
             <div class = "filter-option">
                 &nbsp Type:&nbsp 
-                <%= radio_button_tag :type, 'Discount', params[:type] == 'Discount'%> Discount &nbsp  
-                <%= radio_button_tag :type, 'Coupon', params[:type] == 'Coupon'%> Coupon
+                <%= radio_button_tag :type, 'discount', params[:type] == 'discount'%> Discount &nbsp  
+                <%= radio_button_tag :type, 'coupon', params[:type] == 'coupon'%> Coupon
             </div>
             <div class = "filter-option">    
                 &nbsp Active: &nbsp 
@@ -61,10 +61,12 @@
                     <img src=<%=asset_url('delete.png')%> style="margin-right:4px" width='24px'>
                     <span class = "promo-option-label">Delete</span></a>
                 <%end%>
+                <%if current_user.role.has_permission('VIEW_REPORTS') or current_user.is_admin%>
                 <a class="w3-button" href=<%=generate_report_path(id: promo.id)%>>
                     <img src=<%=asset_url('presentation_64.png')%> style="margin-right:4px" width='24px'>
                     <span class = "promo-option-label">Report</span>
                 </a>
+                <%end%>
             </div>
         </div>
     <%end%>
