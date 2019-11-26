@@ -71,9 +71,12 @@ class PromotionsController < ApplicationController
         format.html { redirect_to @promotion, notice: 'Promotion was updated successfully.' }
         format.json { render :show, status: :ok, location: @promotion }
       else
-        @promotion.errors.add(:error, result.data.to_s)
+        params = promotion_parameters
+        params[:new] = false
+        @promotion = Promotion.new(params)
+        @promotion.errors.add(:error, result.data.inspect)
 
-        format.html { render :edit, status: :unprocessable_entity }
+        format.html { render :edit, id: params[:id], status: :unprocessable_entity }
         format.json { render json: @promotion.errors, status: :unprocessable_entity }
       end
     end

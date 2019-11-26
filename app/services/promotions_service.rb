@@ -57,7 +57,7 @@ def create_coupon_instances(promotion, payload)
 end
 
 def update_promotion(id, payload)
-  route  = '/v1/promotions/' + id
+  route  = '/v1/promotions/' + id.to_s
   put route, payload
 end
 
