@@ -64,11 +64,15 @@ module HttpRequests
   end
 
   def handle_response(response)
-    result = response.body.empty? ? {} : (JSON.parse response.body)
     if response.success?
+      result = response.body.empty? ? {} : (JSON.parse response.body)
       RequestResult.new(true, result)
     else
+      result = response.body.empty? ? {} : (JSON.parse response.body)
       RequestResult.new(false, result)
     end
+    rescue JSON::ParserError
+      result = {error:"There was an error"}
+      return RequestResult.new(false, result)
   end
 end

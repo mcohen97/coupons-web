@@ -2,7 +2,6 @@
 
 class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_sign_up_params, only: [:create]
-  helper_method :is_invitation_sign_up
 
   # before_action :configure_account_update_params, only: [:update]
 
@@ -16,16 +15,27 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
+    build_resource(sign_up_params)
+    
+    if params[:user][:password] != params[:user][:password_confirmation]
+      flash[:error] = "Passwords do not match"
+      render :action => "new" and return
+    end 
+
     createResult = UsersService.instance().create_user(@newUserDto)
     if not createResult.success
       flash[:error] = createResult.data['error']
-      return
+      clean_up_passwords resource
+      set_minimum_password_length
+      render :action => "new" and return
+    else
+      UsersService.instance().sign_in(@newUserDto.email, @newUserDto.password)
+      session[:user_id] = @newUserDto.email;
+      puts session[:user_id]
+      redirect_to home_path and return
     end
-    UsersService.instance().sign_in(@newUserDto.email, @newUserDto.password)
-    session[:user_id] = @newUserDto.email;
-    puts session[:user_id]
-    redirect_to home_path
   end
+
 
   # GET /resource/edit
   def edit
@@ -50,15 +60,19 @@ class Users::RegistrationsController < Devise::RegistrationsController
   #   super
   # end
 
+  def is_invitation_sign_up
+    params.key?('invitation_code') || params.key?(:invitation_code)
+  end
+  helper_method :is_invitation_sign_up
+
   protected
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
+
     if not is_invitation_sign_up
-      puts 'entra en not is invitation'
       role = {'name'=>'ADMIN','permissions'=>[]}
     else
-      puts 'entra en invitation'
       role = {'name'=>'','permissions'=>[]}
     end
     args = {
@@ -75,9 +89,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
     devise_parameter_sanitizer.permit(:sign_up, keys: %i[name surname role organization organization_id avatar invitation_code])
   end
 
-  def is_invitation_sign_up
-    params.key?('invitation_code') || params.key?(:invitation_code)
-  end
 
   # If you have extra params to permit, append them to the sanitizer.
   # def configure_account_update_params
