@@ -8,11 +8,11 @@ class PromotionTest < ActiveSupport::TestCase
   end
 
   test 'should create promotion with the specified data' do
-    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentage,
                          return_value: 10, active: true, condition: 'quantity > 3', organization_id: 1)
     assert promo.save
     assert_equal(:Discount, promo.type.to_sym)
-    assert_equal(:percentaje, promo.return_type.to_sym)
+    assert_equal(:percentage, promo.return_type.to_sym)
     assert promo.active
     assert_equal('code', promo.code)
     assert_equal('a promotion', promo.name)
@@ -21,25 +21,25 @@ class PromotionTest < ActiveSupport::TestCase
   end
 
   test 'should not save promotion with empty name' do
-    promo = Discount.new(code: 'code', return_type: :percentaje,
+    promo = Discount.new(code: 'code', return_type: :percentage,
                          return_value: 10, active: true, condition: 'quantity > 3')
     assert_not promo.save
     assert promo.errors[:name].any?
   end
 
   test 'should not save promotion with empty code' do
-    promo = Coupon.new(name: 'a promotion', return_type: :percentaje,
+    promo = Coupon.new(name: 'a promotion', return_type: :percentage,
                        return_value: 10, active: true, condition: 'quantity > 3')
     assert_not promo.save
     assert promo.errors[:code].any?
   end
 
   test 'should not save promotion with zero or negative return value' do
-    promo1 = Coupon.new(name: 'a promotion', return_type: :percentaje, active: true, condition: 'quantity > 3')
+    promo1 = Coupon.new(name: 'a promotion', return_type: :percentage, active: true, condition: 'quantity > 3')
     assert_not promo1.save
     assert promo1.errors[:return_value].any?
 
-    promo2 = Coupon.new(name: 'a promotion', return_value: -5, return_type: :percentaje, active: true, condition: 'quantity > 3')
+    promo2 = Coupon.new(name: 'a promotion', return_value: -5, return_type: :percentage, active: true, condition: 'quantity > 3')
     assert_not promo2.save
     assert promo2.errors[:return_value].any?
   end
@@ -51,15 +51,15 @@ class PromotionTest < ActiveSupport::TestCase
     end
   end
 
-  test 'should not save promotion with percentaje over 100' do
-    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
+  test 'should not save promotion with percentage over 100' do
+    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentage,
                             return_value: 113, active: true, condition: 'quantity > 3')
     assert_not promo.save
     assert promo.errors[:return_value].any?
   end
 
   test 'should not save promotion with empty type' do
-    promo = Promotion.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Promotion.new(code: 'code', name: 'a promotion', return_type: :percentage,
                           return_value: 10, active: true, condition: 'quantity > 3')
 
     assert_not promo.save
@@ -67,7 +67,7 @@ class PromotionTest < ActiveSupport::TestCase
   end
 
   test 'should not save promotion with empty status' do
-    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentage,
                          return_value: 10, condition: 'quantity > 3')
 
     assert_not promo.save
@@ -75,20 +75,20 @@ class PromotionTest < ActiveSupport::TestCase
   end
 
   test 'should not save promotion with repeated codes' do
-    promo = Discount.new(code: 'code', name: 'a promotion1', return_type: :percentaje,
+    promo = Discount.new(code: 'code', name: 'a promotion1', return_type: :percentage,
                          return_value: 10, active: true, condition: 'quantity > 3', organization_id: 1)
     assert promo.save
-    promo = Discount.new(code: 'code', name: 'a promotion2', return_type: :percentaje,
+    promo = Discount.new(code: 'code', name: 'a promotion2', return_type: :percentage,
                          return_value: 10, active: true, condition: 'quantity > 3', organization_id: 1)
     assert_not promo.save
     assert promo.errors[:code].any?
   end
 
   test 'should not save promotion with repeated names' do
-    promo = Discount.new(code: 'code1', name: 'a promotion', return_type: :percentaje,
+    promo = Discount.new(code: 'code1', name: 'a promotion', return_type: :percentage,
                          return_value: 10, active: true, condition: 'quantity > 3', organization_id: 1)
     assert promo.save
-    promo = Discount.new(code: 'code2', name: 'a promotion', return_type: :percentaje,
+    promo = Discount.new(code: 'code2', name: 'a promotion', return_type: :percentage,
                          return_value: 10, active: true, condition: 'quantity > 3', organization_id: 1)
     assert_not promo.save
     assert promo.errors[:name].any?
@@ -96,7 +96,7 @@ class PromotionTest < ActiveSupport::TestCase
   # Common condition-related behaviour between the different types of promotions is tested here.
 
   test 'should not save promotion with empty condition' do
-    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentage,
                             return_value: 10, active: true)
 
     assert_not promo.save
@@ -104,7 +104,7 @@ class PromotionTest < ActiveSupport::TestCase
   end
 
   test 'should format correct condition' do
-    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentage,
                             return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10', organization_id: 1)
 
     assert promo.save
@@ -113,7 +113,7 @@ class PromotionTest < ActiveSupport::TestCase
 
   test 'should not save promotion with invalid expresion' do
     # promotion with invalid condition expresion
-    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentage,
                             return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total >', organization_id: 1)
 
     assert_not promo.save
@@ -121,7 +121,7 @@ class PromotionTest < ActiveSupport::TestCase
   end
 
   test 'should not validate inactive promotions' do
-    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentage,
                             return_value: 10, active: false, condition: 'quantity > 3', organization_id: 1)
 
     @app_key.promotions << promo
@@ -133,7 +133,7 @@ class PromotionTest < ActiveSupport::TestCase
   end
 
   test 'should return invalid for deleted promotions' do
-    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentage,
                             return_value: 10, active: true, condition: 'quantity > 3', deleted: true, organization_id: 1)
 
     @app_key.promotions << promo
@@ -147,7 +147,7 @@ class PromotionTest < ActiveSupport::TestCase
   test 'should raise error for promotions from other organization' do
     app_key = application_keys(:one)
 
-    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentage,
                             return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10', organization_id: 2)
 
     assert_raises NotAuthorizedError do

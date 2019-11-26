@@ -11,7 +11,7 @@ $(document).ready(function(){
 });
 </script>
 
-<%= bootstrap_form_for @promotion.becomes(Promotion), local: true do |form| %>
+<%= bootstrap_form_for @promotion do |form| %>
   <h1><%=@form_title%></h1>
 
   <div class="form-group" style="text-align:left">
@@ -58,8 +58,8 @@ $(document).ready(function(){
   <div class="form-group">
     <%=form.label :returned_value_type%>
     <%if !readonly%>
-      <%= form.radio_button :return_type, :fixed_value, readonly: readonly %>
-      <%= form.radio_button :return_type, :percentaje, readonly: readonly %>
+      <%= form.radio_button :return_type, :fixed, readonly: readonly %>
+      <%= form.radio_button :return_type, :percentage, readonly: readonly %>
     <%else%>
       <%= @promotion.return_type %>
     <%end%>
@@ -73,15 +73,15 @@ $(document).ready(function(){
   <div class="form-group">
     <%=form.label :active%>
     <%if !readonly%>
-      <%= form.radio_button :active, 'true', readonly: readonly%>
-      <%= form.radio_button :active, 'false', readonly: readonly%>  
+      <%= form.radio_button :active, true, label: 'Yes' , readonly: readonly%>
+      <%= form.radio_button :active, false, label: 'No',readonly: readonly%>  
     <%else%>
       <%= @promotion.active ? "Active" : "Inactive" %>
     <%end%>
   </div>
 
   <div class="form-group">
-    <%= form.text_field :expiration_date, readonly: readonly, class: 'datepicker' %>
+    <%= form.text_field :expiration, readonly: readonly, class: 'datepicker' %>
   </div>
 
 

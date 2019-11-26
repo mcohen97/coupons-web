@@ -80,7 +80,7 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
     assert_equal 'Promo verano', coupon.name
     assert_equal 'COMIDADESC5', coupon.code
     assert_equal 1, coupon.organization_id
-    assert_equal 'percentaje', coupon.return_type
+    assert_equal 'percentage', coupon.return_type
     assert_equal 10, coupon.return_value
     assert coupon.active
     assert_equal 'Coupon', coupon.type
@@ -115,7 +115,7 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
       { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
         code: 'COFEE_DISCOUNT',
         organization_id: 2,
-        return_type: 'percentaje',
+        return_type: 'percentage',
         return_value: 50,
         active: true,
         type: 'Coupon',
@@ -135,7 +135,7 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
       { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
         code: 'COFEE_DISCOUNT',
         organization_id: 2,
-        return_type: 'percentaje',
+        return_type: 'percentage',
         return_value: 50,
         active: true,
         type: 'Coupon',
@@ -147,7 +147,7 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
 
   test 'should not create promotion with empty fields' do
     promo_params = { name: '', code: 'COFEE_DISCOUNT', organization_id: 2,
-                     return_type: 'percentaje', return_value: 50, active: true, type: 'Coupon', condition: 'quantity = 3 OR total > 100' }
+                     return_type: 'percentage', return_value: 50, active: true, type: 'Coupon', condition: 'quantity = 3 OR total > 100' }
 
     # perform a post for each parameter, with that parameter missing
     promo_params.keys.each do |key|
@@ -165,7 +165,7 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
     assert_no_difference('Promotion.count') do
       post promotions_url, params: {
         promotion: { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
-                     code: 'COFEE_DISCOUNT', organization_id: 2, return_type: 'percentaje', return_value: -3,
+                     code: 'COFEE_DISCOUNT', organization_id: 2, return_type: 'percentage', return_value: -3,
                      active: true, type: 'Coupon', condition: 'quantity = 3 OR total > 100' }
       }
     end
@@ -174,11 +174,11 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
     assert promotion.errors[:return_value].any?
   end
 
-  test 'should not create percentaje promotion with return value over 100' do
+  test 'should not create percentage promotion with return value over 100' do
     assert_no_difference('Promotion.count') do
       post promotions_url, params: {
         promotion: { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
-                     code: 'COFEE_DISCOUNT', organization_id: 2, return_type: 'percentaje', return_value: 103,
+                     code: 'COFEE_DISCOUNT', organization_id: 2, return_type: 'percentage', return_value: 103,
                      active: true, type: 'Coupon', condition: 'quantity = 3 OR total > 100' }
       }
     end
@@ -192,7 +192,7 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
       post promotions_url, params: {
         # lacks one operand
         promotion: { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
-                     code: 'COFEE_DISCOUNT', organization_id: 2, return_type: 'percentaje', return_value: 55,
+                     code: 'COFEE_DISCOUNT', organization_id: 2, return_type: 'percentage', return_value: 55,
                      active: true, type: 'Coupon', condition: 'quantity = 3 OR total > 100 OR quantity = 2 AND total >' }
       }
     end
@@ -204,7 +204,7 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
       post promotions_url, params: {
         # lacks operator
         promotion: { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF', code: 'COFEE_DISCOUNT', organization_id: 2,
-                     return_type: 'percentaje', return_value: 55, active: true, type: 'Coupon', condition: 'quantity total' }
+                     return_type: 'percentage', return_value: 55, active: true, type: 'Coupon', condition: 'quantity total' }
       }
     end
     assert_response :unprocessable_entity
@@ -215,7 +215,7 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
       post promotions_url, params: {
         # wrong order
         promotion: { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF', code: 'COFEE_DISCOUNT', organization_id: 2,
-                     return_type: 'percentaje', return_value: 55, active: true, type: 'Coupon', condition: '= quantity 10' }
+                     return_type: 'percentage', return_value: 55, active: true, type: 'Coupon', condition: '= quantity 10' }
       }
     end
     assert_response :unprocessable_entity
@@ -231,7 +231,7 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
       { name: 'Obtené un cupón de 5% de descuento para tu primera compra en las cantinas de la Universidad ORT',
         code: 'COFEE_DISCOUNT',
         organization_id: 2,
-        return_type: 'percentaje',
+        return_type: 'percentage',
         return_value: 50,
         active: true,
         type: 'Coupon',
@@ -250,7 +250,7 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
       { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
         code: 'COMPRAYA',
         organization_id: 2,
-        return_type: 'percentaje',
+        return_type: 'percentage',
         return_value: 50,
         active: true,
         type: 'Coupon',
@@ -264,7 +264,7 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
   test 'should not create with a type not in the permitted collection' do
     assert_no_difference('Promotion.count') do
       post_params = { promotion: { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF', code: 'COFEE_DISCOUNT',
-                                   organization_id: 2, return_type: 'percentaje', return_value: 50, active: true, type: 'not_existent',
+                                   organization_id: 2, return_type: 'percentage', return_value: 50, active: true, type: 'not_existent',
                                    condition: 'quantity = 3 OR total > 100' } }
       assert_raise(ActiveRecord::SubclassNotFound) do
         post promotions_url, params: post_params
@@ -291,7 +291,7 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
         { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
           code: 'COFEE_DISCOUNT',
           organization_id: 2,
-          return_type: 'percentaje',
+          return_type: 'percentage',
           return_value: 50,
           active: true,
           type: 'Coupon',
@@ -317,7 +317,7 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
       { name: 'Descuento comienzo clases',
         code: 'COFEE_DISCOUNT',
         organization_id: 2,
-        return_type: 'percentaje',
+        return_type: 'percentage',
         return_value: 50,
         active: true,
         type: 'Coupon',
@@ -336,7 +336,7 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
       { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
         code: 'COMPRAYA',
         organization_id: 2,
-        return_type: 'percentaje',
+        return_type: 'percentage',
         return_value: 50,
         active: true,
         type: 'Coupon',
@@ -355,7 +355,7 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
         { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
           code: 'COFEE_DISCOUNT',
           organization_id: 2,
-          return_type: 'percentaje',
+          return_type: 'percentage',
           return_value: -5,
           active: true,
           type: 'Coupon',
@@ -367,14 +367,14 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
     assert promotion.errors[:return_value].any?
   end
 
-  test 'should not update percentaje promotion with return value over 100' do
+  test 'should not update percentage promotion with return value over 100' do
     to_update = promotions(:coupon1)
     patch promotion_url(to_update), params: {
       promotion:
       { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
         code: 'COFEE_DISCOUNT',
         organization_id: 2,
-        return_type: 'percentaje',
+        return_type: 'percentage',
         return_value: 102,
         active: true,
         type: 'Coupon',
@@ -393,7 +393,7 @@ class PromotionsControllerCrudTest < ActionDispatch::IntegrationTest
       { name: 'Spending more than 100 in coffee or buying 3 packs, you get 50% OFF',
         code: 'COFEE_DISCOUNT',
         organization_id: 2,
-        return_type: 'percentaje',
+        return_type: 'percentage',
         return_value: 50,
         active: true,
         type: 'Coupon',

@@ -23,11 +23,17 @@ class ApplicationController < ActionController::Base
       @current_user = UserDto.new(session[:user_data])
       session[:org_id] = @current_user.org_id
     elsif session[:user_id]
-      user_data = UsersService.instance().get_user(session[:user_id])
-      session[:user_data] = user_data
-      @current_user = UserDto.new(user_data)
-      session[:org_id] = @current_user.org_id
-      return @current_user
+      result = UsersService.instance().get_user(session[:user_id])
+      if result.success
+        session[:user_data] = result.data
+        puts result.data  
+        @current_user = UserDto.new(result.data)
+        session[:org_id] = @current_user.org_id
+        return @current_user
+      else
+        reset_session
+        redirect_to new_user_session_path and return
+      end
     else
       return nil
     end
@@ -38,9 +44,9 @@ class ApplicationController < ActionController::Base
     if session[:org_id] and session[:org_data]
       @current_organization = OrganizationDto.new(session[:org_data])
     elsif session[:org_id]
-      org_data = UsersService.instance().get_organization(session[:org_id])
-      session[:org_data] = org_data
-      @current_organization = OrganizationDto.new(org_data)
+      result = UsersService.instance().get_organization(session[:org_id])
+      session[:org_data] = result.data
+      @current_organization = OrganizationDto.new(result.data)
       return @current_organization
     else
       return nil

@@ -36,7 +36,7 @@
                 <br><b>Code:</b> <%= promo.code%>
                 <br><b>Return value:</b> 
 
-                <% if promo.percentaje? %>
+                <% if promo.percentage? %>
                 <%=promo.return_value%>%
                 <% else %>
                 $<%=promo.return_value%>
@@ -48,27 +48,24 @@
             </div>
 
             <div class = "w3-bar">
-                <a class="w3-button" href=<%=promotion_path(promo)%>>
+                <a class="w3-button" href=<%=promotion_path(id: promo.id)%>>
                     <img src=<%=asset_url('loupe.png')%> style="margin-right:4px" width='24px'>
                     <span class = "promo-option-label">Show</span>
                 </a>
                 <%if is_current_user_admin%>
-                <a class="w3-button" href=<%=edit_promotion_path(promo)%>>
+                <a class="w3-button" href=<%=edit_promotion_path(id: promo.id)%>>
                     <img src=<%=asset_url('edit.png')%> style="margin-right:4px" width='24px'>
                     <span class = "promo-option-label">Edit</span>
                 </a>
-                <a data-confirm="Are you sure?" class="w3-button" rel="nofollow" data-method="delete" href=<%=promotion_path(promo)%>>
+                <a data-confirm="Are you sure?" class="w3-button" rel="nofollow" data-method="delete" href=<%=promotion_path(id: promo.id)%>>
                     <img src=<%=asset_url('delete.png')%> style="margin-right:4px" width='24px'>
                     <span class = "promo-option-label">Delete</span></a>
                 <%end%>
-                <a class="w3-button" href=<%=generate_report_path(promo)%>>
+                <a class="w3-button" href=<%=generate_report_path(id: promo.id)%>>
                     <img src=<%=asset_url('presentation_64.png')%> style="margin-right:4px" width='24px'>
                     <span class = "promo-option-label">Report</span>
                 </a>
             </div>
         </div>
     <%end%>
-    <div class = "digg_pagination" style="display:block; margin: 20px auto 0px auto; clear:both; background: none">
-        <%= will_paginate @promotions, inner_window: 0, outer_window:0 %>
-    </div>
 </div>

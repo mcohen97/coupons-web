@@ -7,14 +7,15 @@
   <p style = "white-space:break-all;word-break:break-all;">
     <strong>Token:</strong>
     <br>
-    <%= @application_key.generate_token %>
+    <%= @application_key.token %>
   </p>
   <p>
     <strong>Promotions:</strong>
     <br>
-    <%= @application_key.promotions.pluck(:name).join(', ') %>
+    <%=@application_key.promotions.map{|p| p.name}.join(', ') %>
+    
   </p>
 
-  <%= link_to 'Edit', edit_application_key_path(@application_key) %> |
+  <%= link_to 'Edit', edit_application_key_path(@application_key.token) %> |
   <%= link_to 'Back', application_keys_path %>
 </div>

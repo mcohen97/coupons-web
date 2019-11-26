@@ -2183,7 +2183,7 @@
                 <elementProp name="promotion%5Breturn_type%5D" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.name">promotion%5Breturn_type%5D</stringProp>
-                  <stringProp name="Argument.value">percentaje</stringProp>
+                  <stringProp name="Argument.value">percentage</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
                 <elementProp name="promotion%5Breturn_value%5D" elementType="HTTPArgument">
@@ -2644,7 +2644,7 @@
                 <elementProp name="promotion[return_type]" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">true</boolProp>
                   <stringProp name="Argument.name">promotion[return_type]</stringProp>
-                  <stringProp name="Argument.value">percentaje</stringProp>
+                  <stringProp name="Argument.value">percentage</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
                 <elementProp name="promotion[return_value]" elementType="HTTPArgument">
@@ -2842,7 +2842,7 @@
                 <elementProp name="promotion[return_type]" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">true</boolProp>
                   <stringProp name="Argument.name">promotion[return_type]</stringProp>
-                  <stringProp name="Argument.value">percentaje</stringProp>
+                  <stringProp name="Argument.value">percentage</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
                 <elementProp name="promotion[return_value]" elementType="HTTPArgument">
@@ -3040,7 +3040,7 @@
                 <elementProp name="promotion[return_type]" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">true</boolProp>
                   <stringProp name="Argument.name">promotion[return_type]</stringProp>
-                  <stringProp name="Argument.value">percentaje</stringProp>
+                  <stringProp name="Argument.value">percentage</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
                 <elementProp name="promotion[return_value]" elementType="HTTPArgument">
@@ -3238,7 +3238,7 @@
                 <elementProp name="promotion[return_type]" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">true</boolProp>
                   <stringProp name="Argument.name">promotion[return_type]</stringProp>
-                  <stringProp name="Argument.value">percentaje</stringProp>
+                  <stringProp name="Argument.value">percentage</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
                 <elementProp name="promotion[return_value]" elementType="HTTPArgument">
@@ -3436,7 +3436,7 @@
                 <elementProp name="promotion[return_type]" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">true</boolProp>
                   <stringProp name="Argument.name">promotion[return_type]</stringProp>
-                  <stringProp name="Argument.value">percentaje</stringProp>
+                  <stringProp name="Argument.value">percentage</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
                 <elementProp name="promotion[return_value]" elementType="HTTPArgument">
@@ -3634,7 +3634,7 @@
                 <elementProp name="promotion[return_type]" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">true</boolProp>
                   <stringProp name="Argument.name">promotion[return_type]</stringProp>
-                  <stringProp name="Argument.value">percentaje</stringProp>
+                  <stringProp name="Argument.value">percentage</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
                 <elementProp name="promotion[return_value]" elementType="HTTPArgument">
@@ -3832,7 +3832,7 @@
                 <elementProp name="promotion[return_type]" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">true</boolProp>
                   <stringProp name="Argument.name">promotion[return_type]</stringProp>
-                  <stringProp name="Argument.value">percentaje</stringProp>
+                  <stringProp name="Argument.value">percentage</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
                 <elementProp name="promotion[return_value]" elementType="HTTPArgument">

@@ -16,7 +16,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    UsersService.instance().create_user(@newUserDto)
+    createResult = UsersService.instance().create_user(@newUserDto)
+    if not createResult.success
+      flash[:error] = createResult.data['error']
+      return
+    end
     UsersService.instance().sign_in(@newUserDto.email, @newUserDto.password)
     session[:user_id] = @newUserDto.email;
     puts session[:user_id]

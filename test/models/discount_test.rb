@@ -8,7 +8,7 @@ class DiscountTest < ActiveSupport::TestCase
   end
 
   test 'should return false when promo does not apply' do
-    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Discount.new(code: 'code', name: 'a promotion', return_type: percentage,
                          return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10', organization_id: 1)
 
     @app_key.promotions << promo
@@ -19,19 +19,19 @@ class DiscountTest < ActiveSupport::TestCase
   end
 
   test 'should return true when promo applies' do
-    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Discount.create(code: 'code', name: 'a promotion', return_type: percentage,
                             return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10', organization_id: 1)
     @app_key.promotions << promo
     result = promo.evaluate_applicability({ total: 11, quantity: 0, transaction_id: 4 }, @app_key)
 
     assert_not result[:error]
     assert result[:applicable]
-    assert_equal :percentaje, result[:return_type].to_sym
+    assert_equal percentage, result[:return_type].to_sym
     assert_equal 10, result[:return_value]
   end
 
   test 'should raise error when wrong arguments given' do
-    promo = Discount.new(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Discount.new(code: 'code', name: 'a promotion', return_type: percentage,
                          return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10', organization_id: 1)
     @app_key.promotions << promo
     assert_raise PromotionArgumentsError do
@@ -40,7 +40,7 @@ class DiscountTest < ActiveSupport::TestCase
   end
 
   test 'should retourn error if transaction id was already used' do
-    promo = Discount.create(code: 'code', name: 'a promotion', return_type: :percentaje,
+    promo = Discount.create(code: 'code', name: 'a promotion', return_type: percentage,
                             return_value: 10, active: true, condition: 'total <= 100 AND quantity >= 5 OR total > 10', organization_id: 1)
     @app_key.promotions << promo
     result = promo.evaluate_applicability({ total: 11, quantity: 0, transaction_id: 4 }, @app_key)
