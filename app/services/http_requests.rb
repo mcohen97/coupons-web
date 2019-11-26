@@ -4,9 +4,11 @@ module HttpRequests
   @@token = nil
 
   def self.set_token(token)
-    @@authorization = 'Bearer '+token
-    @@token = token
-    puts @@token
+    if not token.nil?
+      @@authorization = 'Bearer '+token
+      @@token = token
+      puts @@token
+    end
   end
 
   def self.authorization
