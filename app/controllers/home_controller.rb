@@ -6,7 +6,7 @@ class HomeController < ApplicationController
 
   def index
     redirect_to new_user_session_path and return unless is_user_signed_in
-    redirect_to promotions_path unless current_user.is_admin
+    #redirect_to promotions_path unless current_user.is_admin
   end
 
   def invitation

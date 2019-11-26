@@ -19,7 +19,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
     UsersService.instance().create_user(@newUserDto)
     UsersService.instance().sign_in(@newUserDto.email, @newUserDto.password)
     redirect_to home_path and return 
-
   end
 
   # GET /resource/edit
