@@ -30,8 +30,10 @@ class ApplicationKeysService
   def create_application_key(payload)
     #ids  = payload[:promotion_ids]
     #payload.delete(:promotion_ids)
+    puts payload
     payload[:promotions] =payload[:promotions].select{|id| !id.empty?}.map{ |id| id.to_i}
-
+    puts "PAYLOADDDADADADAD"
+    puts payload
     route = '/v1/app_keys'
     result = post route, payload
     if result.success

@@ -3,7 +3,7 @@ module HttpRequests
   @@authorization = ''
   @@token = nil
 
-  def self.setToken(token)
+  def self.set_token(token)
     @@authorization = 'Bearer '+token
     @@token = token
     puts @@token
@@ -80,6 +80,8 @@ module HttpRequests
       RequestResult.new(true, result)
     else
       if response.status == 401
+        puts @@token
+        puts @@authorization
         raise UnauthorizedError
       end
       result = response.body.empty? ? {} : (JSON.parse response.body)

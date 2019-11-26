@@ -5,7 +5,7 @@ require_relative '../../lib/error/not_authorized_error.rb'
 class ApplicationController < ActionController::Base
   rescue_from UnauthorizedError, with: :not_authorized
   rescue_from ExpiredTokenError, with: :ask_sign_in
-  before_action :set_current_user, :set_current_organization
+  before_action :set_current_user, :set_current_organization, :set_token
 
   helper_method :is_user_signed_in
   helper_method :is_current_user_admin
@@ -86,6 +86,10 @@ class ApplicationController < ActionController::Base
 
   def set_current_organization
     @current_organization = current_organization
+  end
+
+  def set_token
+    HttpRequests.set_token(token)
   end
 
   def token

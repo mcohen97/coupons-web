@@ -19,7 +19,7 @@ class Users::SessionsController < Devise::SessionsController
       session[:token] = result.data['token']
       puts session[:token]
       puts ENV["SECRET"]
-      HttpRequests.setToken(result.data["token"])
+      HttpRequests.set_token(result.data["token"])
       redirect_to home_path and return 
     else
       flash[:error] = "Wrong email or password"
