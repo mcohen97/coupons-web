@@ -74,9 +74,9 @@ class PromotionsController < ApplicationController
   end
 
   def destroy
-    result = PromotionsService.instance.delete_promotion(@promotion.id, TOKEN)
+    result = PromotionsService.instance.delete_promotion(params[:id], TOKEN)
     respond_to do |format|
-      logger.info("Successfully deleted promotion of id: #{@promotion.id}.")
+      logger.info("Successfully deleted promotion of id: #{params[:id]}.")
       format.html { redirect_to promotions_path, notice: 'Promotion was successfully deleted.' }
       format.json { render json: { notice: 'Promotion was successfully deleted.' }, status: :success }
     end
