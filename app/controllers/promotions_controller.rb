@@ -63,23 +63,22 @@ class PromotionsController < ApplicationController
   end
 
   def update
-    respond_to do |format|
       result = PromotionsService.instance.update_promotion(params[:promotion][:id],promotion_parameters)
       if result.success
         @promotion = result.data
         logger.info("Successfully updated promotion of id: #{@promotion.id}.")
-        format.html { redirect_to @promotion, notice: 'Promotion was updated successfully.' }
-        format.json { render :show, status: :ok, location: @promotion }
+        redirect_to @promotion, notice: 'Promotion was updated successfully.'
       else
-        params = promotion_parameters
-        params[:new] = false
-        @promotion = Promotion.new(params)
+        parameters = promotion_parameters
+        parameters[:new] = false
+        parameters[:id] = params[:id]
+        @promotion = Promotion.new(parameters)
         @promotion.errors.add(:error, result.data.inspect)
 
-        format.html { render :edit, id: params[:id], status: :unprocessable_entity }
-        format.json { render json: @promotion.errors, status: :unprocessable_entity }
+        redirect_to edit_promotion_path(@promotion, notice: "Error")
+        #format.html { render :edit, status: :unprocessable_entity }
+        #format.json { render json: @promotion.errors, status: :unprocessable_entity }
       end
-    end
   end
 
   def destroy
