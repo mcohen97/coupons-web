@@ -35,21 +35,31 @@ class PromotionsController < ApplicationController
 
   def create
     puts "PARAMETERS #{promotion_parameters.inspect}"
-    @promotion = Promotion.new(promotion_parameters)
+    parameters = promotion_parameters
+    @promotion = Promotion.new(parameters)
     is_coupon = @promotion.type == 'coupon'
     if is_coupon && !valid_instances_count
       @promotion.errors.add(:coupon_instances, "Coupon count must be positive and less or equal to #{Coupon::MAX_COUPON_INSTANCES}")
       respond_promotion_not_created(@promotion) && return
     end
 
-    result = PromotionsService.instance.create_promotion(promotion_parameters)
+    result = PromotionsService.instance.create_promotion(parameters)
     if result.success
+      puts result.data.inspect
+      @promotion = result.data
       logger.info("Successfully updated promotion of id: #{@promotion.id}.")
-      respond_promotion_created(@promotion) && return
+      respond_promotion_created(@promotion)
+      if parameters[:promotion_type] == 'coupon'
+        puts 'SE AGREGAN LOS CUPONES'
+        result = PromotionsService.instance.create_coupon_instances(@promotion, coupon_instances_params)
+        puts result.inspect
+      end
+      return
     else
       @promotion.errors.add(:error, result.data.to_s)
       respond_promotion_not_created(@promotion)
     end
+
   end
 
   def update
@@ -61,9 +71,12 @@ class PromotionsController < ApplicationController
         format.html { redirect_to @promotion, notice: 'Promotion was updated successfully.' }
         format.json { render :show, status: :ok, location: @promotion }
       else
-        @promotion.errors.add(:error, result.data.to_s)
+        params = promotion_parameters
+        params[:new] = false
+        @promotion = Promotion.new(params)
+        @promotion.errors.add(:error, result.data.inspect)
 
-        format.html { render :edit, status: :unprocessable_entity }
+        format.html { render :edit, id: params[:id], status: :unprocessable_entity }
         format.json { render json: @promotion.errors, status: :unprocessable_entity }
       end
     end
@@ -176,6 +189,10 @@ class PromotionsController < ApplicationController
     p[:return_value] = p[:return_value].to_i
     p[:active] = p[:active] == "true"
     return p
+  end
+
+  def coupon_instances_params
+    params.slice(:instance_expiration_date, :instances_count)
   end
 
   def coupon_instances_count

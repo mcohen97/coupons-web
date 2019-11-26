@@ -39,7 +39,7 @@ end
 
 def create_promotion(payload)
   route  = '/v1/promotions'
-  format_payload(payload)
+  format_promotion_payload(payload)
   puts "payload #{payload.inspect}"
   result = post route, payload
   if result.success
@@ -48,8 +48,16 @@ def create_promotion(payload)
   return result
 end
 
+def create_coupon_instances(promotion, payload)
+  route = "/v1/promotions/#{promotion.id}/coupons"
+  payload = create_coupon_instances_payload(promotion,payload)
+  puts route
+  puts payload.inspect
+  post route, payload
+end
+
 def update_promotion(id, payload)
-  route  = '/v1/promotions/' + id
+  route  = '/v1/promotions/' + id.to_s
   put route, payload
 end
 
@@ -62,6 +70,10 @@ private
 
   def initialize
     @connection = create_connection(GATEWAY_URL)
+  end
+
+  def create_coupon_instances_payload(promotion,payload)
+    return {coupon_code: promotion.code, quantity: payload[:instances_count].to_i, max_uses: 10, expiration: convert_date(payload[:instance_expiration_date])}
   end
 
   def add_filters(filters)
@@ -77,14 +89,10 @@ private
     return query_string
   end
 
-  def format_payload(payload)
+  def format_promotion_payload(payload)
     #payload[:promotion_type] = payload[:type].downcase
     #payload.delete(:type)
-    date_tokens = payload[:expiration].split('/')
-    day = date_tokens[1].to_i
-    month = date_tokens[0].to_i
-    year = date_tokens[2].to_i
-    payload[:expiration] = DateTime.new(year, month, day)
+    payload[:expiration] = convert_date(payload[:expiration])
   end
 
   def build_promo(data)
@@ -92,5 +100,14 @@ private
     data['new'] = false
     return Promotion.new(data)
   end
+
+  def convert_date(date)
+    date_tokens = date.split('/')
+    day = date_tokens[1].to_i
+    month = date_tokens[0].to_i
+    year = date_tokens[2].to_i
+    DateTime.new(year, month, day)
+  end
+
 
 end
