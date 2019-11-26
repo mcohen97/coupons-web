@@ -11,7 +11,7 @@ $(document).ready(function(){
 });
 </script>
 
-<%= bootstrap_form_for @promotion do |form| %>
+<%= bootstrap_form_for @promotion, :html => { :onsubmit => "show_spiner()" } do |form| %>
   <h1><%=@form_title%></h1>
 
   <div class="form-group" style="text-align:left">
@@ -84,6 +84,12 @@ $(document).ready(function(){
     <%= form.text_field :expiration, readonly: readonly, class: 'datepicker' %>
   </div>
 
+  <div class="sk-folding-cube" id='spiner' style="display:none">
+  <div class="sk-cube1 sk-cube"></div>
+  <div class="sk-cube2 sk-cube"></div>
+  <div class="sk-cube4 sk-cube"></div>
+  <div class="sk-cube3 sk-cube"></div>  
+  </div>
 
   <%if !readonly%>
     <div class="actions">

@@ -1,31 +1,7 @@
 <div class='white-container'>
   <h1 class="section-title"> Promotion report: <%= @promotion.code %></h1> <br/>
-  <%if @report[:invocations_count] == 0%>
-    <h3 style='color:black'>This promotion was never used</h3> <br/>
-  <%else%>  
-    <div class = "table-wrapper" style="margin-bottom: 20px;">
-      <table class="fl-table">
-        <thead>
-          <tr>
-            <th>Invocations count</th>
-            <th>Total money spent</th>
-            <th>Positive response ratio</th>
-            <th>Negative response ratio</th>
-            <th>Average response time</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr>
-            <td><%= @report[:invocations_count] %></td>
-            <td><%= @report[:total_money_spent] %></td>
-            <td><%= @report[:positive_ratio] %></td>
-            <td><%= @report[:negative_ratio] %></td>
-            <td><%= @report[:average_response_time] %></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  <%end%>
+  <%=@promotion%>
+  <%=@demographic_report%>
+  <%=@usage_report%>
   <%= link_to 'Back', promotions_path %>
 </div>

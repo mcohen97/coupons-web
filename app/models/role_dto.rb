@@ -5,4 +5,8 @@ class RoleDto
         @name = args['name']
         @permissions = args['permissions']
     end
+
+    def has_permission(permission)
+        return @permissions.include?(permission)
+    end
 end

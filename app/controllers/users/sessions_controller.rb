@@ -17,13 +17,13 @@ class Users::SessionsController < Devise::SessionsController
       session[:user_id] = email;
       session[:password] = password;
       session[:token] = result.data['token']
-      puts 'DATAAAAAAAA'
-      puts result.data
-      HttpRequests.setToken(result.data["token"])
-      puts HttpRequests.token
+      puts session[:token]
+      puts ENV["SECRET"]
+      HttpRequests.set_token(result.data["token"])
       redirect_to home_path and return 
     else
       flash[:error] = "Wrong email or password"
+      puts result.data
       redirect_to user_session_path and return
     end
   end
@@ -33,7 +33,6 @@ class Users::SessionsController < Devise::SessionsController
     reset_session
     @current_user = nil;
     redirect_to new_user_session_path
-    puts session
   end
 
   # protected

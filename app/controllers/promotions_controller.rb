@@ -18,7 +18,7 @@ class PromotionsController < ApplicationController
   end
 
   def show
-    if @promotion.type == 'Coupon'
+    if @promotion.type == 'coupon'
       @coupon_instances = CouponInstance.where(promotion_id: @promotion.id)
     end
   end
@@ -97,11 +97,28 @@ class PromotionsController < ApplicationController
   
 
   def report
-    if is_backoffice_client
-      respond_to_backoffice
+    promotion_id = params[:id]
+
+    @promotion = PromotionsService.instance.get_promotion_by_id(promotion_id)
+
+    demographic_response = ReportsService.instance.get_demographic_report(promotion_id)
+    if demographic_response.success
+      @demographic_report = demographic_response.data
     else
-      respond_to_external
+      flash[:error] = demographic_response.data
     end
+    
+    usage_response = ReportsService.instance.get_usage_report(promotion_id)
+    if usage_response.success
+      @usage_report = usage_response.data
+    else
+      flash[:error] = usage_response.data
+    end
+
+    respond_to do |format|
+      format.html { :report }
+    end
+
   end
 
   private

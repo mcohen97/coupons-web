@@ -3,8 +3,14 @@
 require_relative '../../lib/error/not_authorized_error.rb'
 
 class ApplicationController < ActionController::Base
-  rescue_from NotAuthorizedError, with: :not_authorized
-  before_action :set_current_user, :set_current_organization
+  rescue_from UnauthorizedError, with: :not_authorized
+  rescue_from ExpiredTokenError, with: :ask_sign_in
+  before_action :set_current_user, :set_current_organization, :set_token
+
+  helper_method :is_user_signed_in
+  helper_method :is_current_user_admin
+  helper_method :current_organization
+  helper_method :current_user
 
   def default_url_options
     if Rails.env.production?
@@ -55,7 +61,7 @@ class ApplicationController < ActionController::Base
   end
 
   def is_user_signed_in
-    return not(session[:user_id].nil?)
+    return not(session[:token].nil?)
   end
 
   def authenticate!
@@ -67,12 +73,23 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def ask_sign_in
+    reset_session
+    @current_user = nil;
+    flash[:error] = "Session expired. Please, sign in again."
+    redirect_to new_user_session_path
+  end
+
   def set_current_user
     @current_user = current_user
   end
 
   def set_current_organization
     @current_organization = current_organization
+  end
+
+  def set_token
+    HttpRequests.set_token(token)
   end
 
   def token
@@ -82,13 +99,9 @@ class ApplicationController < ActionController::Base
   def not_authorized
     respond_to do |format|
       logger.error('User not authorized to perform that ac.')
-      format.html { render file: "#{Rails.root}/public/404", layout: false, status: :forbidden }
+      format.html { render file: "#{Rails.root}/public/401", layout: false, status: :forbidden }
       format.json { render json: { error: 'Promotion not found.' }.to_json, status: :forbidden }
     end
   end
 
-  helper_method :is_user_signed_in
-  helper_method :is_current_user_admin
-  helper_method :current_organization
-  helper_method :current_user
 end

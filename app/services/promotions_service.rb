@@ -77,6 +77,7 @@ private
   end
 
   def add_filters(filters)
+    query_string = ''
     query_string += '?'
     filters.each do |filter, value|
         if query_string == '?'
@@ -85,6 +86,7 @@ private
           query_string += "&#{filter}=#{value}"
         end
     end
+    return query_string
   end
 
   def format_promotion_payload(payload)
