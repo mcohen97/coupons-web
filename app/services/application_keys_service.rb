@@ -55,7 +55,7 @@ private
     #puts args.inspect
     #args[:id] = args[:name]
     promos = key['promotions'].map{|id| Promotion.new(id: id, name: 'placeholder')}
-    appkey = ApplicationKey.new(name: key['name'], token: key['token'], promotions: promos )
+    appkey = ApplicationKey.new(name: key['name'], token: key['token'], promotions: promos, new: false)
     return appkey
   end
 end

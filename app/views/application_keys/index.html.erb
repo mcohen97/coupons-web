@@ -22,8 +22,8 @@
     <% @application_keys.each do |application_key| %>
       <tr>
         <td><%= application_key.name %></td>
-        <td><%= application_key.promotions.pluck(:name).join(', ') %></td>
-        <td><%= application_key.generate_token %></td>
+        <td><%= application_key.promotions.map{ |p| p.name}.join(', ') %></td>
+        <td><%= application_key.token %></td>
         <td class = "option" >
           <a class="w3-button" style="padding: 3px;" href=<%=application_key_path(id: application_key.token)%>>
             <img src=<%=asset_url('loupe.png')%> width='24px'>
