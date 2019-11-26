@@ -1,13 +1,19 @@
 module HttpRequests
   
   @@authorization = ''
+  @@token = ''
 
   def self.setToken(token)
     @@authorization = 'Bearer '+token
+    @@token = token
+  end
+
+  def self.authorization
+    @@authorization
   end
 
   def self.token
-    @@authorization
+    @@token
   end
 
   def create_connection(gateway_url)
@@ -75,4 +81,5 @@ module HttpRequests
       result = {error:"There was an error"}
       return RequestResult.new(false, result)
   end
+
 end
