@@ -18,7 +18,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def create
     UsersService.instance().create_user(@newUserDto)
     UsersService.instance().sign_in(@newUserDto.email, @newUserDto.password)
-    redirect_to home_path and return 
+    session[:user_id] = @newUserDto.email;
+    puts session[:user_id]
+    redirect_to home_path
   end
 
   # GET /resource/edit
