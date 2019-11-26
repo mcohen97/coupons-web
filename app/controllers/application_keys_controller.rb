@@ -30,7 +30,7 @@ class ApplicationKeysController < ApplicationController
   # POST /application_keys.json
   def create
     logger.info("Creating application key of params: #{application_key_params.inspect}.")
-
+    puts 'CREATE'
     result = ApplicationKeysService.instance.create_application_key(application_key_params, TOKEN)
     respond_to do |format|
       if result.success
@@ -87,7 +87,7 @@ class ApplicationKeysController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def application_key_params
-    params.require(:application_key).permit(:name, promotion_ids: []).to_h
+    params.require(:application_key).permit(:name, promotions: []).to_h
   end
 
   def application_key_not_found

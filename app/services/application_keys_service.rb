@@ -28,9 +28,9 @@ class ApplicationKeysService
   end
 
   def create_application_key(payload, authorization)
-    ids  = payload[:promotion_ids]
-    payload.delete(:promotion_ids)
-    payload[:promotions] =ids.select{|id| !id.empty?}.map{ |id| id.to_i}
+    #ids  = payload[:promotion_ids]
+    #payload.delete(:promotion_ids)
+    payload[:promotions] =payload[:promotions].select{|id| !id.empty?}.map{ |id| id.to_i}
     route = '/v1/app_keys'
     result = post route, payload, authorization
     if result.success
