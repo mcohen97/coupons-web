@@ -26,3 +26,7 @@ function show_spiner(){
     document.getElementById('submit_form_container').style.display ='none';
 
 }
+
+$(document).ready(function () {
+    $('.datepicker').datepicker({autoclose: true});
+});

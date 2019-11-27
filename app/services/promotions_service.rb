@@ -56,9 +56,15 @@ end
     t.strftime("%m/%d/%Y")
   end
 
-def create_coupon_instances(promotion, payload)
-  route = "/v1/promotions/#{promotion.id}/coupons"
-  payload = create_coupon_instances_payload(promotion,payload)
+def create_coupon_instances(coupon_instances)
+  puts "CREATE COUPON INSTANCES"
+  route = "/v1/promotions/#{coupon_instances.coupon_code}/coupons"
+  payload = {
+    coupon_code: coupon_instances.coupon_code,
+    quantity: coupon_instances.quantity,
+    expiration: convert_date(coupon_instances.expiration),
+    max_uses: coupon_instances.max_uses
+  }
   puts route
   puts payload.inspect
   post route, payload
@@ -80,8 +86,8 @@ private
     @connection = create_connection(GATEWAY_URL)
   end
 
-  def create_coupon_instances_payload(promotion,payload)
-    return {coupon_code: promotion.code, quantity: payload[:instances_count].to_i, max_uses: 10, expiration: convert_date(payload[:instance_expiration_date])}
+  def create_coupon_instances_payload(coupon_instances,payload)
+    return {coupon_code: coupon_instances.code, quantity: payload[:instances_count].to_i, max_uses: 10, expiration: convert_date(payload[:instance_expiration_date])}
   end
 
   def add_filters(filters)

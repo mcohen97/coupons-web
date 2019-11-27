@@ -1,5 +1,5 @@
 
-<%= form_with model: @coupon_instances, url: add_coupon_instances_path, method: :post, :html => { :onsubmit => "show_spiner()" }, local:true do |form| %>
+<%= form_with model: @coupon_instances, url: add_coupon_instances_path, method: :post, :html => { :onsubmit => "show_spiner()", class:"form-centered" }, local:true do |form| %>
   <h1><%=@form_title%></h1>
 
   <div class="form-group" style="text-align:left">
@@ -8,13 +8,17 @@
 
   <%= hidden_field_tag :coupon_code%>
   <div class="form-group">
-    <%= text_field_tag :quantity%>
+    <%= label_tag :quantity, "Quantity" %>
+    <%= number_field_tag :quantity, '1', min:1, max:10000%>
   </div>
   <div class="form-group">
-    <%= text_field_tag :expiration, "", class: 'datepicker'%>
-  </div>
-  <div class="form-group">
+    <%= label_tag :max_uses, "Maximum usages" %>
     <%= number_field_tag :max_uses, '1', min:1, max:10000%>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag :expiration, "Expiration date" %>
+    <%= text_field_tag :expiration, "", class: 'datepicker'%>
   </div>
 
   <div class="sk-folding-cube" id='spiner' style="display:none">

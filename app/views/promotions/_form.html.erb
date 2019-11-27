@@ -1,9 +1,3 @@
-<script>
-    $(document).ready(function () {
-        $('.datepicker').datepicker({autoclose: true});
-    });
-</script>
-
 <%= bootstrap_form_for @promotion, :html => {:onsubmit => "show_spiner()"} do |form| %>
   <h1><%= @form_title %></h1>
 

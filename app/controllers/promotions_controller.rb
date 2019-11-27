@@ -121,10 +121,15 @@ class PromotionsController < ApplicationController
   end
 
   def add_coupon_instances
-    puts "REDIRECT"
-    puts params
+    coupon_instances = CouponInstancesDto.new(new_coupon_instances_params)
+    response = PromotionsService.instance.create_coupon_instances(coupon_instances)
+    if response.success
+      flash[:notice] = response.data
+    else
+      flash[:error] = response.data['error']
+    end
     respond_to do |format|
-      format.html { redirect_to home_path }
+      format.html { redirect_to promotions_path }
     end
   end
   private
@@ -195,7 +200,7 @@ class PromotionsController < ApplicationController
   end
 
   def new_coupon_instances_params
-    params.require(:coupon_instances_dto).permit(:quantity, :coupon_code, :expiration, :max_uses)
+    params.permit(:quantity, :coupon_code, :expiration, :max_uses)
   end
 
   def coupon_instances_params

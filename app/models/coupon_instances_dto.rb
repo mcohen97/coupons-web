@@ -8,10 +8,10 @@ class CouponInstancesDto
   attr_accessor :coupon_code, :quantity, :expiration, :max_uses
 
   def initialize(args = {})
-    @coupon_code = args['promotion_name']
-    @quantity = args['instances_count']
-    @expiration = args['expiration_date']
-    @max_uses = args['usage_count']
+    @coupon_code = args['coupon_code']
+    @quantity = args['quantity']
+    @expiration = args['expiration']
+    @max_uses = args['max_uses']
   end
 
   def to_simple_date(date)
