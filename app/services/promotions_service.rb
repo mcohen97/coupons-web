@@ -14,8 +14,8 @@ def self.instance()
   return @instance
 end
 
-def get_promotions(filters, page =nil, offset = nil)
-  route  = '/v1/promotions'
+def get_promotions(filters = [], limit =1000, offset = 0)
+  route  = "/v1/promotions?limit=#{limit}&offset=#{offset}"
   if filters.any?
     route += add_filters(filters)
   end

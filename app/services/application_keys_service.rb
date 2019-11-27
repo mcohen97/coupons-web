@@ -28,12 +28,7 @@ class ApplicationKeysService
   end
 
   def create_application_key(payload)
-    #ids  = payload[:promotion_ids]
-    #payload.delete(:promotion_ids)
-    puts payload
     payload[:promotions] =payload[:promotions].select{|id| !id.empty?}.map{ |id| id.to_i}
-    puts "PAYLOADDDADADADAD"
-    puts payload
     route = '/v1/app_keys'
     result = post route, payload
     if result.success
@@ -43,6 +38,7 @@ class ApplicationKeysService
   end
 
   def update_application_key(name, payload)
+    payload[:promotions] = payload[:promotions].filter {|p| !p.blank?}.map{|p| p.to_i}
     route = '/v1/app_keys/'+ name
     put route, payload
   end
@@ -55,10 +51,9 @@ private
   
   def build_app_key(key)
     args = key.slice('name', 'token')
-    #puts args.inspect
-    #args[:id] = args[:name]
-    promos = key['promotions'].map{|id| Promotion.new(id: id, name: 'placeholder')}
-    appkey = ApplicationKey.new(name: key['name'], token: key['token'], promotions: promos, new: false)
-    return appkey
+    promos =  key['promotion_ids'].zip(key['promotion_names'])
+                                                 .map {|id, name | Promotion.new(id: id, name: name)}
+
+    ApplicationKey.new(name: key['name'], token: key['token'], promotions: promos, new: false)
   end
 end
