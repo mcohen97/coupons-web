@@ -15,7 +15,6 @@ class Users::SessionsController < Devise::SessionsController
     result = UsersService.instance().sign_in(email,password);
     if result.success
       session[:user_id] = email;
-      session[:password] = password;
       session[:token] = result.data['token']
       puts 'NEW SESSION WITH TOKEN:' + session[:token] unless session[:token].nil?
       HttpRequests.set_token(result.data["token"])

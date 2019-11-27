@@ -3,9 +3,12 @@
 require_relative '../../lib/error/not_authorized_error.rb'
 
 class ApplicationController < ActionController::Base
+  #rescue_from Exception, with: :server_error
+  #rescue_from StandardError, with: :server_error
   rescue_from UnauthorizedError, with: :not_authorized
   rescue_from ExpiredTokenError, with: :ask_sign_in
-  before_action :set_current_user, :set_current_organization, :set_token
+
+  before_action :set_current_user, :set_current_organization, :set_token, except: [:not_authorized, :not_found, :server_error]
 
   helper_method :is_user_signed_in
   helper_method :is_current_user_admin
@@ -70,7 +73,32 @@ class ApplicationController < ActionController::Base
     end
   end 
 
+
   private
+
+  def not_authorized
+    respond_to do |format|
+      logger.error('User not authorized to perform that ac.')
+      format.html { render file: "#{Rails.root}/public/401", layout: false, status: :forbidden }
+      format.json { render json: { error: 'Promotion not found.' }.to_json, status: :forbidden }
+    end
+  end
+
+  def not_found
+    respond_to do |format|
+      logger.error('User not authorized to perform that ac.')
+      format.html { render file: "#{Rails.root}/public/404", layout: false, status: :forbidden }
+      format.json { render json: { error: 'Promotion not found.' }.to_json, status: :forbidden }
+    end
+  end
+
+  def server_error
+    respond_to do |format|
+      logger.error('User not authorized to perform that ac.')
+      format.html { render file: "#{Rails.root}/public/500", layout: false, status: :forbidden }
+      format.json { render json: { error: 'Promotion not found.' }.to_json, status: :forbidden }
+    end
+  end
 
   def ask_sign_in
     reset_session
@@ -95,12 +123,6 @@ class ApplicationController < ActionController::Base
     session[:token]
   end
 
-  def not_authorized
-    respond_to do |format|
-      logger.error('User not authorized to perform that ac.')
-      format.html { render file: "#{Rails.root}/public/401", layout: false, status: :forbidden }
-      format.json { render json: { error: 'Promotion not found.' }.to_json, status: :forbidden }
-    end
-  end
+
 
 end

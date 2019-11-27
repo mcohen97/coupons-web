@@ -108,6 +108,7 @@ class PromotionsController < ApplicationController
       @demographic_report = demographic_response.data
     else
       flash[:error] = demographic_response.data
+      redirect_to promotions_path and return
     end
     
     usage_response = ReportsService.instance.get_usage_report(promotion_id)
@@ -115,6 +116,7 @@ class PromotionsController < ApplicationController
       @usage_report = usage_response.data
     else
       flash[:error] = usage_response.data
+      redirect_to promotions_path and return
     end
 
     respond_to do |format|
