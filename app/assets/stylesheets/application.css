@@ -9,8 +9,8 @@
 
 .sk-folding-cube {
     margin: 20px auto;
-    width: 40px;
-    height: 40px;
+    width: 20px;
+    height: 20px;
     position: relative;
     -webkit-transform: rotateZ(45deg);
             transform: rotateZ(45deg);
@@ -101,7 +101,12 @@
         -ms-animation: fadein 2s; /* Internet Explorer */
          -o-animation: fadein 2s; /* Opera < 12.1 */
             animation: fadein 2s;
-}
+  }
+
+  #submit_form_container{
+    height: 40px;
+    margin: 10px;
+  }
 
 @keyframes fadein {
     from { opacity: 0; }
@@ -131,3 +136,4 @@
     from { opacity: 0; }
     to   { opacity: 1; }
 }
+

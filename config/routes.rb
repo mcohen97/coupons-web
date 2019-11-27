@@ -19,7 +19,8 @@ Rails.application.routes.draw do
   post '/login/create', to: 'login#create', as: 'register'
   post '/promotions/evaluate', to: 'promotions#evaluate', as: 'evaluate_promotion'
   get '/promotions/report/:id', to: 'promotions#report', as: 'generate_report'
-
+  get '/promotions/:coupon_code/coupon_instances', to: 'promotions#coupon_instances', as: 'coupon_instances'
+  post '/promotions/add_coupon_instances/:coupon_code', to: 'promotions#add_coupon_instances', as: 'add_coupon_instances'
   root 'home#index'
 
   resources :promotions

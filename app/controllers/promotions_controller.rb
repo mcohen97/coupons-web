@@ -123,6 +123,19 @@ class PromotionsController < ApplicationController
 
   end
 
+  def coupon_instances
+    coupon_code = params[:coupon_code]
+    @coupon_instances = CouponInstancesDto.new({coupon_code: coupon_code})
+    @form_title = 'Add coupon instances'
+  end
+
+  def add_coupon_instances
+    puts "REDIRECT"
+    puts params
+    respond_to do |format|
+      format.html { redirect_to home_path }
+    end
+  end
   private
 
   def valid_instances_count
@@ -187,9 +200,15 @@ class PromotionsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def promotion_parameters
     p = params.require(:promotion).permit(:id, :name,:code ,:type, :condition,:return_type, :return_value, :active, :expiration, :promotion_type).to_h
+    params.require(:coupon_instances_dto).permit(:quantity, :coupon_code, :expiration, :max_uses)
+
     p[:return_value] = p[:return_value].to_i
     p[:active] = p[:active] == "true"
     return p
+  end
+
+  def new_coupon_instances_params
+    params.require(:coupon_instances_dto).permit(:quantity, :coupon_code, :expiration, :max_uses)
   end
 
   def coupon_instances_params

@@ -13,6 +13,8 @@
 
 function hide_spiner(){
     document.getElementById('spiner').style.display ='none';
+    document.getElementById('submit_form_container').style.display ='block';
+
 }
 
 $("form").submit(function(){
@@ -21,4 +23,6 @@ $("form").submit(function(){
 
 function show_spiner(){
     document.getElementById('spiner').style.display = 'block';
+    document.getElementById('submit_form_container').style.display ='none';
+
 }
