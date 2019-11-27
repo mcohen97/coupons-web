@@ -9,16 +9,16 @@
   <%= hidden_field_tag :coupon_code%>
   <div class="form-group">
     <%= label_tag :quantity, "Quantity" %>
-    <%= number_field_tag :quantity, '1', min:1, max:10000%>
+    <%= number_field_tag :quantity, '1', min:1, max:10000, required: true%>
   </div>
   <div class="form-group">
     <%= label_tag :max_uses, "Maximum usages" %>
-    <%= number_field_tag :max_uses, '1', min:1, max:10000%>
+    <%= number_field_tag :max_uses, '1', min:1, max:10000, required: true%>
   </div>
 
   <div class="form-group">
     <%= label_tag :expiration, "Expiration date" %>
-    <%= text_field_tag :expiration, "", class: 'datepicker'%>
+    <%= text_field_tag :expiration, "", class: 'datepicker', required: true%>
   </div>
 
   <div class="sk-folding-cube" id='spiner' style="display:none">

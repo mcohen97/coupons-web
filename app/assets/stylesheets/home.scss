@@ -16,9 +16,10 @@
 .dashboard-item{
     background-color: white;
     display:inline-block; 
-    width:33%; 
-    margin:10px;
+    width:25%; 
+    margin:30px 50px 30px 50px;
     border: 1px solid black;
+    animation: flipInY .8s;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
@@ -70,11 +71,12 @@ ul.nav.navbar-nav.profile{
 
 @media screen and (max-width: 767px) {
     .dashboard-title{
-        font-size: 10px;
+        font-size: 12px;
     }
 
     .dashboard-item{
-        width: 40%;
+        width: 45%;
+        margin: 5px;
     }
 
     ul.nav.navbar-nav.profile{

@@ -1,12 +1,11 @@
 <%= render 'form', promotion: @promotion, readonly: true %>
-<% if @promotion.type == 'coupon'%>
+<% if @promotion.promotion_type == 'coupon'%>
   <div class = "table-container">
   <div class = "table-wrapper">
     <table class="fl-table">
       <thead>
         <tr>
           <th>Coupon Code</th>
-          <th>Reedemed</th>
           <th>Expiration date</th>
         </tr>
       </thead>
@@ -14,16 +13,7 @@
         <% @coupon_instances.each do |ci| %>
           <tr>
             <td><%= ci.coupon_code %></td>
-            <td>
-              <%if ci.redeemed%>
-                yes
-              <%else%>
-                no
-              <%end%>
-            </td>
-            <td>
-              <%=ci.instance_expiration_date%>
-            </td>
+            <td><%=ci.expiration%></td>
           </tr>
         <%end%>
       </tbody>

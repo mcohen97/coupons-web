@@ -18,11 +18,12 @@ class PromotionsController < ApplicationController
   end
 
   def show
+    @form_title = "Promotion"
     puts "GET COUPON INSTANCES"
     if @promotion.promotion_type == 'coupon'
       puts "IS COUPON"
       response = PromotionsService.instance.get_coupon_instances(@promotion.id.to_s)
-      puts "RESPONSE DATA"
+      puts "COUPONS INSTANCES DATA"
       puts response.data
       if response.success
         @coupon_instances = response.data.map{ |coupon_instance_data| PromotionsService.build_coupon_instance(coupon_instance_data)}
@@ -36,7 +37,7 @@ class PromotionsController < ApplicationController
   end
 
   def edit
-    @form_title = 'Edit promotion'
+    @form_title = 'Update promotion'
     @is_edit = true
   end
 
