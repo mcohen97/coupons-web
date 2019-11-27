@@ -16,8 +16,9 @@ $(document).ready(function(){
 
   <div class="form-group" style="text-align:left">
     <%= form.alert_message "Please fix the errors below." %>
-  </div>  
+  </div>
 
+  <%= form.hidden_field :id %>
   <div class="form-group">
     <%= form.text_field :name, readonly: readonly %>
   </div>

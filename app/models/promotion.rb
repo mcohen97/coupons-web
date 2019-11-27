@@ -21,8 +21,14 @@ class Promotion
     @condition = args['condition']
     @active = args['active']
     @promotion_type = args['promotion_type']
-    @expiration_date = args['expiration']
+    @expiration =  to_simple_date args['expiration']
     @new = args['new'].nil? || args['new']
+  end
+
+  def to_simple_date(date)
+    return nil unless date
+    t = DateTime.parse(date)
+    t.strftime("%m/%d/%Y")
   end
 
   def percentage?

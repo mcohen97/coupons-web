@@ -18,6 +18,7 @@ class ApplicationKeysController < ApplicationController
   end
 
   def edit
+    @promotions = PromotionsService.instance.get_promotions({})
     @form_title = 'Edit application key'
   end
 

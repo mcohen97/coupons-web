@@ -45,14 +45,11 @@ class PromotionsController < ApplicationController
 
     result = PromotionsService.instance.create_promotion(parameters)
     if result.success
-      puts result.data.inspect
       @promotion = result.data
       logger.info("Successfully updated promotion of id: #{@promotion.id}.")
       respond_promotion_created(@promotion)
       if parameters[:promotion_type] == 'coupon'
-        puts 'SE AGREGAN LOS CUPONES'
         result = PromotionsService.instance.create_coupon_instances(@promotion, coupon_instances_params)
-        puts result.inspect
       end
       return
     else
@@ -62,12 +59,19 @@ class PromotionsController < ApplicationController
 
   end
 
+  def get_date_time(str)
+    split = str.split('/')
+    DateTime.new(split[2].to_i, split[0].to_i, split[1].to_f)
+  end
+
   def update
+      params[:promotion][:expiration] = get_date_time params[:promotion][:expiration]
       result = PromotionsService.instance.update_promotion(params[:promotion][:id],promotion_parameters)
       if result.success
         @promotion = result.data
-        logger.info("Successfully updated promotion of id: #{@promotion.id}.")
-        redirect_to @promotion, notice: 'Promotion was updated successfully.'
+        id = @promotion['id']
+        logger.info("Successfully updated promotion of id: #{id}.")
+        redirect_to promotion_path(id), notice: 'Promotion was updated successfully.'
       else
         parameters = promotion_parameters
         parameters[:new] = false
@@ -75,9 +79,7 @@ class PromotionsController < ApplicationController
         @promotion = Promotion.new(parameters)
         @promotion.errors.add(:error, result.data.inspect)
 
-        redirect_to edit_promotion_path(@promotion, notice: "Error")
-        #format.html { render :edit, status: :unprocessable_entity }
-        #format.json { render json: @promotion.errors, status: :unprocessable_entity }
+        redirect_to edit_promotion_path(@promotion, notice: @promotion.errors.messages)
       end
   end
 
@@ -142,7 +144,7 @@ class PromotionsController < ApplicationController
   end
 
   def generate_coupon_instances(promotion)
-    puts instance_expiration_date
+    # puts instance_expiration_date
     promotion.generate_coupon_instances(coupon_instances_count, instance_expiration_date)
   end
 
@@ -162,7 +164,7 @@ class PromotionsController < ApplicationController
 
   def set_promo
     #@promotion = Promotion.find(params[:id])
-    puts "PROMOTION ID #{params[:id]}"
+    # puts "PROMOTION ID #{params[:id]}"
     @promotion = PromotionsService.instance.get_promotion_by_id(params[:id])
     #promotion_not_found if @promotion.deleted
     #@promotion = @promotion.becomes(Promotion)
@@ -184,7 +186,7 @@ class PromotionsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def promotion_parameters
-    p = params.require(:promotion).permit(:name,:code ,:type, :condition,:return_type, :return_value, :active, :expiration, :promotion_type).to_h
+    p = params.require(:promotion).permit(:id, :name,:code ,:type, :condition,:return_type, :return_value, :active, :expiration, :promotion_type).to_h
     p[:return_value] = p[:return_value].to_i
     p[:active] = p[:active] == "true"
     return p
