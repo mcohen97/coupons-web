@@ -195,8 +195,6 @@ class PromotionsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def promotion_parameters
     p = params.require(:promotion).permit(:id, :name,:code ,:type, :condition,:return_type, :return_value, :active, :expiration, :promotion_type).to_h
-    params.require(:coupon_instances_dto).permit(:quantity, :coupon_code, :expiration, :max_uses)
-
     p[:return_value] = p[:return_value].to_i
     p[:active] = p[:active] == "true"
     return p

@@ -50,20 +50,21 @@ def create_promotion(payload)
   return result
 end
 
-  def to_simple_date(date)
-    return nil unless date
-    t = DateTime.parse(date)
-    t.strftime("%m/%d/%Y")
-  end
+#Date format from backend
+def to_simple_date(date)
+  return nil unless date
+  t = DateTime.parse(date)
+  t.strftime("%m/%d/%Y")
+end
 
 def create_coupon_instances(coupon_instances)
   puts "CREATE COUPON INSTANCES"
   route = "/v1/promotions/#{coupon_instances.coupon_code}/coupons"
   payload = {
     coupon_code: coupon_instances.coupon_code,
-    quantity: coupon_instances.quantity,
+    quantity: coupon_instances.quantity.to_i,
     expiration: convert_date(coupon_instances.expiration),
-    max_uses: coupon_instances.max_uses
+    max_uses: coupon_instances.max_uses.to_i
   }
   puts route
   puts payload.inspect

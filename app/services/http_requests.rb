@@ -82,10 +82,10 @@ module HttpRequests
       RequestResult.new(true, result)
     else
       if response.status == 401
-        puts @@token
-        puts @@authorization
         raise UnauthorizedError
       end
+      puts 'BAD REQUEST'
+      puts response.body
       result = response.body.empty? ? {} : (JSON.parse response.body)
       RequestResult.new(false, result)
     end
@@ -96,8 +96,6 @@ module HttpRequests
 
   def check_token_validity
     if not @@token.nil?
-      puts 'TOKEN'
-      puts @@token
       payload = JsonWebToken.decode(@@token)
       actual_time = Time.now.to_i
       if payload['expires'] < actual_time
@@ -105,7 +103,6 @@ module HttpRequests
       end
     end
   rescue JWT::DecodeError
-    puts 'decode error'
     raise ExpiredTokenError
   end
 
