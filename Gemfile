@@ -80,3 +80,4 @@ gem 'faker'
 gem "azure-storage-blob"
 gem "azure-storage"
 gem 'bootstrap-datepicker-rails'
+gem 'chart-js-rails'
