@@ -7,10 +7,10 @@
 
   <%= form.hidden_field :id %>
   <div class="form-group">
-    <%= form.text_field :name, readonly: readonly %>
+    <%= form.text_field :name, readonly: readonly, required: true %>
   </div>
   <div class="form-group">
-    <%= form.text_field :code, readonly: readonly %>
+    <%= form.text_field :code, readonly: readonly, required: true %>
   </div>
 
   <% if not @is_edit %>
@@ -32,7 +32,7 @@
 
   <% end %>
   <div class="form-group">
-    <%= form.text_area :condition, readonly: readonly %>
+    <%= form.text_area :condition, readonly: readonly, required: true %>
   </div>
 
   <div class="form-group">
@@ -46,7 +46,7 @@
   </div>
 
   <div class="form-group">
-    <%= form.number_field :return_value, readonly: readonly %>
+    <%= form.number_field :return_value, readonly: readonly, required: true %>
   </div>
 
 
@@ -61,7 +61,7 @@
   </div>
 
   <div class="form-group">
-    <%= form.text_field :expiration, readonly: readonly, class: 'datepicker' %>
+    <%= form.text_field :expiration, readonly: readonly, class: 'datepicker', required: true %>
   </div>
 
   <div class="sk-folding-cube" id='spiner' style="display:none">
@@ -73,7 +73,12 @@
 
   <% if !readonly %>
     <div class="actions">
-      <%= form.submit class: "btn btn-primary" %>
+      <div id = "submit_form_container">
+        <%= form.submit class: "btn btn-primary" %>
+      </div>
     </div>
   <% end %>
+
+  <div style="display:block;margin:10px auto;width:fit-content" onclick='show_spiner();'><%= link_to 'Back', promotions_path %></div>
+
 <% end %>

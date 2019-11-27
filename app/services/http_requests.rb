@@ -7,7 +7,6 @@ module HttpRequests
     if not token.nil?
       @@authorization = 'Bearer '+token
       @@token = token
-      puts @@token
     end
   end
 
@@ -71,8 +70,7 @@ module HttpRequests
       request.headers["Authorization"] = @@authorization
       request.headers['Content-Type'] = 'application/json'
     end
-    puts "RESPONSE #{resp.inspect}"
-    puts "BODY #{resp.body}"
+
     handle_response(resp)
   end
 

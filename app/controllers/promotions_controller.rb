@@ -18,8 +18,15 @@ class PromotionsController < ApplicationController
   end
 
   def show
-    if @promotion.type == 'coupon'
-      @coupon_instances = CouponInstance.where(promotion_id: @promotion.id)
+    puts "GET COUPON INSTANCES"
+    if @promotion.promotion_type == 'coupon'
+      puts "IS COUPON"
+      response = PromotionsService.instance.get_coupon_instances(@promotion.id.to_s)
+      puts "RESPONSE DATA"
+      puts response.data
+      if response.success
+        @coupon_instances = response.data.map{ |coupon_instance_data| PromotionsService.build_coupon_instance(coupon_instance_data)}
+      end
     end
   end
 
@@ -34,6 +41,7 @@ class PromotionsController < ApplicationController
   end
 
   def create
+    puts "CREATE PROMOTION"
     puts "PARAMETERS #{promotion_parameters.inspect}"
     parameters = promotion_parameters
     @promotion = Promotion.new(parameters)

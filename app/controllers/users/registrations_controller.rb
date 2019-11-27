@@ -29,10 +29,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
       set_minimum_password_length
       render :action => "new" and return
     else
-      UsersService.instance().sign_in(@newUserDto.email, @newUserDto.password)
-      session[:user_id] = @newUserDto.email;
-      puts session[:user_id]
-      redirect_to home_path and return
+      response = UsersService.instance().sign_in(@newUserDto.email, @newUserDto.password)
+      if response.success
+        session[:token] = response.data['token']
+        session[:user_id] = @newUserDto.email
+        redirect_to home_path and return
+      else
+        redirect_to new_user_session_path and return
+      end
     end
   end
 

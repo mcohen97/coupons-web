@@ -32,7 +32,6 @@ class ApplicationController < ActionController::Base
       result = UsersService.instance().get_user(session[:user_id])
       if result.success
         session[:user_data] = result.data
-        puts result.data  
         @current_user = UserDto.new(result.data)
         session[:org_id] = @current_user.org_id
         return @current_user

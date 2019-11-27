@@ -19,7 +19,6 @@ def get_promotions(filters, page =nil, offset = nil)
   if filters.any?
     route += add_filters(filters)
   end
-  puts route
   promos = (get route).data
   promos.map{ |p| build_promo(p)}
 end
@@ -66,7 +65,6 @@ def create_coupon_instances(coupon_instances)
     expiration: convert_date(coupon_instances.expiration),
     max_uses: coupon_instances.max_uses.to_i
   }
-  puts route
   puts payload.inspect
   post route, payload
 end
@@ -80,6 +78,13 @@ def delete_promotion(id)
   route  = '/v1/promotions/' + id.to_s
   delete route
 end
+
+def self.build_coupon_instance(data)
+  exp = DateTime.parse(data['expiration'])
+  data['expiration'] = exp.strftime('%m/%d/%Y')
+  CouponInstancesDto.new(data)
+end
+
 
 private
 
@@ -111,12 +116,12 @@ private
   end
 
   def build_promo(data)
-    puts data
     data['new'] = false
     exp = DateTime.parse(data['expiration'])
     data['expiration'] = exp.strftime('%m/%d/%Y')
     Promotion.new(data)
   end
+
 
   def convert_date(date)
     date_tokens = date.split('/')

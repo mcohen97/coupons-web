@@ -27,9 +27,12 @@
   <div class="sk-cube4 sk-cube"></div>
   <div class="sk-cube3 sk-cube"></div>  
   </div>
-  <div id = 'submit_form_container'>
-    <div class="actions">
-      <%= form.submit "Create coupon instances", class: "btn btn-primary" %>
-    </div>
+  <div class="actions">
+      <div id = 'submit_form_container'>
+       <%= form.submit "Create coupon instances", class: "btn btn-primary" %>
+      </div>
   </div>
+
+  <div style="display:block;margin:10px auto;width:fit-content" onclick='show_spiner();'><%= link_to 'Back', promotions_path %></div>
+
 <% end %>
