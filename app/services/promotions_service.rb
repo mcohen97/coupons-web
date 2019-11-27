@@ -42,11 +42,19 @@ def create_promotion(payload)
   format_promotion_payload(payload)
   puts "payload #{payload.inspect}"
   result = post route, payload
+
   if result.success
+    result.data['expiration'] = to_simple_date result.data['expiration']
     result.data = Promotion.new(result.data)
   end
   return result
 end
+
+  def to_simple_date(date)
+    return nil unless date
+    t = DateTime.parse(date)
+    t.strftime("%m/%d/%Y")
+  end
 
 def create_coupon_instances(promotion, payload)
   route = "/v1/promotions/#{promotion.id}/coupons"
@@ -98,7 +106,9 @@ private
   def build_promo(data)
     puts data
     data['new'] = false
-    return Promotion.new(data)
+    exp = DateTime.parse(data['expiration'])
+    data['expiration'] = exp.strftime('%m/%d/%Y')
+    Promotion.new(data)
   end
 
   def convert_date(date)

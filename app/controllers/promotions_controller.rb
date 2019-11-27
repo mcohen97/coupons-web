@@ -37,23 +37,14 @@ class PromotionsController < ApplicationController
     puts "PARAMETERS #{promotion_parameters.inspect}"
     parameters = promotion_parameters
     @promotion = Promotion.new(parameters)
-    is_coupon = @promotion.type == 'coupon'
-    if is_coupon && !valid_instances_count
-      @promotion.errors.add(:coupon_instances, "Coupon count must be positive and less or equal to #{Coupon::MAX_COUPON_INSTANCES}")
-      respond_promotion_not_created(@promotion) && return
-    end
 
     result = PromotionsService.instance.create_promotion(parameters)
     if result.success
       @promotion = result.data
       logger.info("Successfully updated promotion of id: #{@promotion.id}.")
       respond_promotion_created(@promotion)
-      if parameters[:promotion_type] == 'coupon'
-        result = PromotionsService.instance.create_coupon_instances(@promotion, coupon_instances_params)
-      end
-      return
     else
-      @promotion.errors.add(:error, result.data.to_s)
+      @promotion.errors.add(:error, result.data['error'])
       respond_promotion_not_created(@promotion)
     end
 
@@ -65,7 +56,7 @@ class PromotionsController < ApplicationController
   end
 
   def update
-      params[:promotion][:expiration] = get_date_time params[:promotion][:expiration]
+        params[:promotion][:expiration] = get_date_time params[:promotion][:expiration]
       result = PromotionsService.instance.update_promotion(params[:promotion][:id],promotion_parameters)
       if result.success
         @promotion = result.data
@@ -77,9 +68,9 @@ class PromotionsController < ApplicationController
         parameters[:new] = false
         parameters[:id] = params[:id]
         @promotion = Promotion.new(parameters)
-        @promotion.errors.add(:error, result.data.inspect)
+        @promotion.errors.add(:error, result.data.inspect[:error])
 
-        redirect_to edit_promotion_path(@promotion, notice: @promotion.errors.messages)
+        redirect_to edit_promotion_path(@promotion, notice: @promotion.errors.full_messages)
       end
   end
 
@@ -163,11 +154,7 @@ class PromotionsController < ApplicationController
   end
 
   def set_promo
-    #@promotion = Promotion.find(params[:id])
-    # puts "PROMOTION ID #{params[:id]}"
     @promotion = PromotionsService.instance.get_promotion_by_id(params[:id])
-    #promotion_not_found if @promotion.deleted
-    #@promotion = @promotion.becomes(Promotion)
   end
 
   def promotion_not_found

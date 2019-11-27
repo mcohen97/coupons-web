@@ -12,7 +12,7 @@
     <%= form.label "Promotions" %><br />
     <%= form.collection_check_boxes :promotions, @promotions, :id, :name do |b| %>
       <div class="collection-check-box">
-        <%= b.check_box %>
+        <%= b.check_box "Promotion", enabled, checked: true %>
         <%= b.label %>
       </div>
     <% end %>
