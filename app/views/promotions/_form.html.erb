@@ -1,18 +1,11 @@
 <script>
-function hide_instances_field(){
-  document.getElementById('instances-count-field').style.display ='none';
-}
-function show_instances_field(){
-  document.getElementById('instances-count-field').style.display = 'block';
-}
-
-$(document).ready(function(){
-  $('.datepicker').datepicker({autoclose: true});
-});
+    $(document).ready(function () {
+        $('.datepicker').datepicker({autoclose: true});
+    });
 </script>
 
-<%= bootstrap_form_for @promotion, :html => { :onsubmit => "show_spiner()" } do |form| %>
-  <h1><%=@form_title%></h1>
+<%= bootstrap_form_for @promotion, :html => {:onsubmit => "show_spiner()"} do |form| %>
+  <h1><%= @form_title %></h1>
 
   <div class="form-group" style="text-align:left">
     <%= form.alert_message "Please fix the errors below." %>
@@ -26,59 +19,51 @@ $(document).ready(function(){
     <%= form.text_field :code, readonly: readonly %>
   </div>
 
-  <%if not @is_edit%>
+  <% if not @is_edit %>
     <div class="form-group">
-      <%=form.label :type%>
-      <%if !readonly%>
+      <%= form.label :type %>
+      <% if !readonly %>
         <%= form.radio_button :promotion_type, :coupon, readonly: readonly, onclick: "show_instances_field();" %>
-        <%= form.radio_button :promotion_type, :discount, readonly: readonly, onclick: "hide_instances_field();"%> 
-      <%else%>
-        <%= @promotion.promotion_type%>
-      <%end%>
+        <%= form.radio_button :promotion_type, :discount, readonly: readonly, onclick: "hide_instances_field();" %>
+      <% else %>
+        <%= @promotion.promotion_type %>
+      <% end %>
     </div>
 
-
-    <div class="form-group" id="instances-count-field" >
-      Instances: <br>
-      <%= number_field_tag 'instances_count', '1', min:1, max:10000, class: 'form-control shorter' %>
-      <br>
-      Expiration: <br>
-      <%= text_field_tag "instance_expiration_date", "", class: 'datepicker' %>
-    </div>
-  <%else%>
+  <% else %>
     <div class="form-group">
-      <%=form.label :type%>
-      <%= @promotion.type%>
+      <%= form.label :type %>
+      <%= @promotion.type %>
     </div>
 
-  <%end%>
+  <% end %>
   <div class="form-group">
-    <%= form.text_area :condition, readonly: readonly%>
+    <%= form.text_area :condition, readonly: readonly %>
   </div>
 
   <div class="form-group">
-    <%=form.label :returned_value_type%>
-    <%if !readonly%>
+    <%= form.label :returned_value_type %>
+    <% if !readonly %>
       <%= form.radio_button :return_type, :fixed, readonly: readonly %>
       <%= form.radio_button :return_type, :percentage, readonly: readonly %>
-    <%else%>
+    <% else %>
       <%= @promotion.return_type %>
-    <%end%>
+    <% end %>
   </div>
 
   <div class="form-group">
-    <%= form.number_field :return_value, readonly: readonly%>
+    <%= form.number_field :return_value, readonly: readonly %>
   </div>
 
 
   <div class="form-group">
-    <%=form.label :active%>
-    <%if !readonly%>
-      <%= form.radio_button :active, true, label: 'Yes' , readonly: readonly%>
-      <%= form.radio_button :active, false, label: 'No',readonly: readonly%>  
-    <%else%>
+    <%= form.label :active %>
+    <% if !readonly %>
+      <%= form.radio_button :active, true, label: 'Yes', readonly: readonly %>
+      <%= form.radio_button :active, false, label: 'No', readonly: readonly %>
+    <% else %>
       <%= @promotion.active ? "Active" : "Inactive" %>
-    <%end%>
+    <% end %>
   </div>
 
   <div class="form-group">
@@ -86,15 +71,15 @@ $(document).ready(function(){
   </div>
 
   <div class="sk-folding-cube" id='spiner' style="display:none">
-  <div class="sk-cube1 sk-cube"></div>
-  <div class="sk-cube2 sk-cube"></div>
-  <div class="sk-cube4 sk-cube"></div>
-  <div class="sk-cube3 sk-cube"></div>  
+    <div class="sk-cube1 sk-cube"></div>
+    <div class="sk-cube2 sk-cube"></div>
+    <div class="sk-cube4 sk-cube"></div>
+    <div class="sk-cube3 sk-cube"></div>
   </div>
 
-  <%if !readonly%>
+  <% if !readonly %>
     <div class="actions">
       <%= form.submit class: "btn btn-primary" %>
     </div>
-  <%end%>
+  <% end %>
 <% end %>
