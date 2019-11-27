@@ -5,13 +5,14 @@ require 'securerandom'
 class CouponInstancesDto
   include ActiveModel::Model
 
-  attr_accessor :coupon_code, :quantity, :expiration, :max_uses
+  attr_accessor :coupon_code, :quantity, :expiration, :max_uses, :promotion_id
 
   def initialize(args = {})
     @coupon_code = args['coupon_code']
     @quantity = args['quantity']
     @expiration = args['expiration']
     @max_uses = args['max_uses']
+    @promotion_id = args['promotion_id'].to_i
   end
 
   def to_simple_date(date)

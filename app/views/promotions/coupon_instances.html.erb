@@ -6,7 +6,10 @@
       <%= bootstrap_flash %>
   </div>
 
+  <%= hidden_field_tag :promotion_id, params[:promotion_id]%>
+
   <%= hidden_field_tag :coupon_code%>
+
   <div class="form-group">
     <%= label_tag :quantity, "Quantity" %>
     <%= number_field_tag :quantity, '1', min:1, max:10000, required: true%>

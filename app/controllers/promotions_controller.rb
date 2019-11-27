@@ -166,7 +166,7 @@ class PromotionsController < ApplicationController
     end
   end
 
-  def generate_coupon_instances(promotion)
+  def generate_coupon_instances(promotion) # No se usa?
     # puts instance_expiration_date
     promotion.generate_coupon_instances(coupon_instances_count, instance_expiration_date)
   end
@@ -212,7 +212,7 @@ class PromotionsController < ApplicationController
   end
 
   def new_coupon_instances_params
-    params.permit(:quantity, :coupon_code, :expiration, :max_uses)
+    params.permit(:promotion_id, :quantity, :coupon_code, :expiration, :max_uses)
   end
 
   def coupon_instances_params

@@ -10,7 +10,7 @@
 
   <div class="form-group">
     <%= form.label "Promotions" %><br/>
-    <%= form.collection_check_boxes :promotions, @promotions || [], :id, :name, checked: @promotions&.filter{|p| @in_appkey.include? p.id} do |b| %>
+    <%= form.collection_check_boxes :promotions, @promotions || [], :id, :name, checked: @promotions&.filter{|p| @in_appkey&.include? p.id} do |b| %>
       <div class="collection-check-box">
         <%= b.check_box %>
         <%= b.label %>

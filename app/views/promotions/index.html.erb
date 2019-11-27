@@ -68,7 +68,7 @@
                 </a>
                 <%end%>
                 <%if current_user.is_admin and promo.promotion_type == 'coupon'%>
-                <a class="w3-button" href=<%=coupon_instances_path(coupon_code: promo.id)%>>
+                <a class="w3-button" href=<%=coupon_instances_path(coupon_code: promo.code, promotion_id: promo.id)%>>
                     <img src=<%=asset_url('anadir.png')%> style="margin-right:4px" width='24px'>
                     <span class = "promo-option-label">Add</span>
                 </a>
