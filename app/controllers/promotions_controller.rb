@@ -123,10 +123,13 @@ class PromotionsController < ApplicationController
   def add_coupon_instances
     coupon_instances = CouponInstancesDto.new(new_coupon_instances_params)
     response = PromotionsService.instance.create_coupon_instances(coupon_instances)
+    puts 'RESPONSE DE INSTANCIAS'
     if response.success
-      flash[:notice] = response.data
+      flash[:notice] = "Successfully created"
+      puts response.data
     else
-      flash[:error] = response.data['error']
+      flash[:error] = response.data[:error]
+      puts response.data
     end
     respond_to do |format|
       format.html { redirect_to promotions_path }
