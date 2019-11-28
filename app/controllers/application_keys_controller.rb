@@ -8,17 +8,19 @@ class ApplicationKeysController < ApplicationController
     @application_keys = ApplicationKeysService.instance.get_application_keys(page = nil, offset = nil)
   end
 
-  def show; 
+  def show;
   end
 
   def new
     @application_key = ApplicationKey.new
     @form_title = 'New application key'
-    @promotions = PromotionsService.instance.get_promotions({})
+    @promotions = PromotionsService.instance.get_promotions
   end
 
   def edit
-    @promotions = PromotionsService.instance.get_promotions({})
+    @promotions = PromotionsService.instance.get_promotions
+    @in_appkey = Set.new(@application_key.promotions.map(&:id))
+    @application_key.new = false
     @form_title = 'Edit application key'
   end
 
@@ -45,21 +47,17 @@ class ApplicationKeysController < ApplicationController
 
   def update
     logger.info("Updating appkey of id: #{params[:id]}.")
-    result = ApplicationKeysService.instance.update_application_key(application_key_params)
+    result = ApplicationKeysService.instance.update_application_key(params[:id], application_key_params)
     @application_key = ApplicationKey.new(application_key_params)
-    respond_to do |format|
-      if result.success
-        logger.info('Application key was successfully updated.')
-        format.html { redirect_to @application_key, notice: 'Application key was successfully updated.' }
-        format.json { render :show, status: :ok, location: @application_key }
-      else
-        @application_key.errors.add(:error, result.data.to_s)
-        logger.error("Invalid application key update, params: #{result.data.inspect}.")
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @application_key.errors, status: :unprocessable_entity }
-      end
+    if result.success
+      logger.info('Application key was successfully updated.')
+      redirect_to @application_key, notice: 'Application key was successfully updated.'
+    else
+      @application_key.errors.add(:error, result.data.to_s)
+      logger.error("Invalid application key update, params: #{result.data.inspect}.")
+      render :edit, status: :unprocessable_entity
     end
-    
+
   end
 
   def destroy
@@ -76,20 +74,20 @@ class ApplicationKeysController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_application_key
     @application_key = ApplicationKeysService.instance.get_application_key(params[:id])
-    puts @application_key.inspect
-    puts @application_key.promotions.map{|p| p.name}
+    @application_key.new = false
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def application_key_params
-    params.require(:application_key).permit(:name, promotions: []).to_h
+    puts params
+    params.require(:application_key).permit(:name, promotions: [])
   end
 
   def application_key_not_found
     respond_to do |format|
       logger.error('Application key not found.')
       format.html { render file: "#{Rails.root}/public/404", layout: false, status: :not_found }
-      format.json { render json: { error: 'Promotion not found.' }.to_json, status: :not_found }
+      format.json { render json: {error: 'Promotion not found.'}.to_json, status: :not_found }
     end
   end
 
