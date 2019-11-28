@@ -3,8 +3,7 @@
 require_relative '../../lib/error/not_authorized_error.rb'
 
 class ApplicationController < ActionController::Base
-  #rescue_from Exception, with: :server_error
-  #rescue_from StandardError, with: :server_error
+  rescue_from StandardError, with: :server_error
   rescue_from UnauthorizedError, with: :not_authorized
   rescue_from ExpiredTokenError, with: :ask_sign_in
 
