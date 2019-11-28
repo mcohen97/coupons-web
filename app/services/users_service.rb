@@ -5,7 +5,7 @@ class UsersService
   include HttpRequests
 
 #temporarily against microservice
-GATEWAY_URL = 'https://coupons-auth.herokuapp.com'
+GATEWAY_URL = 'https://coupons-gateway.herokuapp.com'
 
 
 def self.instance()

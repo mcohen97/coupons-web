@@ -1,7 +1,7 @@
 class ApplicationKeysService
   include HttpRequests
 
-  GATEWAY_URL = 'https://coupons-evaluation.herokuapp.com'
+  GATEWAY_URL = 'https://coupons-gateway.herokuapp.com'
 
   def self.instance()
     @instance = @instance || ApplicationKeysService.new()

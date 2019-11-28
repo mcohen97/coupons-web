@@ -5,8 +5,7 @@
 .dashboard-container{
     background-color: rgba(250, 250, 250, 0.9);
     border: 1px solid rgb(250, 250, 250);
-    padding: 10px;
-    padding-bottom: 10px;
+    padding: 30px 100px 100px 30px;
     border-radius: 10px;
     animation: fadeIn .3s;
     text-align: center;
@@ -17,7 +16,7 @@
     background-color: white;
     display:inline-block; 
     width:25%; 
-    margin:30px 70px 30px 70px;
+    margin: 50px;
     border: 1px solid black;
     animation: flipInY .8s;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -69,6 +68,10 @@ ul.nav.navbar-nav.profile{
 }
 
 @media screen and (max-width: 767px) {
+    .dashboard-container{
+        padding: 30px 10px 10px 30px;
+    }
+   
     .dashboard-title{
         font-size: 12px;
     }
@@ -76,6 +79,7 @@ ul.nav.navbar-nav.profile{
     .dashboard-item{
         width: 45%;
         margin: 5px;
+
     }
 
     ul.nav.navbar-nav.profile{

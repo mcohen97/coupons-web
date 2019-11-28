@@ -5,8 +5,7 @@ class PromotionsService
 
 #temporarily against microservice
 
-  GATEWAY_URL = 'https://coupons-evaluation.herokuapp.com'
-  PROMOTIONS_URL = 'https://coupons-evaluation.herokuapp.com/v1/promotions'
+  GATEWAY_URL = 'https://coupons-gateway.herokuapp.com'
 
 
   def self.instance()

@@ -5,6 +5,7 @@ class Users::SessionsController < Devise::SessionsController
   skip_before_action :verify_signed_out_user
   # GET /resource/sign_in
   def new
+    redirect_to home_path and return unless session[:token].nil?
     super
   end
 

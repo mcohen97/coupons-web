@@ -2,7 +2,7 @@ class ReportsService
     include HttpRequests
   
   #temporarily against microservice
-  GATEWAY_URL = 'https://coupons-reports.herokuapp.com'
+  GATEWAY_URL = 'https://coupons-gateway.herokuapp.com'
   
   
   def self.instance()
@@ -11,12 +11,12 @@ class ReportsService
   end
   
   def get_demographic_report(promotion_id)
-    route = 'api/v1/reports/demographic/'+promotion_id
+    route = '/v1/reports/demographic/'+promotion_id
     get route
   end
   
   def get_usage_report(promotion_id)
-    route = 'api/v1/reports/usage/'+promotion_id
+    route = '/v1/reports/usage/'+promotion_id
     get route
   end
   
