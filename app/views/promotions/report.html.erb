@@ -1,25 +1,38 @@
 
-
 <div class='white-container'>
-  <h1 class="section-title"> Promotion report: <%= @promotion.code %></h1> <br/>
+    <h1 class="section-title"> Promotion report: <%= @promotion.code %></h1> <br/>
 
-  Invocations: <%=@usage_report['invocations_count']%> <br>
-  Negative response rate: <%=@usage_report['negative_response_ratio']%> <br>
-  Positive response rate: <%=@usage_report['positive_response_ratio']%> <br>
-  Average response rate: <%=@usage_report['average_response_time']%> <br>
-  Total money spent: <%=@usage_report['total_money_spent']%> <br>
-  Last time updated: <%=@usage_report['last_time_updated']%> <br>
-  <br>
-  <div class="graphs-container">
-    <canvas id="usage_report_countries" width="200px" height="200px"></canvas>
+    Invocations: <%=@usage_report['invocations_count']%> <br>
+    Negative response rate: <%=@usage_report['negative_response_ratio']%> <br>
+    Positive response rate: <%=@usage_report['positive_response_ratio']%> <br>
+    Average response rate: <%=@usage_report['average_response_time']%> <br>
+    Total money spent: <%=@usage_report['total_money_spent']%> <br>
+    Last time updated: <%=@usage_report['last_time_updated']%> <br>
     <br>
-    <canvas id="usage_report_ages" width="200px" height="200px"></canvas>
-  </div>
-  <%=JSON.pretty_generate(@demographic_report)%>
+    <div class="graphs-container">
+        <canvas id="usage_report_ages" width="400px" height="400px"></canvas>
+    </div>
+    <div class="graphs-container">
+        <canvas id="usage_report_countries" width="400px" height="400px"></canvas>
+    </div>
+
+    Cities(IATA):
+    <br>
+    <%@demographic_report['countries'].keys.each do |country|
+        @demographic_report['countries'][country]['cities'].keys.each do |city| %>
+            <%=city + ': ' + @demographic_report['countries'][country]['cities'][city]['count'].to_s%>
+            <br>
+        <%end%>      
+    <%end%>
+    <br>        
+    
   <%= link_to 'Back', promotions_path %>
 
 </div>
 
+<script> 
+    document.getElementById("json").innerHTML = JSON.stringify(, undefined, 2);
+</script>
 
 <script>
 //Charts scripts
@@ -57,7 +70,8 @@ var myChart_ages = new Chart(ctx_usage_report_ages, {
             display: true,
             text: 'Ages',
             fontSize: 20
-        }
+        },
+        responsive: false
     }
 });
 
@@ -90,7 +104,8 @@ var myChart_countries = new Chart(ctx_usage_report_countries, {
             display: true,
             text: 'Countries',
             fontSize: 20
-        }
+        },
+        responsive: false
     }
 });
 </script>
