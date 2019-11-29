@@ -1,9 +1,6 @@
 class OrganizationService
 
-    #temporarily against microservice
-    GATEWAY_URL = 'https://coupons-auth.herokuapp.com'
-    
-    
+    GATEWAY_URL = ENV.fetch('GATEWAY_URL'){'https://coupons-gateway.herokuapp.com'}
     
     def self.instance()
       @instance = @instance || OrganizationService.new()

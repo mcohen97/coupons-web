@@ -1,9 +1,7 @@
 class ReportsService
     include HttpRequests
   
-  #temporarily against microservice
-  GATEWAY_URL = 'https://coupons-gateway.herokuapp.com'
-  
+  GATEWAY_URL = ENV.fetch('GATEWAY_URL'){'https://coupons-gateway.herokuapp.com'}
   
   def self.instance()
     @instance = @instance || ReportsService.new()

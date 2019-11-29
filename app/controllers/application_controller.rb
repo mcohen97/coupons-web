@@ -79,23 +79,18 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       logger.error('User not authorized to perform that ac.')
       format.html { render file: "#{Rails.root}/public/401", layout: false, status: :forbidden }
-      format.json { render json: { error: 'Promotion not found.' }.to_json, status: :forbidden }
     end
   end
 
   def not_found
     respond_to do |format|
-      logger.error('User not authorized to perform that ac.')
       format.html { render file: "#{Rails.root}/public/404", layout: false, status: :forbidden }
-      format.json { render json: { error: 'Promotion not found.' }.to_json, status: :forbidden }
     end
   end
 
   def server_error
     respond_to do |format|
-      logger.error('User not authorized to perform that ac.')
       format.html { render file: "#{Rails.root}/public/500", layout: false, status: :forbidden }
-      format.json { render json: { error: 'Promotion not found.' }.to_json, status: :forbidden }
     end
   end
 

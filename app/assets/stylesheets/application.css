@@ -106,6 +106,7 @@
   #submit_form_container{
     height: 40px;
     margin: 10px;
+    position: relative;
   }
 
 @keyframes fadein {

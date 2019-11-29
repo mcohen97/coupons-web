@@ -82,7 +82,7 @@ module HttpRequests
       if response.status == 401
         raise UnauthorizedError
       end
-      puts 'BAD REQUEST'
+      puts 'ERROR REQUEST'
       puts response.body
       result = response.body.empty? ? {} : (JSON.parse response.body)
       RequestResult.new(false, result)

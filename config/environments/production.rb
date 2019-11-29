@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 Rails.application.configure do
-  config.hosts << ENV.fetch('HOSTS') { 'localhost' }
-  config.action_controller.default_url_options = { host: ENV.fetch('HOSTS') { 'localhost' } }
-  Rails.application.routes.default_url_options[:host] = ENV.fetch('HOSTS') { 'localhost' }
+  config.hosts << ENV.fetch('HOSTS') { "coupons-ui.herokuapp.com" }
+  config.action_controller.default_url_options = { host: ENV.fetch('HOSTS') { nil } }
+  Rails.application.routes.default_url_options[:host] = ENV.fetch('HOSTS') { nil }
 
   # Settings specified here will take precedence over those in config/application.rb.
   raise 'JWT secret not set in enviroment' unless ENV['SECRET'].present?

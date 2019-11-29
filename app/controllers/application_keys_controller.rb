@@ -2,6 +2,7 @@
 
 class ApplicationKeysController < ApplicationController
   #prepend_before_action :authenticate_user!
+  before_action :authenticate!
   before_action :set_application_key, only: %i[show edit]
 
   def index
@@ -29,19 +30,16 @@ class ApplicationKeysController < ApplicationController
   def create
     logger.info("Creating application key of params: #{application_key_params.inspect}.")
     result = ApplicationKeysService.instance.create_application_key(application_key_params)
-    respond_to do |format|
-      if result.success
-        @application_key = result.data
-        logger.info("Application key was successfully created, with id: #{@application_key.token}.")
-        format.html { redirect_to @application_key, notice: 'Application key was successfully created.' }
-        format.json { render :show, status: :created, location: @application_key }
-      else
-        @application_key = ApplicationKey.new(application_key_params)
-        logger.error("Invalid application key with params: #{result.data.inspect}.")
-        @application_key.errors.add(:error, result.data.to_s)
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @application_key.errors, status: :unprocessable_entity }
-      end
+    if result.success
+      @application_key = result.data
+      logger.info("Application key was successfully created, with id: #{@application_key.token}.")
+      redirect_to @application_key, notice: 'Application key was successfully created.'
+    else
+      @application_key = ApplicationKey.new(application_key_params)
+      logger.error("Invalid application key with params: #{result.data.inspect}.")
+      @application_key.errors.add(:error, result.data['error'].to_s)
+      flash[:error] = @application_key.errors.full_messages
+      redirect_to new_application_key_path(@application_key.token)
     end
   end
 
@@ -53,7 +51,7 @@ class ApplicationKeysController < ApplicationController
       logger.info('Application key was successfully updated.')
       redirect_to @application_key, notice: 'Application key was successfully updated.'
     else
-      @application_key.errors.add(:error, result.data.to_s)
+      @application_key.errors.add(:error, result.data['error'].to_s)
       logger.error("Invalid application key update, params: #{result.data.inspect}.")
       render :edit, status: :unprocessable_entity
     end

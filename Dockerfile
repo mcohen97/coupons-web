@@ -8,9 +8,8 @@ RUN bundle install
 COPY . /myapp
 RUN npm install yarn -g
 
-RUN RAILS_ENV=production rails assets:clobber
-RUN RAILS_ENV=production rails assets:precompile
-RUN RAILS_ENV=production rails db:create db:migrate
+RUN rails assets:precompile
+RUN rails db:create db:migrate
 # Add a script to be executed every time the container starts.
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh

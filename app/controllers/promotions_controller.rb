@@ -10,7 +10,7 @@ class PromotionsController < ApplicationController
     filters = {}
     filters[:code] = params[:code] if params[:code].present?
     filters[:name] = params[:name] if params[:name].present?
-    filters[:type] = params[:type] if params[:type].present?
+    filters[:promotion_type] = params[:type] if params[:type].present?
     filters[:active] = params[:active] if params[:active].present?
 
     
@@ -107,7 +107,7 @@ class PromotionsController < ApplicationController
     if demographic_response.success
       @demographic_report = demographic_response.data
     else
-      flash[:error] = demographic_response.data
+      flash[:error] = demographic_response.data['error']
       redirect_to promotions_path and return
     end
     
@@ -115,7 +115,7 @@ class PromotionsController < ApplicationController
     if usage_response.success
       @usage_report = usage_response.data
     else
-      flash[:error] = usage_response.data
+      flash[:error] = usage_response.data['error']
       redirect_to promotions_path and return
     end
 
