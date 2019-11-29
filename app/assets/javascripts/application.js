@@ -7,4 +7,26 @@
 //= require jquery
 //= require jquery_ujs
 //= require twitter/bootstrap
+//= require bootstrap-datepicker
+//= require Chart.min
 //= require_tree .
+
+function hide_spiner(){
+    document.getElementById('spiner').style.display ='none';
+    document.getElementById('submit_form_container').style.display ='block';
+
+}
+
+$("form").submit(function(){
+    $(this).hide();
+})
+
+function show_spiner(){
+    document.getElementById('spiner').style.display = 'block';
+    document.getElementById('submit_form_container').style.display ='none';
+
+}
+
+$(document).ready(function () {
+    $('.datepicker').datepicker({autoclose: true});
+});

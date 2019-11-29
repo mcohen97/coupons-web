@@ -4,7 +4,6 @@
   New Application Key
 </a>
 <div class = "digg_pagination" style="display:block; margin: 20px auto 0px auto; clear:both; background: none">
-  <%= will_paginate @application_keys, inner_window: 0, outer_window:0 %>
 </div>
 <div class = "table-wrapper">
   <table class="fl-table">
@@ -23,20 +22,20 @@
     <% @application_keys.each do |application_key| %>
       <tr>
         <td><%= application_key.name %></td>
-        <td><%= application_key.promotions.pluck(:name).join(', ') %></td>
-        <td><%= application_key.generate_token %></td>
+        <td><%= application_key.promotions.map{ |p| p.name}.join(', ') %></td>
+        <td><%= application_key.token %></td>
         <td class = "option" >
-          <a class="w3-button" style="padding: 3px;" href=<%=application_key_path(application_key)%>>
+          <a class="w3-button" style="padding: 3px;" href=<%=application_key_path(id: application_key.token)%>>
             <img src=<%=asset_url('loupe.png')%> width='24px'>
           </a>
         </td>
         <td class = "option">
-          <a class="w3-button" style="padding: 3px" href=<%=edit_application_key_path(application_key)%>>
+          <a class="w3-button" style="padding: 3px" href=<%=edit_application_key_path(id: application_key.token)%>>
             <img src=<%=asset_url('edit.png')%> width='24px'>
           </a>
         </td>
         <td class = "option"  >
-          <a data-confirm="Are you sure?" class="w3-button" style="padding: 3px" rel="nofollow" data-method="delete" href=<%=application_key_path(application_key)%>>
+          <a data-confirm="Are you sure?" class="w3-button" style="padding: 3px" rel="nofollow" data-method="delete" href=<%=application_key_path(id: application_key.token)%>>
             <img src=<%=asset_url('delete.png')%> width='24px'>
           </a>
         </td>

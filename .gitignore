@@ -32,3 +32,11 @@ config/local_env.yml
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
+
+# node js
+node_modules
+build
+npm-debug.log
+.env
+.DS_Store
+.vscode

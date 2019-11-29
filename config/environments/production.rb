@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
 Rails.application.configure do
-  config.hosts << ENV.fetch('HOSTS') { 'localhost' }
-  config.hosts << 'couponsweb.azurewebsites.net'
-  config.action_controller.default_url_options = { host: ENV.fetch('HOSTS') { 'localhost' } }
-  Rails.application.routes.default_url_options[:host] = ENV.fetch('HOSTS') { 'localhost' }
+  config.hosts << ENV.fetch('HOSTS') { "coupons-ui.herokuapp.com" }
+  config.action_controller.default_url_options = { host: ENV.fetch('HOSTS') { nil } }
+  Rails.application.routes.default_url_options[:host] = ENV.fetch('HOSTS') { nil }
 
   # Settings specified here will take precedence over those in config/application.rb.
-  raise 'JWT secret not set in enviroment' unless ENV['JWT_SECRET'].present?
+  raise 'JWT secret not set in enviroment' unless ENV['SECRET'].present?
 
-  config.jwt_secret = ENV['JWT_SECRET']
+  config.jwt_secret = ENV['SECRET']
 
   config.require_master_key = true
   config.assets.compile = false
@@ -52,7 +51,7 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :microsoft
+  config.active_storage.service = :local
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil

@@ -1,9 +1,0 @@
-one:
-  promotion_id: 1
-  coupon_code: COMIDADESC5-1
-  redeemed: false
-
-two: 
-  promotion_id: 1
-  coupon_code: COMIDADESC5-2
-  redeemed: true

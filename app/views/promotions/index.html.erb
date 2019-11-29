@@ -11,8 +11,8 @@
             </div>
             <div class = "filter-option">
                 &nbsp Type:&nbsp 
-                <%= radio_button_tag :type, 'Discount', params[:type] == 'Discount'%> Discount &nbsp  
-                <%= radio_button_tag :type, 'Coupon', params[:type] == 'Coupon'%> Coupon
+                <%= radio_button_tag :type, 'discount', params[:type] == 'discount'%> Discount &nbsp  
+                <%= radio_button_tag :type, 'coupon', params[:type] == 'coupon'%> Coupon
             </div>
             <div class = "filter-option">    
                 &nbsp Active: &nbsp 
@@ -32,11 +32,11 @@
         <div class = "promo-container">
             <h3><%=promo.name%></h3>
             <div class = "promo-info-container">
-                <b>Type:</b> <%= promo.type%>
+                <b>Type:</b> <%= promo.promotion_type%>
                 <br><b>Code:</b> <%= promo.code%>
                 <br><b>Return value:</b> 
 
-                <% if promo.percentaje? %>
+                <% if promo.percentage? %>
                 <%=promo.return_value%>%
                 <% else %>
                 $<%=promo.return_value%>
@@ -48,27 +48,32 @@
             </div>
 
             <div class = "w3-bar">
-                <a class="w3-button" href=<%=promotion_path(promo)%>>
-                    <img src=<%=asset_url('loupe.png')%> style="margin-right:4px" width='24px'>
+                <a class="w3-button" href=<%=promotion_path(id: promo.id)%>>
+                    <img src=<%=asset_url('loupe.png')%> style="margin-right:0px" width='24px'>
                     <span class = "promo-option-label">Show</span>
                 </a>
-                <%if is_current_user_admin%>
-                <a class="w3-button" href=<%=edit_promotion_path(promo)%>>
-                    <img src=<%=asset_url('edit.png')%> style="margin-right:4px" width='24px'>
+                <%if current_user.is_admin%>
+                <a class="w3-button" href=<%=edit_promotion_path(id: promo.id)%>>
+                    <img src=<%=asset_url('edit.png')%> style="margin-right:0px" width='24px'>
                     <span class = "promo-option-label">Edit</span>
                 </a>
-                <a data-confirm="Are you sure?" class="w3-button" rel="nofollow" data-method="delete" href=<%=promotion_path(promo)%>>
-                    <img src=<%=asset_url('delete.png')%> style="margin-right:4px" width='24px'>
+                <a data-confirm="Are you sure?" class="w3-button" rel="nofollow" data-method="delete" href=<%=promotion_path(id: promo.id)%>>
+                    <img src=<%=asset_url('delete.png')%> style="margin-right:0px" width='24px'>
                     <span class = "promo-option-label">Delete</span></a>
                 <%end%>
-                <a class="w3-button" href=<%=generate_report_path(promo)%>>
-                    <img src=<%=asset_url('presentation_64.png')%> style="margin-right:4px" width='24px'>
+                <%if current_user.role.has_permission('VIEW_REPORTS') or current_user.is_admin%>
+                <a class="w3-button" href=<%=generate_report_path(id: promo.id)%>>
+                    <img src=<%=asset_url('presentation_64.png')%> style="margin-right:0px" width='24px'>
                     <span class = "promo-option-label">Report</span>
                 </a>
+                <%end%>
+                <%if current_user.is_admin and promo.promotion_type == 'coupon'%>
+                <a class="w3-button" href=<%=coupon_instances_path(coupon_code: promo.code, promotion_id: promo.id)%>>
+                    <img src=<%=asset_url('anadir.png')%> style="margin-right:4px" width='24px'>
+                    <span class = "promo-option-label">Add</span>
+                </a>
+                <%end%>
             </div>
         </div>
     <%end%>
-    <div class = "digg_pagination" style="display:block; margin: 20px auto 0px auto; clear:both; background: none">
-        <%= will_paginate @promotions, inner_window: 0, outer_window:0 %>
-    </div>
 </div>

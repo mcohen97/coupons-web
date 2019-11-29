@@ -2,23 +2,32 @@
 
 class PromotionsController < ApplicationController
   protect_from_forgery except: :evaluate
-  prepend_before_action :authenticate_user!, except: %i[evaluate report]
-  before_action :authorize_user!, only: %i[new create edit update destroy]
-  before_action :set_promo, only: %i[show edit update destroy report]
-  rescue_from ActiveRecord::RecordNotFound, with: :promotion_not_found
+  prepend_before_action :authenticate!
+  #before_action :authorize_user!, only: %i[new create edit update destroy]
+  before_action :set_promo, only: %i[show edit]
 
   def index
-    @promotions = Promotion.not_deleted
-    @promotions = @promotions.by_code(params[:code]) if params[:code].present?
-    @promotions = @promotions.by_name(params[:name]) if params[:name].present?
-    @promotions = @promotions.by_type(params[:type]) if params[:type].present?
-    @promotions = @promotions.active?(params[:active]) if params[:active].present?
-    @promotions = set_pagination(@promotions)
+    filters = {}
+    filters[:code] = params[:code] if params[:code].present?
+    filters[:name] = params[:name] if params[:name].present?
+    filters[:promotion_type] = params[:type] if params[:type].present?
+    filters[:active] = params[:active] if params[:active].present?
+
+    
+    @promotions = PromotionsService.instance.get_promotions(filters)
   end
 
   def show
-    if @promotion.type == 'Coupon'
-      @coupon_instances = CouponInstance.where(promotion_id: @promotion.id)
+    @form_title = "Promotion"
+    puts "GET COUPON INSTANCES"
+    if @promotion.promotion_type == 'coupon'
+      puts "IS COUPON"
+      response = PromotionsService.instance.get_coupon_instances(@promotion.id.to_s)
+      puts "COUPONS INSTANCES DATA"
+      puts response.data
+      if response.success
+        @coupon_instances = response.data.map{ |coupon_instance_data| PromotionsService.build_coupon_instance(coupon_instance_data)}
+      end
     end
   end
 
@@ -28,71 +37,115 @@ class PromotionsController < ApplicationController
   end
 
   def edit
-    @form_title = 'Edit promotion'
+    @form_title = 'Update promotion'
     @is_edit = true
   end
 
   def create
-    @promotion = Promotion.new(promotion_parameters)
-    is_coupon = @promotion.type == 'Coupon'
-    if is_coupon && !valid_instances_count
-      @promotion.errors.add(:coupon_instances, "Coupon count must be positive and less or equal to #{Coupon::MAX_COUPON_INSTANCES}")
-      respond_promotion_not_created(@promotion) && return
-    end
+    puts "CREATE PROMOTION"
+    puts "PARAMETERS #{promotion_parameters.inspect}"
+    parameters = promotion_parameters
+    @promotion = Promotion.new(parameters)
 
-    if @promotion.save
-      generate_coupon_instances(@promotion) if is_coupon
-      logger.info("Successfully created promotion of id: #{@promotion.id}")
-      respond_promotion_created(@promotion) && return
+    result = PromotionsService.instance.create_promotion(parameters)
+    if result.success
+      @promotion = result.data
+      logger.info("Successfully updated promotion of id: #{@promotion.id}.")
+      respond_promotion_created(@promotion)
     else
+      @promotion.errors.add(:error, result.data['error'])
       respond_promotion_not_created(@promotion)
     end
+
+  end
+
+  def get_date_time(str)
+    split = str.split('/')
+    DateTime.new(split[2].to_i, split[0].to_i, split[1].to_f)
   end
 
   def update
-    respond_to do |format|
-      if @promotion.update(promotion_parameters)
-        logger.info("Successfully updated promotion of id: #{@promotion.id}.")
-        format.html { redirect_to @promotion, notice: 'Promotion was updated successfully.' }
-        format.json { render :show, status: :ok, location: @promotion }
+        params[:promotion][:expiration] = get_date_time params[:promotion][:expiration]
+      result = PromotionsService.instance.update_promotion(params[:promotion][:id],promotion_parameters)
+      if result.success
+        @promotion = result.data
+        id = @promotion['id']
+        logger.info("Successfully updated promotion of id: #{id}.")
+        redirect_to promotion_path(id), notice: 'Promotion was updated successfully.'
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @promotion.errors, status: :unprocessable_entity }
+        parameters = promotion_parameters
+        parameters[:new] = false
+        parameters[:id] = params[:id]
+        @promotion = Promotion.new(parameters)
+        @promotion.errors.add(:error, result.data.inspect[:error])
+
+        redirect_to edit_promotion_path(@promotion, notice: @promotion.errors.full_messages)
       end
-    end
   end
 
   def destroy
-    @promotion.update(deleted: true)
+    result = PromotionsService.instance.delete_promotion(params[:id])
     respond_to do |format|
-      logger.info("Successfully deleted promotion of id: #{@promotion.id}.")
+      logger.info("Successfully deleted promotion of id: #{params[:id]}.")
       format.html { redirect_to promotions_path, notice: 'Promotion was successfully deleted.' }
       format.json { render json: { notice: 'Promotion was successfully deleted.' }, status: :success }
     end
   end
 
   def evaluate
-    logger.info("Evaluating promotion #{params[:code]}.")
-    appkey = get_app_key
-    promotion = Promotion.find_by(code: params[:code])
-
-    if !promotion.nil?
-      logger.info("Successfully evaluated promotion of code: #{params[:code]}")
-      evaluate_existing_promotion(promotion, appkey)
-    else
-      logger.error('Promotion not found')
-      render json: { error_message: 'Promotion not found' }, status: :not_found
-    end
+    response =Services.promotions_service.evaluate(params[:code],params[:attributes])
+    render json: response, status: :success
   end
+  
 
   def report
-    if is_backoffice_client
-      respond_to_backoffice
+    promotion_id = params[:id]
+
+    @promotion = PromotionsService.instance.get_promotion_by_id(promotion_id)
+
+    demographic_response = ReportsService.instance.get_demographic_report(promotion_id)
+    if demographic_response.success
+      @demographic_report = demographic_response.data
     else
-      respond_to_external
+      flash[:error] = demographic_response.data['error']
+      redirect_to promotions_path and return
     end
+    
+    usage_response = ReportsService.instance.get_usage_report(promotion_id)
+    if usage_response.success
+      @usage_report = usage_response.data
+    else
+      flash[:error] = usage_response.data['error']
+      redirect_to promotions_path and return
+    end
+
+    respond_to do |format|
+      format.html { :report }
+    end
+
   end
 
+  def coupon_instances
+    coupon_code = params[:coupon_code]
+    @coupon_instances = CouponInstancesDto.new({coupon_code: coupon_code})
+    @form_title = 'Add coupon instances'
+  end
+
+  def add_coupon_instances
+    coupon_instances = CouponInstancesDto.new(new_coupon_instances_params)
+    response = PromotionsService.instance.create_coupon_instances(coupon_instances)
+    puts 'RESPONSE DE INSTANCIAS'
+    if response.success
+      flash[:notice] = "Successfully created"
+      puts response.data
+    else
+      flash[:error] = response.data[:error]
+      puts response.data
+    end
+    respond_to do |format|
+      format.html { redirect_to promotions_path }
+    end
+  end
   private
 
   def valid_instances_count
@@ -113,8 +166,9 @@ class PromotionsController < ApplicationController
     end
   end
 
-  def generate_coupon_instances(promotion)
-    promotion.generate_coupon_instances(coupon_instances_count)
+  def generate_coupon_instances(promotion) # No se usa?
+    # puts instance_expiration_date
+    promotion.generate_coupon_instances(coupon_instances_count, instance_expiration_date)
   end
 
   def evaluate_existing_promotion(promotion, appkey)
@@ -131,31 +185,8 @@ class PromotionsController < ApplicationController
     render json: { error_message: e.message }, status: :bad_request
   end
 
-  def is_backoffice_client
-    !request.headers['Content-Type'].present? || request.headers['Content-Type'] == 'text/html'
-  end
-
-  def respond_to_backoffice
-    authenticate_user!
-    @report = @promotion.generate_report
-  end
-
-  def respond_to_external
-    appkey = get_app_key
-    @report = @promotion.generate_report(true, appkey)
-    render json: @report, status: :ok
-  rescue NotAuthenticatedError => e
-    logger.error('No valid application key.')
-    render(json: { error_message: e.message }, status: :unauthorized)
-  rescue NotAuthorizedError => e
-    logger.error('User not authorized.')
-    render(json: { error_message: e.message }, status: :forbidden)
-  end
-
   def set_promo
-    @promotion = Promotion.find(params[:id])
-    promotion_not_found if @promotion.deleted
-    @promotion = @promotion.becomes(Promotion)
+    @promotion = PromotionsService.instance.get_promotion_by_id(params[:id])
   end
 
   def promotion_not_found
@@ -166,11 +197,6 @@ class PromotionsController < ApplicationController
     end
   end
 
-  def get_app_key
-    token = request.headers['Authorization']
-    ApplicationKey.get_from_token_if_valid(token)
-  end
-
   def set_pagination(collection)
     offset = pagination_offset
     per_page = pagination_per_page
@@ -179,11 +205,26 @@ class PromotionsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def promotion_parameters
-    params.require(:promotion).permit(:code, :name, :type, :return_type, :return_value, :active, :condition)
+    p = params.require(:promotion).permit(:id, :name,:code ,:type, :condition,:return_type, :return_value, :active, :expiration, :promotion_type).to_h
+    p[:return_value] = p[:return_value].to_i
+    p[:active] = p[:active] == "true"
+    return p
+  end
+
+  def new_coupon_instances_params
+    params.permit(:promotion_id, :quantity, :coupon_code, :expiration, :max_uses)
+  end
+
+  def coupon_instances_params
+    params.slice(:instance_expiration_date, :instances_count)
   end
 
   def coupon_instances_count
     params.fetch(:instances_count, Coupon::DEFAULT_COUPON_INSTANCES).to_i
+  end
+
+  def instance_expiration_date
+    params.fetch(:instance_expiration_date, @promotion.expiration_date)
   end
 
   def pagination_offset

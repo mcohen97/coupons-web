@@ -1,31 +1,111 @@
-<div class='white-container'>
-  <h1 class="section-title"> Promotion report: <%= @promotion.code %></h1> <br/>
-  <%if @report[:invocations_count] == 0%>
-    <h3 style='color:black'>This promotion was never used</h3> <br/>
-  <%else%>  
-    <div class = "table-wrapper" style="margin-bottom: 20px;">
-      <table class="fl-table">
-        <thead>
-          <tr>
-            <th>Invocations count</th>
-            <th>Total money spent</th>
-            <th>Positive response ratio</th>
-            <th>Negative response ratio</th>
-            <th>Average response time</th>
-          </tr>
-        </thead>
 
-        <tbody>
-          <tr>
-            <td><%= @report[:invocations_count] %></td>
-            <td><%= @report[:total_money_spent] %></td>
-            <td><%= @report[:positive_ratio] %></td>
-            <td><%= @report[:negative_ratio] %></td>
-            <td><%= @report[:average_response_time] %></td>
-          </tr>
-        </tbody>
-      </table>
+<div class='white-container'>
+    <h1 class="section-title"> Promotion report: <%= @promotion.code %></h1> <br/>
+
+    Invocations: <%=@usage_report['invocations_count']%> <br>
+    Negative response rate: <%=@usage_report['negative_response_ratio']%> <br>
+    Positive response rate: <%=@usage_report['positive_response_ratio']%> <br>
+    Average response rate: <%=@usage_report['average_response_time']%> <br>
+    Total money spent: <%=@usage_report['total_money_spent']%> <br>
+    Last time updated: <%=@usage_report['last_time_updated']%> <br>
+    <br>
+    <div class="graphs-container">
+        <canvas id="usage_report_ages" width="400px" height="400px"></canvas>
     </div>
-  <%end%>
+    <div class="graphs-container">
+        <canvas id="usage_report_countries" width="400px" height="400px"></canvas>
+    </div>
+
+    Cities(IATA):
+    <br>
+    <%@demographic_report['countries'].keys.each do |country|
+        @demographic_report['countries'][country]['cities'].keys.each do |city| %>
+            <%=city + ': ' + @demographic_report['countries'][country]['cities'][city]['count'].to_s%>
+            <br>
+        <%end%>      
+    <%end%>
+    <br>        
+    
   <%= link_to 'Back', promotions_path %>
+
 </div>
+
+<script> 
+    document.getElementById("json").innerHTML = JSON.stringify(, undefined, 2);
+</script>
+
+<script>
+//Charts scripts
+
+var ctx_usage_report_ages = document.getElementById('usage_report_ages').getContext('2d');
+var myChart_ages = new Chart(ctx_usage_report_ages, {
+    type: 'pie',
+    data: {
+        labels: ['18-25', '25-40', '40-60', '60-99'],
+        datasets: [{
+            label: 'Usage by age',
+            data: [
+              <%=@demographic_report['ages']['18-25']['count']%>,
+              <%=@demographic_report['ages']['25-40']['count']%>, 
+              <%=@demographic_report['ages']['40-60']['count']%>,
+              <%=@demographic_report['ages']['60-99']['count']%>
+              ],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)'
+              ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)'
+             ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: 'Ages',
+            fontSize: 20
+        },
+        responsive: false
+    }
+});
+
+
+var ctx_usage_report_countries = document.getElementById('usage_report_countries').getContext('2d');
+var myChart_countries = new Chart(ctx_usage_report_countries, {
+    type: 'pie',
+    data: {
+        labels: <%=raw @demographic_report['countries'].keys%>,
+        datasets: [{
+            label: '# of Votes',
+            data: <%=@demographic_report['countries'].keys.map { |country| @demographic_report['countries'][country]['count'] }%>,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)'
+              ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)'
+             ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: 'Countries',
+            fontSize: 20
+        },
+        responsive: false
+    }
+});
+</script>

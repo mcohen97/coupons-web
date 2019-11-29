@@ -1,10 +1,13 @@
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), :html => { :onsubmit => "show_spiner()" }) do |f| %>
   <h1><%= t('.sign_up') %></h1>
   <%= bootstrap_flash %>
 
   <%= bootstrap_devise_error_messages! %>
 
   <%
+  is_invitation_sign_up = params.key?('invitation_code') || params.key?(:invitation_code)
+
   if params.has_key?("invitation_code")
     invitation_code = params["invitation_code"]
   elsif params.has_key?(:invitation_code)
@@ -12,33 +15,37 @@
   end
   %>
 
-  <%= hidden_field_tag 'invitation_code', invitation_code %>
+  <%= 
+    if is_invitation_sign_up
+      hidden_field_tag 'invitation_code', invitation_code 
+    end
+  %>
 
   <div class="form-group">
     <%= f.label :email %>
-    <%= f.email_field :email, autofocus: true, autocomplete: 'email', class: 'form-control' %>
+    <%= f.email_field :email, autofocus: true, autocomplete: 'email', class: 'form-control', required: true%>
   </div>
 
   <div class="form-group">
     <%= f.label :name %>
-    <%= f.text_field :name, autofocus: true, autocomplete: "name", class: 'form-control' %>
+    <%= f.text_field :name, autofocus: true, autocomplete: "name", class: 'form-control', required: true %>
   </div>
 
   <div class="form-group">
     <%= f.label :surname %>
-    <%= f.text_field :surname, autofocus: true, autocomplete: "surname", class: 'form-control' %>
+    <%= f.text_field :surname, autofocus: true, autocomplete: "surname", class: 'form-control', required: true %>
   </div>
 
-  <% if not is_invitation_sign_up or not is_valid_invitation_code(invitation_code)%>
+  <% if not is_invitation_sign_up%>
     <div class="form-group">
       <%= f.label :organization %>
-      <%= f.text_field :organization, autofocus: true, autocomplete: "org", class: 'form-control' %>
+      <%= f.text_field :organization, autofocus: true, autocomplete: "org", class: 'form-control', required: true %>
     </div>
   <% end %>
 
   <div class="form-group">
     <%= f.label :password %>
-    <%= f.password_field :password, autocomplete: 'current-password', class: 'form-control' %>
+    <%= f.password_field :password, autocomplete: 'current-password', class: 'form-control', maxlength: 255, minlength:6, required: true %>
 
     <% if @minimum_password_length %>
       <small class="form-text text-muted"><%= t('devise.shared.minimum_password_length', count: @minimum_password_length) %></small>
@@ -47,18 +54,26 @@
 
   <div class="form-group">
     <%= f.label :password_confirmation %>
-    <%= f.password_field :password_confirmation, autocomplete: 'current-password', class: 'form-control' %>
+    <%= f.password_field :password_confirmation, autocomplete: 'current-password', class: 'form-control', required: true %>
   </div>
 
-  <div class="form-group">
+  <div class="form-group" hidden>
     <%= f.label :avatar %>
     <%= f.file_field :avatar, class: "file-chooser"%>
   </div>
 
-  <div class="form-group">
-    <%= f.submit t('.sign_up'), class: 'btn btn-primary' %>
+  <div class="sk-folding-cube" id='spiner' style="display:none">
+  <div class="sk-cube1 sk-cube"></div>
+  <div class="sk-cube2 sk-cube"></div>
+  <div class="sk-cube4 sk-cube"></div>
+  <div class="sk-cube3 sk-cube"></div>  
   </div>
 
+  <div id = 'submit_form_container'>
+  <div class="form-group">
+    <%= f.submit t('.sign_up'), class: 'btn btn-primary'%>
+  </div>
+  </div>
   <%= render 'devise/shared/links' %> 
 <% end %>
 

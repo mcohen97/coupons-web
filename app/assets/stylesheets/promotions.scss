@@ -12,7 +12,7 @@
     border: 3px dashed black;
     border-radius: 5px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    padding: 10px;
+    padding: 10px 10px 0px 10px;
     vertical-align: middle;
 }
 
@@ -79,6 +79,10 @@
     margin: 20px auto;
 }
 
+.promo-option-label{
+    display: none;
+}
+
 @media screen and (max-width: 767px) {
     .promo-container{
         width: 90%
@@ -97,4 +101,16 @@
     .table-container{
         width: 100%;
     }
+
+    .graphs-container{
+        display: block;
+        margin: 0px auto 0px auto;
+        width: 400px;
+    }
+}
+
+.graphs-container{
+    display: block;
+    margin: 20px auto 20px auto;
+    width: 400px;
 }

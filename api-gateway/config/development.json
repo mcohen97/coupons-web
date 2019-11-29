@@ -1,0 +1,12 @@
+{
+    "gatewayAddress":{
+        "url": "http://localhost",
+        "port": 5000
+    },
+    "authServer": {
+        "url": "http://localhost:3000"
+    },
+    "servicesUrls":{
+        "promotions_by_id": "/promotions/:id"
+    }
+}
